@@ -3,6 +3,7 @@
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import CountUp from "@/components/CountUp";
+import StackShowcase from "@/components/StackShowcase";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -247,7 +248,7 @@ export default function Home() {
               >
                 L&apos;agence qui transforme
                 <br />ton image en
-                <br />machine de guerre.
+                <br /><span className="text-abcs-red">machine de guerre.</span>
               </motion.h2>
             </div>
 
@@ -514,6 +515,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ─── STACK SHOWCASE ─── */}
+      <StackShowcase />
 
       {/* ─── FAQ ─── */}
       <section className="w-full py-24 px-8 border-t border-black/10">

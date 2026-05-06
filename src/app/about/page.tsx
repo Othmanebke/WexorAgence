@@ -92,8 +92,8 @@ export default function AboutPage() {
       </div>
 
       {/* ─── HERO INTRO ─── */}
-      <section className="w-full px-8 py-24 max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row gap-16 items-start">
+      <section className="w-full px-6 md:px-8 py-16 md:py-24 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row gap-12 md:gap-16 items-start">
 
           {/* Left: portrait placeholder */}
           <div className="md:w-5/12 shrink-0">
@@ -115,7 +115,7 @@ export default function AboutPage() {
           {/* Right: text */}
           <div className="md:w-7/12 flex flex-col gap-8">
             <LineReveal>
-              <h1 className="font-heading text-5xl md:text-7xl uppercase leading-[0.85]">
+              <h1 className="font-heading text-4xl sm:text-5xl md:text-7xl uppercase leading-[0.85]">
                 QUI JE SUIS ?
               </h1>
             </LineReveal>
@@ -150,15 +150,15 @@ export default function AboutPage() {
       </section>
 
       {/* ─── SKILLS ─── */}
-      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
-        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Stack technique</span>
-        <span className="font-heading text-white text-2xl">01</span>
+      <div className="w-full bg-abcs-red flex items-center justify-between px-6 md:px-8 py-4">
+        <span className="font-bold text-white text-[10px] md:text-xs uppercase tracking-[0.2em]">Stack technique</span>
+        <span className="font-heading text-white text-xl md:text-2xl">01</span>
       </div>
 
-      <section className="skills-section w-full px-8 py-16 bg-[#f0f0ee]">
+      <section className="skills-section w-full px-6 md:px-8 py-16 bg-[#f0f0ee]">
         <div className="w-full max-w-7xl mx-auto">
           <LineReveal className="mb-12">
-            <h2 className="font-heading text-5xl md:text-7xl uppercase leading-none">COMPÉTENCES</h2>
+            <h2 className="font-heading text-4xl sm:text-5xl md:text-7xl uppercase leading-none">COMPÉTENCES</h2>
           </LineReveal>
           <div className="flex flex-wrap gap-3">
             {skills.map((s) => (
@@ -171,15 +171,15 @@ export default function AboutPage() {
       </section>
 
       {/* ─── TIMELINE ─── */}
-      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
-        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Mon parcours</span>
-        <span className="font-heading text-white text-2xl">02</span>
+      <div className="w-full bg-abcs-red flex items-center justify-between px-6 md:px-8 py-4">
+        <span className="font-bold text-white text-[10px] md:text-xs uppercase tracking-[0.2em]">Mon parcours</span>
+        <span className="font-heading text-white text-xl md:text-2xl">02</span>
       </div>
 
-      <section className="timeline-section w-full px-8 py-16 bg-[#f0f0ee]">
+      <section className="timeline-section w-full px-6 md:px-8 py-16 bg-[#f0f0ee]">
         <div className="w-full max-w-7xl mx-auto">
-          <LineReveal className="mb-16">
-            <h2 className="font-heading text-5xl md:text-7xl uppercase leading-none">PARCOURS</h2>
+          <LineReveal className="mb-12 md:mb-16">
+            <h2 className="font-heading text-4xl sm:text-5xl md:text-7xl uppercase leading-none">PARCOURS</h2>
           </LineReveal>
           <div className="flex flex-col gap-0 border-t border-black/15">
             {timeline.map((item, i) => (
@@ -196,15 +196,15 @@ export default function AboutPage() {
       </section>
 
       {/* ─── EXPERIENCES ─── */}
-      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
-        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Expériences pro</span>
-        <span className="font-heading text-white text-2xl">03</span>
+      <div className="w-full bg-abcs-red flex items-center justify-between px-6 md:px-8 py-4">
+        <span className="font-bold text-white text-[10px] md:text-xs uppercase tracking-[0.2em]">Expériences pro</span>
+        <span className="font-heading text-white text-xl md:text-2xl">03</span>
       </div>
 
-      <section className="exp-section w-full px-8 py-16 bg-[#f0f0ee]">
+      <section className="exp-section w-full px-6 md:px-8 py-16 bg-[#f0f0ee]">
         <div className="w-full max-w-7xl mx-auto">
-          <LineReveal className="mb-16">
-            <h2 className="font-heading text-5xl md:text-7xl uppercase leading-none">EXPÉRIENCES</h2>
+          <LineReveal className="mb-12 md:mb-16">
+            <h2 className="font-heading text-4xl sm:text-5xl md:text-7xl uppercase leading-none">EXPÉRIENCES</h2>
           </LineReveal>
           <div className="flex flex-col gap-px bg-black/10">
             {experiences.map((exp, i) => (
@@ -230,15 +230,15 @@ export default function AboutPage() {
       </section>
 
       {/* ─── VALUES ─── */}
-      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
-        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Ce qui nous guide</span>
-        <span className="font-heading text-white text-2xl">04</span>
+      <div className="w-full bg-abcs-red flex items-center justify-between px-6 md:px-8 py-4">
+        <span className="font-bold text-white text-[10px] md:text-xs uppercase tracking-[0.2em]">Ce qui nous guide</span>
+        <span className="font-heading text-white text-xl md:text-2xl">04</span>
       </div>
 
-      <section className="w-full px-8 py-16 bg-[#f0f0ee]">
+      <section className="w-full px-6 md:px-8 py-16 bg-[#f0f0ee]">
         <div className="w-full max-w-7xl mx-auto">
-          <LineReveal className="mb-16">
-            <h2 className="font-heading text-5xl md:text-7xl uppercase leading-none">NOS VALEURS</h2>
+          <LineReveal className="mb-12 md:mb-16">
+            <h2 className="font-heading text-4xl sm:text-5xl md:text-7xl uppercase leading-none">NOS VALEURS</h2>
           </LineReveal>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black/10">
             {values.map((v, i) => (
@@ -255,12 +255,12 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="w-full bg-abcs-black text-white py-32 px-8 flex flex-col items-center text-center">
+      <section className="w-full bg-abcs-black text-white py-24 md:py-32 px-6 md:px-8 flex flex-col items-center text-center">
         <LineReveal className="mb-4">
-          <h2 className="font-heading text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter">ON CRÉE</h2>
+          <h2 className="font-heading text-4xl sm:text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter">ON CRÉE</h2>
         </LineReveal>
         <LineReveal delay={0.1} className="mb-12">
-          <h2 className="font-heading text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter text-abcs-red">ENSEMBLE ?</h2>
+          <h2 className="font-heading text-4xl sm:text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter text-abcs-red">ENSEMBLE ?</h2>
         </LineReveal>
         <FadeUp delay={0.35}>
           <Link href="/contact" className="inline-flex items-center gap-3 bg-white text-abcs-black px-10 py-5 font-bold text-sm uppercase tracking-widest hover:bg-abcs-red hover:text-white transition-colors group">

@@ -169,8 +169,8 @@ export default function StackShowcase() {
     <section className="w-full">
 
       {/* ── INTRO HEADER ── */}
-      <div className="w-full bg-[#111] px-8 pt-24 pb-0">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-end justify-between gap-8 pb-16">
+      <div className="w-full bg-[#111] px-6 md:px-8 pt-16 md:pt-24 pb-0">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-end justify-between gap-6 md:gap-8 pb-12 md:pb-16">
           <div className="flex flex-col gap-4">
             <div className="font-bold text-abcs-red text-[10px] uppercase tracking-[0.25em]">Notre Stack</div>
             <h2 className="font-heading text-white text-5xl md:text-8xl lg:text-[9rem] uppercase leading-[0.85] tracking-tighter">
@@ -220,7 +220,7 @@ export default function StackShowcase() {
               return (
                 <div
                   key={cat.n}
-                  className="hs-slide relative h-full flex-shrink-0 overflow-hidden flex flex-col justify-between px-12 md:px-20 pt-20 pb-12"
+                  className="hs-slide relative h-full flex-shrink-0 overflow-hidden flex flex-col justify-between px-6 md:px-20 pt-16 md:pt-20 pb-8 md:pb-12"
                   style={{ width: "100vw", backgroundColor: cat.color }}
                 >
                   {/* Watermark number */}
@@ -264,7 +264,7 @@ export default function StackShowcase() {
                     </div>
 
                     {/* Right: skill bars */}
-                    <div className="md:w-5/12 flex flex-col gap-5">
+                    <div className="w-full md:w-5/12 flex flex-col gap-4 md:gap-5 mt-8 md:mt-0">
                       {cat.techs.map((tech, j) => (
                         <div key={tech.name} className="flex flex-col gap-2">
                           <div className={`flex items-center justify-between font-bold text-xs uppercase tracking-widest ${textColor}`}>
@@ -302,7 +302,7 @@ export default function StackShowcase() {
       </div>
 
       {/* ── STATS ROW ── */}
-      <div className="w-full bg-abcs-red text-white px-8 py-8 flex items-center justify-between">
+      <div className="w-full bg-abcs-red text-white px-6 md:px-8 py-6 md:py-8 flex items-center justify-between">
         <span className="font-bold text-[10px] uppercase tracking-[0.2em]">Notre arsenal</span>
         <div className="hidden md:flex items-center gap-12">
           {[

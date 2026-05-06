@@ -64,8 +64,8 @@ export default function TarifsPage() {
     <main ref={containerRef} className="flex-1 flex flex-col bg-[#f0f0ee]">
       <PageHeader number="03" title="TARIFS" subtitle="Nos offres & investissements" />
 
-      <section className="w-full px-8 pt-20 pb-12 max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row gap-12 items-start">
+      <section className="w-full px-6 md:px-8 pt-16 md:pt-20 pb-12 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
           <LineReveal className="md:w-1/2">
             <h2 className="font-heading text-4xl md:text-5xl uppercase leading-tight">Pas de frais cachés.<br />Juste de la valeur.</h2>
           </LineReveal>
@@ -75,12 +75,12 @@ export default function TarifsPage() {
         </div>
       </section>
 
-      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
-        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Services Web</span>
-        <span className="font-heading text-white text-2xl">01</span>
+      <div className="w-full bg-abcs-red flex items-center justify-between px-6 md:px-8 py-4">
+        <span className="font-bold text-white text-[10px] md:text-xs uppercase tracking-[0.2em]">Services Web</span>
+        <span className="font-heading text-white text-xl md:text-2xl">01</span>
       </div>
 
-      <section className="w-full px-8 py-16 bg-[#f0f0ee]">
+      <section className="w-full px-6 md:px-8 py-16 bg-[#f0f0ee]">
         <div className="w-full max-w-7xl mx-auto">
           <LineReveal className="mb-16">
             <h2 className="font-heading text-6xl md:text-8xl uppercase leading-none">NOS SERVICES WEB</h2>
@@ -88,15 +88,15 @@ export default function TarifsPage() {
           <div className="tarifs-list flex flex-col border-t border-black/15">
             {webPacks.map((p, i) => (
               <div key={i} className="tarif-row border-b border-black/15">
-                <button onClick={() => setOpenPack(openPack === i ? null : i)} className="w-full flex items-center justify-between py-7 text-left group hover:text-abcs-red transition-colors">
-                  <div className="flex items-center gap-8">
-                    <span className="font-bold text-[10px] opacity-40 w-6">0{i+1}</span>
+                <button onClick={() => setOpenPack(openPack === i ? null : i)} className="w-full flex items-center justify-between py-6 md:py-7 text-left group hover:text-abcs-red transition-colors">
+                  <div className="flex items-center gap-4 md:gap-8">
+                    <span className="font-bold text-[10px] opacity-40 w-4 md:w-6">0{i+1}</span>
                     <div className="flex flex-col md:flex-row md:items-center md:gap-6">
-                      <span className="font-heading text-2xl md:text-4xl uppercase">{p.title}</span>
-                      {p.highlight && <span className="bg-abcs-red text-white font-bold text-[9px] uppercase tracking-widest px-3 py-1 w-fit">Populaire</span>}
+                      <span className="font-heading text-xl sm:text-2xl md:text-4xl uppercase">{p.title}</span>
+                      {p.highlight && <span className="bg-abcs-red text-white font-bold text-[9px] uppercase tracking-widest px-3 py-1 w-fit mt-1 md:mt-0">Populaire</span>}
                     </div>
                   </div>
-                  <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-4 md:gap-6">
                     <span className="hidden md:block font-bold text-sm opacity-50 group-hover:opacity-100 transition-opacity">{p.price}</span>
                     <motion.span animate={{ rotate: openPack === i ? 45 : 0 }} transition={{ duration: 0.25 }} className="font-heading text-3xl">+</motion.span>
                   </div>
@@ -104,7 +104,7 @@ export default function TarifsPage() {
                 <AnimatePresence>
                   {openPack === i && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.35 }} className="overflow-hidden">
-                      <div className="pb-10 pl-14 grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="pb-8 md:pb-10 pl-8 sm:pl-10 md:pl-14 grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
                           <p className="font-bold text-base opacity-60 leading-relaxed mb-6">{p.desc}</p>
                           <ul className="flex flex-col gap-3">
@@ -133,21 +133,21 @@ export default function TarifsPage() {
         </div>
       </section>
 
-      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
-        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Community Management</span>
-        <span className="font-heading text-white text-2xl">02</span>
+      <div className="w-full bg-abcs-red flex items-center justify-between px-6 md:px-8 py-4">
+        <span className="font-bold text-white text-[10px] md:text-xs uppercase tracking-[0.2em]">Community Management</span>
+        <span className="font-heading text-white text-xl md:text-2xl">02</span>
       </div>
 
-      <section className="social-section w-full px-8 py-16 bg-[#f0f0ee]">
+      <section className="social-section w-full px-6 md:px-8 py-16 bg-[#f0f0ee]">
         <div className="w-full max-w-7xl mx-auto">
           <LineReveal className="mb-16">
             <h2 className="font-heading text-6xl md:text-8xl uppercase leading-none">COMMUNITY<br />MANAGEMENT</h2>
           </LineReveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-black/10">
             {socialPacks.map((p, i) => (
-              <div key={i} className={`social-row flex flex-col p-10 ${p.highlight ? "bg-abcs-black text-white" : "bg-[#f0f0ee]"} group hover:bg-abcs-red hover:text-white transition-colors duration-300`}>
-                <div className="flex items-start justify-between mb-8">
-                  <h3 className="font-heading text-4xl uppercase">{p.title}</h3>
+              <div key={i} className={`social-row flex flex-col p-8 md:p-10 ${p.highlight ? "bg-abcs-black text-white" : "bg-[#f0f0ee]"} group hover:bg-abcs-red hover:text-white transition-colors duration-300`}>
+                <div className="flex items-start justify-between mb-6 md:mb-8">
+                  <h3 className="font-heading text-3xl md:text-4xl uppercase">{p.title}</h3>
                   {p.highlight && <span className="bg-abcs-red group-hover:bg-white group-hover:text-abcs-red text-white font-bold text-[9px] uppercase px-3 py-1 transition-colors">Top</span>}
                 </div>
                 <div className="font-heading text-4xl mb-2">{p.price}</div>
@@ -168,21 +168,21 @@ export default function TarifsPage() {
         </div>
       </section>
 
-      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
-        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Branding & Print</span>
-        <span className="font-heading text-white text-2xl">03</span>
+      <div className="w-full bg-abcs-red flex items-center justify-between px-6 md:px-8 py-4">
+        <span className="font-bold text-white text-[10px] md:text-xs uppercase tracking-[0.2em]">Branding & Print</span>
+        <span className="font-heading text-white text-xl md:text-2xl">03</span>
       </div>
 
-      <section className="branding-section w-full px-8 py-16 bg-[#f0f0ee]">
+      <section className="branding-section w-full px-6 md:px-8 py-16 bg-[#f0f0ee]">
         <div className="w-full max-w-7xl mx-auto">
           <LineReveal className="mb-16">
             <h2 className="font-heading text-6xl md:text-8xl uppercase leading-none">BRANDING &<br />CRÉATION</h2>
           </LineReveal>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black/10">
             {brandingPacks.map((p, i) => (
-              <div key={i} className={`branding-row flex flex-col p-10 ${p.highlight ? "bg-abcs-black text-white" : "bg-[#f0f0ee]"} group hover:bg-abcs-red hover:text-white transition-colors duration-300`}>
+              <div key={i} className={`branding-row flex flex-col p-8 md:p-10 ${p.highlight ? "bg-abcs-black text-white" : "bg-[#f0f0ee]"} group hover:bg-abcs-red hover:text-white transition-colors duration-300`}>
                 {p.highlight && <span className="bg-abcs-red group-hover:bg-white group-hover:text-abcs-red text-white font-bold text-[9px] uppercase px-3 py-1 w-fit mb-6 transition-colors">Recommandé</span>}
-                <h3 className="font-heading text-4xl md:text-5xl uppercase mb-2">{p.title}</h3>
+                <h3 className="font-heading text-3xl md:text-4xl lg:text-5xl uppercase mb-2">{p.title}</h3>
                 <div className="font-heading text-3xl text-abcs-red group-hover:text-white mb-2 transition-colors">{p.price}</div>
                 <div className="font-bold text-sm opacity-50 mb-8">{p.desc}</div>
                 <ul className="flex flex-col gap-3 flex-1 mb-8">
@@ -202,12 +202,12 @@ export default function TarifsPage() {
         </div>
       </section>
 
-      <section className="w-full bg-abcs-black text-white py-32 px-8 flex flex-col items-center text-center">
+      <section className="w-full bg-abcs-black text-white py-24 md:py-32 px-6 md:px-8 flex flex-col items-center text-center">
         <LineReveal className="mb-4">
-          <h2 className="font-heading text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter">UN PROJET ?</h2>
+          <h2 className="font-heading text-4xl sm:text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter">UN PROJET ?</h2>
         </LineReveal>
         <LineReveal delay={0.1} className="mb-12">
-          <h2 className="font-heading text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter text-abcs-red">ON EN PARLE.</h2>
+          <h2 className="font-heading text-4xl sm:text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter text-abcs-red">ON EN PARLE.</h2>
         </LineReveal>
         <FadeUp delay={0.35}>
           <Link href="/contact" className="inline-flex items-center gap-3 bg-white text-abcs-black px-10 py-5 font-bold text-sm uppercase tracking-widest hover:bg-abcs-red hover:text-white transition-colors group">

@@ -93,10 +93,10 @@ function ContactForm() {
       <PageHeader number="05" title="CONTACT" subtitle="On t'écoute" />
 
       {/* ─── INTRO ─── */}
-      <section className="w-full px-8 pt-20 pb-8 max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row gap-12 items-end">
+      <section className="w-full px-6 md:px-8 pt-16 md:pt-20 pb-8 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start md:items-end">
           <LineReveal className="md:w-2/3">
-            <h2 className="font-heading text-5xl md:text-7xl uppercase leading-[0.9]">
+            <h2 className="font-heading text-4xl sm:text-5xl md:text-7xl uppercase leading-[0.9]">
               Parlons de<br />ton projet.
             </h2>
           </LineReveal>
@@ -109,8 +109,8 @@ function ContactForm() {
       </section>
 
       {/* ─── MAIN CONTENT ─── */}
-      <section className="w-full px-8 py-16">
-        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-24">
+      <section className="w-full px-6 md:px-8 py-12 md:py-16">
+        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 md:gap-24">
 
           {/* ─── FORM ─── */}
           <div className="lg:w-3/5">
@@ -128,8 +128,8 @@ function ContactForm() {
                 </Link>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <form onSubmit={handleSubmit} className="flex flex-col gap-8 md:gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
                   <div className="form-line flex flex-col gap-1">
                     <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Nom *</label>
                     <input required name="name" value={form.name} onChange={handleChange} placeholder="Jean Dupont" className={inputClass} />
@@ -140,7 +140,7 @@ function ContactForm() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
                   <div className="form-line flex flex-col gap-1">
                     <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Téléphone</label>
                     <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="06 XX XX XX XX" className={inputClass} />

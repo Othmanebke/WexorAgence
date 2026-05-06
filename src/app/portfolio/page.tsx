@@ -78,8 +78,8 @@ export default function PortfolioPage() {
       </div>
 
       {/* Intro */}
-      <section className="w-full px-8 py-16 max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row gap-12 items-end">
+      <section className="w-full px-6 md:px-8 py-16 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start md:items-end">
           <LineReveal className="md:w-2/3">
             <h2 className="font-heading text-5xl md:text-7xl uppercase leading-[0.9]">
               Des projets pensés<br />pour convertir.
@@ -94,13 +94,13 @@ export default function PortfolioPage() {
       </section>
 
       {/* Orange banner */}
-      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
-        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Tous les projets</span>
-        <span className="font-heading text-white text-2xl">{projects.length.toString().padStart(2, "0")}</span>
+      <div className="w-full bg-abcs-red flex items-center justify-between px-6 md:px-8 py-4">
+        <span className="font-bold text-white text-[10px] md:text-xs uppercase tracking-[0.2em]">Tous les projets</span>
+        <span className="font-heading text-white text-xl md:text-2xl">{projects.length.toString().padStart(2, "0")}</span>
       </div>
 
       {/* Project list — hover image reveal */}
-      <section className="w-full px-8 py-0 bg-[#f0f0ee] relative">
+      <section className="w-full px-6 md:px-8 py-0 bg-[#f0f0ee] relative">
         <div className="w-full max-w-7xl mx-auto">
           <div className="projects-list flex flex-col border-t border-black/15">
             {projects.map((p, i) => (
@@ -110,15 +110,15 @@ export default function PortfolioPage() {
                 onMouseEnter={() => setHoveredIdx(i)}
                 onMouseLeave={() => setHoveredIdx(null)}
               >
-                <div className="flex items-center justify-between py-8 transition-colors duration-200 group-hover:text-abcs-red">
-                  <div className="flex items-center gap-8">
-                    <span className="font-bold text-[10px] opacity-40 w-8 shrink-0">{String(i + 1).padStart(2, "0")}</span>
+                <div className="flex items-center justify-between py-6 md:py-8 transition-colors duration-200 group-hover:text-abcs-red">
+                  <div className="flex items-center gap-4 md:gap-8">
+                    <span className="font-bold text-[10px] opacity-40 w-4 md:w-8 shrink-0">{String(i + 1).padStart(2, "0")}</span>
                     <div>
-                      <h3 className="font-heading text-3xl md:text-5xl uppercase leading-tight">{p.title}</h3>
-                      <p className="font-bold text-xs uppercase tracking-widest opacity-40 mt-1">{p.tech}</p>
+                      <h3 className="font-heading text-2xl sm:text-3xl md:text-5xl uppercase leading-tight">{p.title}</h3>
+                      <p className="font-bold text-[10px] sm:text-xs uppercase tracking-widest opacity-40 mt-1">{p.tech}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-4 md:gap-6">
                     <span className="hidden md:block font-bold text-xs uppercase tracking-widest opacity-40 group-hover:opacity-100 transition-opacity">{p.cat}</span>
                     <span className="font-heading text-2xl leading-none opacity-40 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-200">↗</span>
                   </div>
@@ -147,10 +147,10 @@ export default function PortfolioPage() {
       </section>
 
       {/* Grid showcase */}
-      <section className="w-full px-8 py-24 bg-[#f0f0ee]">
+      <section className="w-full px-6 md:px-8 py-16 md:py-24 bg-[#f0f0ee]">
         <div className="w-full max-w-7xl mx-auto">
-          <LineReveal className="mb-16">
-            <h2 className="font-heading text-5xl md:text-7xl uppercase leading-none">APERÇU VISUEL</h2>
+          <LineReveal className="mb-12 md:mb-16">
+            <h2 className="font-heading text-4xl sm:text-5xl md:text-7xl uppercase leading-none">APERÇU VISUEL</h2>
           </LineReveal>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black/10">
             {projects.slice(0, 4).map((p, i) => (
@@ -174,12 +174,12 @@ export default function PortfolioPage() {
       </section>
 
       {/* CTA */}
-      <section className="w-full bg-abcs-black text-white py-32 px-8 flex flex-col items-center text-center">
+      <section className="w-full bg-abcs-black text-white py-24 md:py-32 px-6 md:px-8 flex flex-col items-center text-center">
         <LineReveal className="mb-4">
-          <h2 className="font-heading text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter">LE PROCHAIN</h2>
+          <h2 className="font-heading text-4xl sm:text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter">LE PROCHAIN</h2>
         </LineReveal>
         <LineReveal delay={0.1} className="mb-12">
-          <h2 className="font-heading text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter text-abcs-red">C&apos;EST LE VÔTRE.</h2>
+          <h2 className="font-heading text-4xl sm:text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter text-abcs-red">C&apos;EST LE VÔTRE.</h2>
         </LineReveal>
         <FadeUp delay={0.35}>
           <Link href="/contact" className="inline-flex items-center gap-3 bg-white text-abcs-black px-10 py-5 font-bold text-sm uppercase tracking-widest hover:bg-abcs-red hover:text-white transition-colors group">

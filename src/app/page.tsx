@@ -159,7 +159,7 @@ export default function Home() {
     <main className="flex flex-col min-h-screen bg-[#f0f0ee] overflow-hidden">
 
       {/* ─── HERO ─── */}
-      <section className="w-full min-h-screen flex flex-col px-8 pt-8 pb-0 relative">
+      <section className="w-full min-h-screen flex flex-col px-6 md:px-8 pt-8 pb-0 relative">
 
         {/* Top row: Logo + Nav */}
         <div className="flex items-start justify-between w-full">
@@ -269,10 +269,10 @@ export default function Home() {
               {/* Numbered orange banner */}
               <a
                 href="#about"
-                className="flex items-center justify-between bg-abcs-red text-white px-6 py-3 font-bold text-xs uppercase tracking-[0.15em] w-full hover:bg-abcs-black transition-colors duration-300 group"
+                className="flex items-center justify-between bg-abcs-red text-white px-4 md:px-6 py-3 font-bold text-[10px] md:text-xs uppercase tracking-[0.15em] w-full hover:bg-abcs-black transition-colors duration-300 group"
               >
                 <span>Notre approche — Qui on est</span>
-                <span className="font-heading text-2xl leading-none group-hover:translate-x-1 transition-transform">01</span>
+                <span className="font-heading text-xl md:text-2xl leading-none group-hover:translate-x-1 transition-transform">01</span>
               </a>
             </motion.div>
           </div>
@@ -293,7 +293,7 @@ export default function Home() {
         </div>
 
         {/* Content overlay */}
-        <div className="w-full max-w-7xl mx-auto px-8 flex flex-col md:flex-row gap-16 items-start -mt-16 relative z-10">
+        <div className="w-full max-w-7xl mx-auto px-6 md:px-8 flex flex-col md:flex-row gap-12 md:gap-16 items-start -mt-8 md:-mt-16 relative z-10">
 
           {/* Image */}
           <div className="w-full md:w-5/12 overflow-hidden relative h-[420px] md:h-[560px] flex-shrink-0">
@@ -330,11 +330,11 @@ export default function Home() {
             </FadeUp>
 
             <FadeUp delay={0.5}>
-              <div className="flex gap-12 pt-4 border-t border-black/15">
+              <div className="flex flex-wrap gap-8 md:gap-12 pt-4 border-t border-black/15">
                 {[
-                  { end: 10, prefix: "+", label: "Clients accompagnés" },
+                  { end: 10, prefix: "+", label: "Clients" },
                   { end: 100, suffix: "%", label: "Satisfaction" },
-                  { end: 48, suffix: "h", label: "Délai de réponse" },
+                  { end: 48, suffix: "h", label: "Réponse" },
                 ].map((s) => (
                   <div key={s.label}>
                     <div className="font-heading text-4xl md:text-5xl text-abcs-red">
@@ -356,7 +356,7 @@ export default function Home() {
       </div>
 
       {/* ─── SERVICES LIST ─── */}
-      <section className="services-section w-full py-16 px-8 bg-[#f0f0ee]">
+      <section className="services-section w-full py-16 px-6 md:px-8 bg-[#f0f0ee]">
         <div className="w-full max-w-7xl mx-auto">
           <LineReveal className="mb-16">
             <h2 className="font-heading text-6xl md:text-9xl uppercase leading-none tracking-tight">
@@ -371,9 +371,9 @@ export default function Home() {
                 href="/tarifs"
                 className="service-row-item service-row flex items-center justify-between py-7 px-0 group"
               >
-                <div className="flex items-center gap-8">
-                  <span className="font-bold text-[10px] uppercase tracking-widest opacity-40 w-8">{s.n}</span>
-                  <span className="font-heading text-2xl md:text-4xl lg:text-5xl uppercase tracking-tight">
+                <div className="flex items-center gap-4 md:gap-8">
+                  <span className="font-bold text-[10px] uppercase tracking-widest opacity-40 w-6 md:w-8">{s.n}</span>
+                  <span className="font-heading text-xl sm:text-2xl md:text-4xl lg:text-5xl uppercase tracking-tight">
                     {s.title}
                   </span>
                 </div>
@@ -390,7 +390,7 @@ export default function Home() {
       </section>
 
       {/* ─── QUOTE SECTION (03) ─── */}
-      <section className="w-full py-32 px-8 border-t border-black/10 bg-[#f0f0ee] overflow-hidden">
+      <section className="w-full py-24 md:py-32 px-6 md:px-8 border-t border-black/10 bg-[#f0f0ee] overflow-hidden">
         <div className="w-full max-w-5xl mx-auto">
           <LineReveal>
             <p className="font-heading text-4xl md:text-6xl lg:text-7xl leading-[1.05] uppercase">
@@ -437,7 +437,7 @@ export default function Home() {
       </div>
 
       {/* ─── PORTFOLIO GRID ─── */}
-      <section className="w-full py-16 px-8 bg-[#f0f0ee]">
+      <section className="w-full py-16 px-6 md:px-8 bg-[#f0f0ee]">
         <div className="w-full max-w-7xl mx-auto">
           <LineReveal className="mb-16">
             <h2 className="font-heading text-6xl md:text-9xl uppercase leading-none tracking-tight">
@@ -483,7 +483,7 @@ export default function Home() {
       </section>
 
       {/* ─── PROCESSUS ─── */}
-      <section className="w-full py-24 px-8 border-t border-black/10 bg-[#f0f0ee]">
+      <section className="w-full py-16 md:py-24 px-6 md:px-8 border-t border-black/10 bg-[#f0f0ee]">
         <div className="w-full max-w-7xl mx-auto">
           {/* Orange banner 05 */}
           <div className="flex items-center justify-between bg-abcs-red text-white px-6 py-4 mb-16">
@@ -520,7 +520,7 @@ export default function Home() {
       <StackShowcase />
 
       {/* ─── FAQ ─── */}
-      <section className="w-full py-24 px-8 border-t border-black/10">
+      <section className="w-full py-16 md:py-24 px-6 md:px-8 border-t border-black/10">
         <div className="w-full max-w-5xl mx-auto">
           <LineReveal className="mb-16">
             <h2 className="font-heading text-6xl md:text-9xl uppercase leading-none tracking-tight">FAQ</h2>
@@ -564,14 +564,14 @@ export default function Home() {
       </section>
 
       {/* ─── CTA FINAL ─── */}
-      <section className="w-full bg-abcs-black text-white py-32 px-8 flex flex-col items-center text-center">
-        <LineReveal className="mb-6">
-          <h2 className="font-heading text-5xl md:text-8xl lg:text-[10rem] uppercase leading-[0.85] tracking-tighter">
+      <section className="w-full bg-abcs-black text-white py-24 md:py-32 px-6 md:px-8 flex flex-col items-center text-center">
+        <LineReveal className="mb-4 md:mb-6">
+          <h2 className="font-heading text-4xl sm:text-5xl md:text-8xl lg:text-[10rem] uppercase leading-[0.85] tracking-tighter">
             ON CRÉE
           </h2>
         </LineReveal>
-        <LineReveal delay={0.1} className="mb-6">
-          <h2 className="font-heading text-5xl md:text-8xl lg:text-[10rem] uppercase leading-[0.85] tracking-tighter text-abcs-red">
+        <LineReveal delay={0.1} className="mb-8 md:mb-6">
+          <h2 className="font-heading text-4xl sm:text-5xl md:text-8xl lg:text-[10rem] uppercase leading-[0.85] tracking-tighter text-abcs-red">
             ENSEMBLE ?
           </h2>
         </LineReveal>

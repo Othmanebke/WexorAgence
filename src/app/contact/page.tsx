@@ -1,24 +1,47 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useRef, useState, useEffect, Suspense } from "react";
+import { motion, useInView } from "framer-motion";
 import PageHeader from "@/components/PageHeader";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import Magnetic from "@/components/Magnetic";
 import { useSearchParams } from "next/navigation";
-import { useEffect, Suspense } from "react";
+import Link from "next/link";
+
+function LineReveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <div ref={ref} className={`overflow-hidden ${className}`}>
+      <motion.div initial={{ y: "102%" }} animate={inView ? { y: 0 } : {}} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay }}>
+        {children}
+      </motion.div>
+    </div>
+  );
+}
+
+function FadeUp({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div ref={ref} className={className} initial={{ opacity: 0, y: 40 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay }}>
+      {children}
+    </motion.div>
+  );
+}
 
 const projectTypes = [
-  "Site Vitrine (Présence)", 
-  "Pack WordPress (Autonomie)", 
-  "Application Web / SaaS", 
-  "Refonte de site existant", 
-  "Branding / Identité Visuelle", 
-  "Pack Flyers & Print", 
+  "Site Vitrine (Présence)",
+  "Pack WordPress (Autonomie)",
+  "Application Web / SaaS",
+  "Refonte de site existant",
+  "Branding / Identité Visuelle",
+  "Pack Flyers & Print",
   "Community Management",
-  "Autre projet sur-mesure"
+  "Autre projet sur-mesure",
 ];
+
+const inputClass = "w-full bg-transparent border-b-2 border-black/20 focus:border-abcs-red py-4 font-bold text-lg placeholder:opacity-30 placeholder:font-bold outline-none transition-colors duration-200";
 
 function ContactForm() {
   const containerRef = useRef<HTMLElement>(null);
@@ -33,43 +56,27 @@ function ContactForm() {
     const type = searchParams.get("type");
     const budget = searchParams.get("budget");
     const message = searchParams.get("message");
-
     if (name || email || phone || type || budget || message) {
       setForm((prev) => ({
         ...prev,
         name: name || prev.name,
         email: email || prev.email,
         phone: phone || prev.phone,
-        // Map short values to full labels if needed
-        type: projectTypes.find(t => t.toLowerCase().includes(type?.toLowerCase() || "")) || type || prev.type,
+        type: projectTypes.find(t => t.toLowerCase().includes((type || "").toLowerCase())) || type || prev.type,
         budget: budget === "low" ? "<1000" : budget === "mid" ? "1000-3000" : budget === "high" ? ">5000" : budget || prev.budget,
-        message: message || prev.message
+        message: message || prev.message,
       }));
     }
   }, [searchParams]);
 
   useGSAP(() => {
-
-    const boxes = gsap.utils.toArray('.contact-box');
-    gsap.from(boxes, {
-      y: 100,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.1,
-      ease: "power3.out",
+    gsap.from(".form-line", {
+      y: 40, opacity: 0, duration: 0.6, stagger: 0.08, ease: "power2.out", delay: 0.2,
     });
-
-    if (!sent) {
-      const formFields = gsap.utils.toArray('.form-field');
-      gsap.from(formFields, {
-        x: -50,
-        opacity: 0,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power2.out",
-        delay: 0.4
-      });
-    }
+    gsap.from(".info-item", {
+      x: -40, opacity: 0, duration: 0.6, stagger: 0.1, ease: "power2.out",
+      scrollTrigger: { trigger: ".info-section", start: "top 80%" },
+    });
   }, { scope: containerRef, dependencies: [sent] });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -82,134 +89,156 @@ function ContactForm() {
   };
 
   return (
-    <main ref={containerRef} className="flex-1 flex flex-col items-center px-0 pb-32 bg-white">
-      <PageHeader />
-      <div className="w-full flex flex-col items-center px-8 pt-16">
-      
-      {/* ─── HEADER ─── */}
-      <div className="w-full max-w-7xl mb-24">
-        <div className="inline-block bg-abcs-red text-white font-bold text-xs uppercase tracking-widest px-4 py-2 mb-6">On t&apos;écoute</div>
-        <motion.h1
-          className="font-heading text-5xl md:text-[9rem] text-abcs-black uppercase leading-[0.8] mb-6"
-          initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }}
-        >
-          PARLONS<br/>DE TON <span className="text-abcs-red">PROJET</span>
-        </motion.h1>
-        <p className="font-bold text-xl opacity-70">Devis gratuit & sans engagement — réponse sous 48h.</p>
-      </div>
+    <main ref={containerRef} className="flex-1 flex flex-col bg-[#f0f0ee]">
+      <PageHeader number="05" title="CONTACT" subtitle="On t'écoute" />
 
-      {/* ─── CONTENT ─── */}
-      <div className="w-full max-w-7xl flex flex-col lg:flex-row gap-16">
-
-        {/* Left — Infos */}
-        <div className="lg:w-1/3 flex flex-col gap-8">
-          <div className="contact-box border-8 border-abcs-black p-8 bg-white shadow-[12px_12px_0px_0px_rgba(255,59,0,1)]">
-            <h2 className="font-heading text-4xl uppercase mb-8">INFOS</h2>
-            <div className="flex flex-col gap-6">
-              <div>
-                <div className="font-bold text-xs uppercase tracking-widest opacity-50 mb-1">Email</div>
-                <a href="mailto:othmane.bouakline.pro@gmail.com" className="font-bold text-lg hover:text-abcs-red transition-colors break-all">othmane.bouakline.pro@gmail.com</a>
-              </div>
-              <div>
-                <div className="font-bold text-xs uppercase tracking-widest opacity-50 mb-1">Téléphone</div>
-                <a href="tel:+33660805337" className="font-bold text-lg hover:text-abcs-red transition-colors">06 60 80 53 37</a>
-              </div>
-              <div>
-                <div className="font-bold text-xs uppercase tracking-widest opacity-50 mb-1">Disponibilité</div>
-                <span className="font-bold text-lg">France & remote</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="contact-box border-8 border-abcs-black p-8 bg-abcs-black text-white shadow-[12px_12px_0px_0px_rgba(255,59,0,1)]">
-            <h2 className="font-heading text-4xl uppercase mb-8">RÉSEAUX</h2>
-            <div className="flex flex-col gap-4">
-              <Magnetic>
-                <a href="https://tiktok.com/@wexo_agence" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 font-bold hover:text-abcs-red transition-colors group w-fit">
-                  <span className="font-heading text-2xl">TikTok</span>
-                  <span className="opacity-50 group-hover:opacity-100">@wexo_agence ↗</span>
-                </a>
-              </Magnetic>
-              <Magnetic>
-                <a href="https://instagram.com/wexor_agence" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 font-bold hover:text-abcs-red transition-colors group w-fit">
-                  <span className="font-heading text-2xl">Instagram</span>
-                  <span className="opacity-50 group-hover:opacity-100">@wexor_agence ↗</span>
-                </a>
-              </Magnetic>
-            </div>
-          </div>
-
-          <div className="contact-box border-8 border-abcs-red p-8 bg-abcs-red text-white shadow-[12px_12px_0px_0px_rgba(17,17,17,1)]">
-            <div className="font-heading text-6xl mb-4">48h</div>
-            <div className="font-bold uppercase tracking-widest text-sm">Délai de réponse maximum garanti</div>
-          </div>
+      {/* ─── INTRO ─── */}
+      <section className="w-full px-8 pt-20 pb-8 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row gap-12 items-end">
+          <LineReveal className="md:w-2/3">
+            <h2 className="font-heading text-5xl md:text-7xl uppercase leading-[0.9]">
+              Parlons de<br />ton projet.
+            </h2>
+          </LineReveal>
+          <FadeUp delay={0.25} className="md:w-1/3">
+            <p className="font-bold text-base opacity-55 leading-relaxed">
+              Devis gratuit & sans engagement — réponse garantie sous 48h.
+            </p>
+          </FadeUp>
         </div>
+      </section>
 
-        {/* Right — Form */}
-        <div className="lg:w-2/3 contact-box">
-          {sent ? (
-            <div className="border-8 border-abcs-black p-16 flex flex-col items-center justify-center text-center shadow-[16px_16px_0px_0px_rgba(255,59,0,1)] min-h-[500px]">
-              <div className="font-script text-abcs-red text-8xl mb-6 -rotate-3">Reçu !</div>
-              <h2 className="font-heading text-5xl uppercase mb-4">MERCI POUR TON MESSAGE</h2>
-              <p className="font-bold opacity-70 text-xl">Je te réponds sous 48h maximum pour discuter de ton projet.</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="border-8 border-abcs-black p-8 bg-white shadow-[16px_16px_0px_0px_rgba(17,17,17,1)]">
-              <h2 className="form-field font-heading text-4xl uppercase mb-8">DÉCRIS TON PROJET</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div className="form-field flex flex-col gap-2">
-                  <label className="font-bold text-xs uppercase tracking-widest opacity-60">Nom *</label>
-                  <input required name="name" value={form.name} onChange={handleChange} placeholder="Jean Dupont" className="border-4 border-abcs-black p-4 font-bold focus:outline-none focus:border-abcs-red transition-colors" />
+      {/* ─── MAIN CONTENT ─── */}
+      <section className="w-full px-8 py-16">
+        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-24">
+
+          {/* ─── FORM ─── */}
+          <div className="lg:w-3/5">
+            {sent ? (
+              <motion.div
+                initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
+                className="flex flex-col items-start justify-center min-h-[500px] gap-6"
+              >
+                <div className="font-heading text-abcs-red text-8xl md:text-[10rem] uppercase leading-none">Reçu !</div>
+                <h2 className="font-heading text-4xl md:text-5xl uppercase">Merci pour ton message</h2>
+                <p className="font-bold opacity-60 text-lg max-w-md leading-relaxed">Je te réponds sous 48h maximum pour discuter de ton projet en détail.</p>
+                <Link href="/" className="inline-flex items-center gap-3 border border-black px-8 py-4 font-bold text-sm uppercase tracking-widest hover:bg-abcs-black hover:text-white transition-colors mt-4 group">
+                  <span>Retour à l&apos;accueil</span>
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </Link>
+              </motion.div>
+            ) : (
+              <form onSubmit={handleSubmit} className="flex flex-col gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                  <div className="form-line flex flex-col gap-1">
+                    <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Nom *</label>
+                    <input required name="name" value={form.name} onChange={handleChange} placeholder="Jean Dupont" className={inputClass} />
+                  </div>
+                  <div className="form-line flex flex-col gap-1">
+                    <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Email *</label>
+                    <input required type="email" name="email" value={form.email} onChange={handleChange} placeholder="jean@exemple.com" className={inputClass} />
+                  </div>
                 </div>
-                <div className="form-field flex flex-col gap-2">
-                  <label className="font-bold text-xs uppercase tracking-widest opacity-60">Email *</label>
-                  <input required type="email" name="email" value={form.email} onChange={handleChange} placeholder="jean@exemple.com" className="border-4 border-abcs-black p-4 font-bold focus:outline-none focus:border-abcs-red transition-colors" />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                  <div className="form-line flex flex-col gap-1">
+                    <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Téléphone</label>
+                    <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="06 XX XX XX XX" className={inputClass} />
+                  </div>
+                  <div className="form-line flex flex-col gap-1">
+                    <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Type de projet *</label>
+                    <select required name="type" value={form.type} onChange={handleChange} className={`${inputClass} bg-transparent appearance-none`}>
+                      <option value="">Choisir...</option>
+                      {projectTypes.map((t) => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                  </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div className="form-field flex flex-col gap-2">
-                  <label className="font-bold text-xs uppercase tracking-widest opacity-60">Téléphone</label>
-                  <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="06 XX XX XX XX" className="border-4 border-abcs-black p-4 font-bold focus:outline-none focus:border-abcs-red transition-colors" />
-                </div>
-                <div className="form-field flex flex-col gap-2">
-                  <label className="font-bold text-xs uppercase tracking-widest opacity-60">Type de projet *</label>
-                  <select required name="type" value={form.type} onChange={handleChange} className="border-4 border-abcs-black p-4 font-bold focus:outline-none focus:border-abcs-red transition-colors bg-white appearance-none">
-                    <option value="">Choisir...</option>
-                    {projectTypes.map((t) => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                </div>
-                <div className="form-field flex flex-col gap-2">
-                  <label className="font-bold text-xs uppercase tracking-widest opacity-60">Budget estimé *</label>
-                  <select required name="budget" value={form.budget} onChange={handleChange} className="border-4 border-abcs-black p-4 font-bold focus:outline-none focus:border-abcs-red transition-colors bg-white appearance-none">
+
+                <div className="form-line flex flex-col gap-1">
+                  <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Budget estimé *</label>
+                  <select required name="budget" value={form.budget} onChange={handleChange} className={`${inputClass} bg-transparent appearance-none`}>
                     <option value="">Choisir un budget...</option>
-                    <option value="<1000">Moins de 1000€</option>
-                    <option value="1000-3000">1000€ - 3000€</option>
-                    <option value="3000-5000">3000€ - 5000€</option>
-                    <option value=">5000">Plus de 5000€</option>
+                    <option value="<1000">Moins de 1 000€</option>
+                    <option value="1000-3000">1 000€ — 3 000€</option>
+                    <option value="3000-5000">3 000€ — 5 000€</option>
+                    <option value=">5000">Plus de 5 000€</option>
                   </select>
                 </div>
+
+                <div className="form-line flex flex-col gap-1">
+                  <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Message *</label>
+                  <textarea required name="message" value={form.message} onChange={handleChange} rows={5} placeholder="Décris ton projet en quelques lignes..." className={`${inputClass} resize-none`} />
+                </div>
+
+                <div className="form-line">
+                  <button
+                    type="submit"
+                    className="w-full bg-abcs-black text-white py-6 font-bold text-sm uppercase tracking-widest hover:bg-abcs-red transition-colors duration-300 flex items-center justify-center gap-4 group"
+                  >
+                    <span>Envoyer mon projet</span>
+                    <span className="text-xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+
+          {/* ─── INFO ─── */}
+          <div className="info-section lg:w-2/5 flex flex-col gap-16">
+
+            <div className="info-item flex flex-col gap-2">
+              <span className="font-bold text-[10px] uppercase tracking-widest opacity-30">Email principal</span>
+              <a href="mailto:othmane.bouakline.pro@gmail.com" className="font-bold text-xl hover:text-abcs-red transition-colors break-all">
+                othmane.bouakline.pro@gmail.com
+              </a>
+            </div>
+
+            <div className="info-item flex flex-col gap-2">
+              <span className="font-bold text-[10px] uppercase tracking-widest opacity-30">Téléphone</span>
+              <a href="tel:+33660805337" className="font-bold text-xl hover:text-abcs-red transition-colors">
+                06 60 80 53 37
+              </a>
+            </div>
+
+            <div className="info-item flex flex-col gap-2">
+              <span className="font-bold text-[10px] uppercase tracking-widest opacity-30">Disponibilité</span>
+              <span className="font-bold text-xl">France & remote</span>
+            </div>
+
+            <div className="info-item border-t border-black/15 pt-10">
+              <span className="font-bold text-[10px] uppercase tracking-widest opacity-30 block mb-6">Réseaux sociaux</span>
+              <div className="flex flex-col gap-4">
+                {[
+                  { label: "TikTok", handle: "@wexo_agence", href: "https://tiktok.com/@wexo_agence" },
+                  { label: "Instagram", handle: "@wexor_agence", href: "https://instagram.com/wexor_agence" },
+                ].map((s) => (
+                  <a key={s.label} href={s.href} target="_blank" rel="noreferrer"
+                    className="flex items-center justify-between py-4 border-b border-black/10 group hover:text-abcs-red transition-colors">
+                    <span className="font-heading text-2xl uppercase">{s.label}</span>
+                    <span className="font-bold text-sm opacity-40 group-hover:opacity-100 transition-opacity">{s.handle} ↗</span>
+                  </a>
+                ))}
               </div>
-              <div className="form-field flex flex-col gap-2 mb-8">
-                <label className="font-bold text-xs uppercase tracking-widest opacity-60">Message *</label>
-                <textarea required name="message" value={form.message} onChange={handleChange} rows={6} placeholder="Décris ton projet en quelques lignes..." className="border-4 border-abcs-black p-4 font-bold focus:outline-none focus:border-abcs-red transition-colors resize-none" />
-              </div>
-              <Magnetic>
-                <button type="submit" className="form-field w-full bg-abcs-black text-white py-6 font-bold text-xl uppercase tracking-widest hover:bg-abcs-red transition-colors flex items-center justify-center gap-4">
-                  ENVOYER MON PROJET <span className="text-2xl leading-none">→</span>
-                </button>
-              </Magnetic>
-            </form>
-          )}
+            </div>
+
+            <div className="info-item bg-abcs-red text-white p-8">
+              <div className="font-heading text-6xl mb-3">48h</div>
+              <div className="font-bold uppercase tracking-widest text-sm opacity-80">Délai de réponse maximum garanti</div>
+            </div>
+          </div>
         </div>
-      </div>
-      </div>
+      </section>
     </main>
   );
 }
 
 export default function ContactPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center font-heading text-4xl animate-pulse">Chargement...</div>}>
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#f0f0ee] flex items-center justify-center">
+        <div className="font-heading text-4xl animate-pulse">Chargement...</div>
+      </div>
+    }>
       <ContactForm />
     </Suspense>
   );

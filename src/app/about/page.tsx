@@ -1,21 +1,43 @@
 "use client";
 
 import { useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import PageHeader from "@/components/PageHeader";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const skills = ["React / Next.js", "Node.js", "Intelligence Artificielle", "ServiceNow", "TypeScript", "Tailwind CSS", "HTML / CSS", "WordPress", "UX Design", "ITSM", "SEO", "Figma", "Vercel"];
+function LineReveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <div ref={ref} className={`overflow-hidden ${className}`}>
+      <motion.div initial={{ y: "102%" }} animate={inView ? { y: 0 } : {}} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay }}>
+        {children}
+      </motion.div>
+    </div>
+  );
+}
 
-const values = [
-  { t: "Pragmatisme", d: "Des solutions axées sur les résultats, sans complexité inutile." },
-  { t: "Transparence", d: "Budget et planning clairs dès le départ, zéro mauvaise surprise." },
-  { t: "Qualité", d: "Performance, accessibilité et design au cœur de chaque livrable." },
-  { t: "Partenariat", d: "On travaille avec toi, pas juste pour toi — relation durable." },
+function FadeUp({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div ref={ref} className={className} initial={{ opacity: 0, y: 40 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay }}>
+      {children}
+    </motion.div>
+  );
+}
+
+const skills = ["React / Next.js", "Node.js", "Intelligence Artificielle", "ServiceNow", "TypeScript", "Tailwind CSS", "HTML / CSS", "WordPress", "UX Design", "SEO", "Figma", "Vercel"];
+
+const timeline = [
+  { period: "2018–2023", title: "Formation", desc: "Bac+5 Expert Informatique Web. Mastère spécialisé en développement & architecture web. Bases solides, projets académiques concrets.", accent: true },
+  { period: "2021–2025", title: "Expérience Pro", desc: "Developer ServiceNow chez Inetum · Consultant ITSM & UX chez Fujitsu · Developer Full Stack chez AJC — 4 ans en grand compte et startups.", accent: false },
+  { period: "2025–Présent", title: "Création de Wexor", desc: "Fondation de l'agence digitale pour accompagner les TPE/PME. Design premium, code sur-mesure, relation directe sans intermédiaire.", accent: true },
 ];
 
 const experiences = [
@@ -24,160 +46,229 @@ const experiences = [
   { title: "Développeur Full Stack", company: "AJC Ingénieur", period: "2021 — 2023 · 1 an 5 mois", current: false, desc: "Conception et développement d'applications web full stack (React / Node.js), intégrations API et déploiement." },
 ];
 
+const values = [
+  { t: "Pragmatisme", d: "Des solutions axées sur les résultats, sans complexité inutile." },
+  { t: "Transparence", d: "Budget et planning clairs dès le départ, zéro mauvaise surprise." },
+  { t: "Qualité", d: "Performance, accessibilité et design au cœur de chaque livrable." },
+  { t: "Partenariat", d: "On travaille avec toi, pas juste pour toi — relation durable." },
+];
+
 export default function AboutPage() {
-  const containerRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const bigTextRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    // Timeline animation
-    const timelineItems = gsap.utils.toArray('.timeline-item');
-    gsap.from(timelineItems, {
-      x: -50,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: ".timeline-section",
-        start: "top 75%",
-      }
+    if (bigTextRef.current) {
+      gsap.fromTo(bigTextRef.current,
+        { xPercent: -5 },
+        { xPercent: 3, ease: "none", scrollTrigger: { trigger: bigTextRef.current, start: "top bottom", end: "bottom top", scrub: 1.2 } }
+      );
+    }
+    gsap.from(".timeline-item", {
+      x: -60, opacity: 0, duration: 0.8, stagger: 0.15, ease: "power3.out",
+      scrollTrigger: { trigger: ".timeline-section", start: "top 75%" }
     });
-
-    // Experiences reveal
-    const expItems = gsap.utils.toArray('.exp-item');
-    gsap.from(expItems, {
-      y: 100,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.15,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: ".exp-section",
-        start: "top 80%",
-      }
+    gsap.from(".exp-item", {
+      y: 60, opacity: 0, duration: 0.7, stagger: 0.12, ease: "power2.out",
+      scrollTrigger: { trigger: ".exp-section", start: "top 80%" }
     });
-
-    // Values reveal
-    const valueItems = gsap.utils.toArray('.value-item');
-    gsap.from(valueItems, {
-      scale: 0.9,
-      y: 50,
-      opacity: 0,
-      duration: 0.6,
-      stagger: 0.1,
-      ease: "back.out(1.7)",
-      scrollTrigger: {
-        trigger: ".values-section",
-        start: "top 85%",
-      }
+    gsap.from(".skill-tag", {
+      scale: 0.8, opacity: 0, duration: 0.4, stagger: 0.04, ease: "back.out(1.4)",
+      scrollTrigger: { trigger: ".skills-section", start: "top 80%" }
     });
   }, { scope: containerRef });
 
   return (
-    <main ref={containerRef} className="flex-1 flex flex-col items-center px-0 pb-32 overflow-hidden bg-white">
-      <PageHeader />
-      <div className="w-full flex flex-col items-center px-8 pt-16">
-      
-      {/* ─── HERO PROFILE ─── */}
-      <motion.div
-        className="w-full max-w-6xl flex flex-col md:flex-row items-center gap-16 mb-32"
-        initial={{ opacity: 0, x: -100 }}
-        animate={{ opacity: 1, x: 0 }}
-      >
-        <div className="w-full md:w-1/2 flex justify-center relative shrink-0">
-          <div className="absolute -inset-4 bg-abcs-red z-0 rotate-3"></div>
-          <div className="relative w-full aspect-square border-8 border-abcs-black shadow-[16px_16px_0px_0px_rgba(17,17,17,1)] -rotate-3 bg-gray-100 z-10 flex flex-col items-center justify-center p-8 text-center">
-            <h2 className="font-heading text-5xl uppercase leading-none">Othmane Bouakline</h2>
-            <div className="font-script text-abcs-red text-5xl mt-4">Fondateur & Dev</div>
-            <p className="mt-6 font-bold font-sans opacity-80">Bac+5 Expert Informatique Web<br/>Mastère spécialisé en architecture web</p>
-            <div className="mt-4 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span className="font-bold text-xs uppercase tracking-widest text-emerald-600">Disponible</span>
+    <main ref={containerRef} className="flex-1 flex flex-col bg-[#f0f0ee]">
+      <PageHeader number="02" title="À PROPOS" subtitle="Qui je suis" />
+
+      {/* Big scrolling text */}
+      <div className="w-full overflow-hidden py-8 border-b border-black/10">
+        <div ref={bigTextRef} className="w-max">
+          <p className="font-heading text-[#111]/[0.06] uppercase leading-none whitespace-nowrap select-none" style={{ fontSize: "clamp(6rem, 18vw, 22rem)" }}>
+            OTHMANE BOUAKLINE WEXOR
+          </p>
+        </div>
+      </div>
+
+      {/* ─── HERO INTRO ─── */}
+      <section className="w-full px-8 py-24 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row gap-16 items-start">
+
+          {/* Left: portrait placeholder */}
+          <div className="md:w-5/12 shrink-0">
+            <div className="relative">
+              <div className="w-full aspect-[4/5] bg-abcs-black flex flex-col items-center justify-center p-10 text-center text-white">
+                <h2 className="font-heading text-4xl uppercase leading-none mb-4">Othmane<br />Bouakline</h2>
+                <div className="font-bold text-abcs-red text-xl mb-6">Fondateur & Dev</div>
+                <p className="font-bold opacity-50 text-sm leading-relaxed">Bac+5 Expert Informatique Web<br />Mastère spécialisé architecture web</p>
+                <div className="mt-6 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="font-bold text-xs uppercase tracking-widest text-emerald-400">Disponible</span>
+                </div>
+              </div>
+              {/* Red accent */}
+              <div className="absolute -bottom-3 -right-3 w-full h-full bg-abcs-red -z-10" />
             </div>
           </div>
-        </div>
 
-        <div className="w-full md:w-1/2 flex flex-col z-20">
-          <h1 className="font-heading text-6xl md:text-8xl text-abcs-black uppercase mb-6 leading-none">
-            QUI JE <span className="text-abcs-red font-script normal-case ml-4 text-7xl">Suis ?</span>
-          </h1>
-          <p className="font-sans text-xl font-bold leading-relaxed mb-8 opacity-90">
-            On ne crée pas des sites. On construit des <span className="text-abcs-red">leviers de croissance</span>. Je permets aux entrepreneurs de se concentrer sur leur métier pendant que je construis une présence digitale efficace et durable.
-          </p>
+          {/* Right: text */}
+          <div className="md:w-7/12 flex flex-col gap-8">
+            <LineReveal>
+              <h1 className="font-heading text-5xl md:text-7xl uppercase leading-[0.85]">
+                QUI JE SUIS ?
+              </h1>
+            </LineReveal>
+            <FadeUp delay={0.2}>
+              <p className="font-bold text-xl leading-snug opacity-90">
+                On ne crée pas des sites. On construit des <span className="text-abcs-red">leviers de croissance</span>. Je permets aux entrepreneurs de se concentrer sur leur métier pendant que je construis une présence digitale efficace et durable.
+              </p>
+            </FadeUp>
+            <FadeUp delay={0.35}>
+              <p className="font-bold text-base opacity-55 leading-relaxed">
+                5 ans d&apos;expérience entre le grand compte (Fujitsu, Inetum) et le freelance créatif — une combinaison rare qui me permet de comprendre à la fois les enjeux techniques et business de mes clients.
+              </p>
+            </FadeUp>
 
-          <div className="grid grid-cols-2 gap-6 border-t-4 border-abcs-black pt-8 mb-8">
-            <div><div className="font-heading text-6xl text-abcs-red">50+</div><div className="font-bold uppercase tracking-widest text-xs">Projets livrés</div></div>
-            <div><div className="font-heading text-6xl text-abcs-red">100%</div><div className="font-bold uppercase tracking-widest text-xs">Satisfaction</div></div>
-            <div><div className="font-heading text-6xl text-abcs-red">48h</div><div className="font-bold uppercase tracking-widest text-xs">Délai de réponse</div></div>
-            <div><div className="font-heading text-6xl text-abcs-red">5 ans</div><div className="font-bold uppercase tracking-widest text-xs">D&apos;expertise</div></div>
+            <FadeUp delay={0.5}>
+              <div className="grid grid-cols-2 gap-6 border-t border-black/15 pt-8">
+                {[
+                  { val: "50+", label: "Projets livrés" },
+                  { val: "100%", label: "Satisfaction" },
+                  { val: "48h", label: "Délai de réponse" },
+                  { val: "5 ans", label: "D'expertise" },
+                ].map((s) => (
+                  <div key={s.label}>
+                    <div className="font-heading text-5xl text-abcs-red">{s.val}</div>
+                    <div className="font-bold text-[10px] uppercase tracking-widest opacity-50 mt-1">{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            </FadeUp>
           </div>
+        </div>
+      </section>
 
-          {/* Skills */}
+      {/* ─── SKILLS ─── */}
+      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
+        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Stack technique</span>
+        <span className="font-heading text-white text-2xl">01</span>
+      </div>
+
+      <section className="skills-section w-full px-8 py-16 bg-[#f0f0ee]">
+        <div className="w-full max-w-7xl mx-auto">
+          <LineReveal className="mb-12">
+            <h2 className="font-heading text-5xl md:text-7xl uppercase leading-none">COMPÉTENCES</h2>
+          </LineReveal>
           <div className="flex flex-wrap gap-3">
             {skills.map((s) => (
-              <span key={s} className="border-4 border-abcs-black px-3 py-2 font-bold text-xs uppercase shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] hover:bg-abcs-black hover:text-white transition-colors cursor-default">
+              <span key={s} className="skill-tag border border-black/20 px-5 py-3 font-bold text-sm uppercase tracking-widest hover:bg-abcs-black hover:text-white hover:border-abcs-black transition-colors duration-200">
                 {s}
               </span>
             ))}
           </div>
         </div>
-      </motion.div>
+      </section>
 
-      {/* ─── TIMELINE PARCOURS ─── */}
-      <section className="timeline-section w-full max-w-6xl border-t-8 border-abcs-black pt-24 mb-32">
-        <h2 className="font-heading text-7xl md:text-9xl text-abcs-black uppercase mb-16 text-center">PARCOURS</h2>
-        <div className="flex flex-col gap-16 w-full max-w-4xl mx-auto">
-          {[
-            { period: "2018-2023", title: "Formation", desc: "Bac+5 Expert Informatique Web · Mastère spécialisé en développement & architecture web. Bases solides, projets académiques concrets.", red: true },
-            { period: "2021-2025", title: "Expérience Pro", desc: "Developer ServiceNow chez Inetum · Consultant ITSM & UX chez Fujitsu · Developer Full Stack chez AJC — 4 ans en grand compte et startups.", red: false },
-            { period: "2025-PRÉSENT", title: "Création de Wexor", desc: "Fondation de l'agence digitale pour accompagner les TPE/PME. Design premium, code sur-mesure, relation directe sans intermédiaire.", red: true },
-          ].map((item, i) => (
-            <div key={i} className={`timeline-item flex flex-col md:flex-row gap-8 border-l-8 pl-8 ${item.red ? "border-abcs-red" : "border-abcs-black"}`}>
-              <div className="font-heading text-4xl md:text-5xl md:w-1/3 shrink-0">{item.period}</div>
-              <div className="md:w-2/3">
-                <h3 className="font-bold text-2xl mb-2 uppercase">{item.title}</h3>
-                <p className="font-sans font-bold opacity-80">{item.desc}</p>
+      {/* ─── TIMELINE ─── */}
+      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
+        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Mon parcours</span>
+        <span className="font-heading text-white text-2xl">02</span>
+      </div>
+
+      <section className="timeline-section w-full px-8 py-16 bg-[#f0f0ee]">
+        <div className="w-full max-w-7xl mx-auto">
+          <LineReveal className="mb-16">
+            <h2 className="font-heading text-5xl md:text-7xl uppercase leading-none">PARCOURS</h2>
+          </LineReveal>
+          <div className="flex flex-col gap-0 border-t border-black/15">
+            {timeline.map((item, i) => (
+              <div key={i} className="timeline-item flex flex-col md:flex-row gap-8 py-10 border-b border-black/15 group hover:bg-abcs-red hover:text-white transition-colors duration-300 px-0 hover:px-6">
+                <div className="font-heading text-3xl md:text-4xl md:w-1/3 shrink-0 leading-tight">{item.period}</div>
+                <div className="md:w-2/3">
+                  <h3 className="font-heading text-3xl uppercase mb-3">{item.title}</h3>
+                  <p className="font-bold opacity-60 group-hover:opacity-80 leading-relaxed">{item.desc}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ─── EXPERIENCES ─── */}
-      <section className="exp-section w-full max-w-6xl border-t-8 border-abcs-black pt-24 mb-32">
-        <h2 className="font-heading text-7xl md:text-9xl text-abcs-black uppercase mb-16 text-center">EXPÉRIENCES</h2>
-        <div className="flex flex-col gap-12">
-          {experiences.map((exp, i) => (
-            <div key={i} className="exp-item flex flex-col md:flex-row gap-8 p-8 border-4 border-abcs-black shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] bg-white hover:-translate-y-1 transition-transform">
-              <div className="md:w-1/3">
-                <div className="font-heading text-3xl uppercase leading-none mb-2">{exp.title}</div>
-                <div className="text-abcs-red font-bold uppercase tracking-widest text-sm">@ {exp.company}</div>
-                {exp.current && <div className="mt-2 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span className="font-bold text-xs text-emerald-600 uppercase">Poste actuel</span></div>}
+      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
+        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Expériences pro</span>
+        <span className="font-heading text-white text-2xl">03</span>
+      </div>
+
+      <section className="exp-section w-full px-8 py-16 bg-[#f0f0ee]">
+        <div className="w-full max-w-7xl mx-auto">
+          <LineReveal className="mb-16">
+            <h2 className="font-heading text-5xl md:text-7xl uppercase leading-none">EXPÉRIENCES</h2>
+          </LineReveal>
+          <div className="flex flex-col gap-px bg-black/10">
+            {experiences.map((exp, i) => (
+              <div key={i} className="exp-item flex flex-col md:flex-row gap-8 p-10 bg-[#f0f0ee] group hover:bg-abcs-black hover:text-white transition-colors duration-300">
+                <div className="md:w-1/3">
+                  <div className="font-heading text-2xl md:text-3xl uppercase leading-tight mb-2">{exp.title}</div>
+                  <div className="text-abcs-red font-bold text-sm uppercase tracking-widest">@ {exp.company}</div>
+                  {exp.current && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="font-bold text-xs text-emerald-400 uppercase">Poste actuel</span>
+                    </div>
+                  )}
+                </div>
+                <div className="md:w-2/3">
+                  <div className="font-bold text-[10px] uppercase tracking-widest opacity-40 mb-4">{exp.period}</div>
+                  <p className="font-bold opacity-70 group-hover:opacity-90 leading-relaxed">{exp.desc}</p>
+                </div>
               </div>
-              <div className="md:w-2/3">
-                <div className="font-bold text-xs uppercase tracking-widest opacity-50 mb-4">{exp.period}</div>
-                <p className="font-bold opacity-80">{exp.desc}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ─── VALUES ─── */}
-      <section className="values-section w-full max-w-6xl border-t-8 border-abcs-black pt-24">
-        <h2 className="font-heading text-7xl md:text-9xl text-abcs-black uppercase mb-16 text-center">
-          NOS <span className="text-abcs-red">VALEURS</span>
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {values.map((v, i) => (
-            <div key={i} className={`value-item p-8 border-8 border-abcs-black hover:-translate-y-2 transition-transform ${i % 3 === 1 ? "bg-abcs-black text-white shadow-[12px_12px_0px_0px_rgba(255,59,0,1)]" : "bg-white shadow-[12px_12px_0px_0px_rgba(17,17,17,1)]"}`}>
-              <div className="font-script text-abcs-red text-5xl mb-4 -rotate-2">{String(i + 1).padStart(2, "0")}</div>
-              <h3 className="font-heading text-4xl uppercase mb-4">{v.t}</h3>
-              <p className={`font-bold ${i % 3 === 1 ? "opacity-80" : "opacity-70"}`}>{v.d}</p>
-            </div>
-          ))}
+      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
+        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Ce qui nous guide</span>
+        <span className="font-heading text-white text-2xl">04</span>
+      </div>
+
+      <section className="w-full px-8 py-16 bg-[#f0f0ee]">
+        <div className="w-full max-w-7xl mx-auto">
+          <LineReveal className="mb-16">
+            <h2 className="font-heading text-5xl md:text-7xl uppercase leading-none">NOS VALEURS</h2>
+          </LineReveal>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black/10">
+            {values.map((v, i) => (
+              <FadeUp key={i} delay={i * 0.1}>
+                <div className={`flex flex-col p-10 h-full group hover:bg-abcs-red hover:text-white transition-colors duration-300 ${i % 3 === 1 ? "bg-abcs-black text-white" : "bg-[#f0f0ee]"}`}>
+                  <span className="font-bold text-[10px] uppercase tracking-widest opacity-40 mb-6">0{i + 1}</span>
+                  <h3 className="font-heading text-4xl uppercase mb-4">{v.t}</h3>
+                  <p className="font-bold opacity-60 group-hover:opacity-80 leading-relaxed">{v.d}</p>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
         </div>
       </section>
-      </div>
+
+      {/* CTA */}
+      <section className="w-full bg-abcs-black text-white py-32 px-8 flex flex-col items-center text-center">
+        <LineReveal className="mb-4">
+          <h2 className="font-heading text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter">ON CRÉE</h2>
+        </LineReveal>
+        <LineReveal delay={0.1} className="mb-12">
+          <h2 className="font-heading text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter text-abcs-red">ENSEMBLE ?</h2>
+        </LineReveal>
+        <FadeUp delay={0.35}>
+          <Link href="/contact" className="inline-flex items-center gap-3 bg-white text-abcs-black px-10 py-5 font-bold text-sm uppercase tracking-widest hover:bg-abcs-red hover:text-white transition-colors group">
+            <span>Démarrer un projet</span>
+            <span className="text-xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </Link>
+        </FadeUp>
+      </section>
     </main>
   );
 }

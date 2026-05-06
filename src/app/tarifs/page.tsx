@@ -1,279 +1,221 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import PageHeader from "@/components/PageHeader";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import Magnetic from "@/components/Magnetic";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const packs = [
-  {
-    tag: "Présence Web", title: "Site Vitrine", price: "À partir de 500€",
-    desc: "Un site vitrine professionnel qui présente ton activité avec élégance et convertit tes visiteurs en clients.",
-    features: ["Design sur-mesure unique", "Responsive mobile first", "SEO on-page complet", "Formulaire de contact", "Google Analytics configuré", "Formation CMS incluse"],
-    stack: "React · Next.js · WordPress", highlight: false,
-  },
-  {
-    tag: "CMS", title: "Pack WordPress", price: "À partir de 1 200€",
-    desc: "Site complet sous WordPress avec thème premium personnalisé, plugins essentiels et prise en main autonome.",
-    features: ["Thème premium personnalisé", "Plugins SEO & sécurité", "Blog & actualités intégré", "Formulaires avancés", "Optimisation vitesse", "Formation incluse"],
-    stack: "WordPress · WooCommerce · Elementor", highlight: false,
-  },
-  {
-    tag: "Développement", title: "Application Web", price: "À partir de 2 500€",
-    desc: "SaaS, dashboard, marketplace ou plateforme métier. Stack moderne, architecture scalable et UX premium.",
-    features: ["Architecture sur-mesure", "Authentification & rôles", "Dashboard utilisateur", "API REST intégrée", "Base de données cloud", "CI/CD & déploiement inclus"],
-    stack: "Next.js · React · Supabase", highlight: true,
-  },
-  {
-    tag: "Transformation", title: "Refonte Web", price: "Sur devis",
-    desc: "Ton site vieilli freine ta croissance ? On le modernise de fond en comble : design, SEO, taux de conversion.",
-    features: ["Audit complet offert", "Nouveau design premium", "Migration de contenu", "Optimisation Core Web Vitals", "SEO technique avancé", "Support post-refonte"],
-    stack: "Sur-mesure · Devis gratuit", highlight: false,
-  },
+function LineReveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <div ref={ref} className={`overflow-hidden ${className}`}>
+      <motion.div initial={{ y: "102%" }} animate={inView ? { y: 0 } : {}} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay }}>
+        {children}
+      </motion.div>
+    </div>
+  );
+}
+
+function FadeUp({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div ref={ref} className={className} initial={{ opacity: 0, y: 40 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay }}>
+      {children}
+    </motion.div>
+  );
+}
+
+const webPacks = [
+  { tag: "Présence Web", title: "Site Vitrine", price: "À partir de 500€", desc: "Un site vitrine professionnel qui présente ton activité avec élégance et convertit tes visiteurs en clients.", features: ["Design sur-mesure unique", "Responsive mobile first", "SEO on-page complet", "Formulaire de contact", "Google Analytics configuré", "Formation CMS incluse"], stack: "React · Next.js · WordPress" },
+  { tag: "CMS", title: "Pack WordPress", price: "À partir de 1 200€", desc: "Site complet sous WordPress avec thème premium personnalisé, plugins essentiels et prise en main autonome.", features: ["Thème premium personnalisé", "Plugins SEO & sécurité", "Blog & actualités intégré", "Formulaires avancés", "Optimisation vitesse", "Formation incluse"], stack: "WordPress · WooCommerce · Elementor" },
+  { tag: "Développement", title: "Application Web", price: "À partir de 2 500€", desc: "SaaS, dashboard, marketplace ou plateforme métier. Stack moderne, architecture scalable et UX premium.", features: ["Architecture sur-mesure", "Authentification & rôles", "Dashboard utilisateur", "API REST intégrée", "Base de données cloud", "CI/CD & déploiement inclus"], stack: "Next.js · React · Supabase", highlight: true },
+  { tag: "Transformation", title: "Refonte Web", price: "Sur devis", desc: "Ton site vieilli freine ta croissance ? On le modernise de fond en comble : design, SEO, taux de conversion.", features: ["Audit complet offert", "Nouveau design premium", "Migration de contenu", "Optimisation Core Web Vitals", "SEO technique avancé", "Support post-refonte"], stack: "Sur-mesure · Devis gratuit" },
 ];
 
 const socialPacks = [
-  { title: "Starter", price: "150€ / mois", phrase: "Idéal pour démarrer", features: ["8 posts / mois", "Design visuel & publications", "Rapport basique mensuel"], highlight: false },
-  { title: "Growth", price: "450€ / mois", phrase: "Pour gagner en visibilité", features: ["12–16 posts / mois", "Création de contenu & stories", "Stratégie & reporting mensuel"], highlight: true },
-  { title: "Pro", price: "1 500€ / mois", phrase: "Campagnes & influence", features: ["Contenu quotidien & community mgmt", "Campagnes paid & micro-influence", "KPI et optimisation continue"], highlight: false },
+  { title: "Starter", price: "150€/mois", desc: "Idéal pour démarrer", features: ["8 posts / mois", "Design visuel & publications", "Rapport mensuel"] },
+  { title: "Growth", price: "450€/mois", desc: "Pour gagner en visibilité", features: ["12–16 posts / mois", "Création contenu & stories", "Stratégie & reporting"], highlight: true },
+  { title: "Pro", price: "1 500€/mois", desc: "Campagnes & influence", features: ["Contenu quotidien", "Campagnes paid & influence", "KPI & optimisation"] },
 ];
 
 const brandingPacks = [
-  {
-    title: "Pack Canva Pro", price: "150 – 350€", desc: "Création rapide, rendu propre & moderne",
-    features: ["Logo principal + 2 variantes", "Palette couleurs & typographies", "Jusqu'à 3 supports print", "Templates réseaux sociaux inclus", "Fichiers HD livrés (PNG, PDF)", "Révisions illimitées"],
-    tools: "Canva Pro", highlight: false,
-  },
-  {
-    title: "Pack Adobe CC", price: "600 – 1 200€", desc: "Identité vectorielle pro, fichiers sources inclus",
-    features: ["Logo vectoriel complet (principal, icône, N&B)", "Charte graphique complète", "Jusqu'à 5 supports print sur-mesure", "Templates réseaux sociaux", "Guide d'utilisation de la marque", "Fichiers sources livrés (AI, PSD, INDD)"],
-    tools: "Adobe Illustrator · Photoshop · InDesign", highlight: true,
-  },
+  { title: "Pack Canva Pro", price: "150–350€", desc: "Création rapide, rendu propre", features: ["Logo + 2 variantes", "Palette & typographies", "3 supports print", "Templates réseaux"], tools: "Canva Pro" },
+  { title: "Pack Adobe CC", price: "600–1 200€", desc: "Identité vectorielle pro", features: ["Logo vectoriel complet", "Charte graphique complète", "5 supports print", "Fichiers sources (AI, PSD)"], tools: "Illustrator · Photoshop", highlight: true },
 ];
 
 export default function TarifsPage() {
+  const [openPack, setOpenPack] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    // Hero Text Stagger
-    gsap.fromTo(".hero-text-line", 
-      { y: 100, opacity: 0 },
-      { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: "power3.out" }
-    );
-
-    // Web Cards Reveal
-    const webCards = gsap.utils.toArray('.web-cards .tarif-card');
-    if (webCards.length > 0) {
-      gsap.fromTo(webCards,
-        { y: 100, opacity: 0 },
-        { 
-          y: 0, 
-          opacity: 1, 
-          duration: 0.8, 
-          stagger: 0.1, 
-          ease: "power3.out",
-          delay: 0.3
-        }
-      );
-    }
-
-    // Other Cards Reveal (Scroll Triggered)
-    const cardGroups = [
-      { selector: '.social-cards', items: '.tarif-card' },
-      { selector: '.branding-cards', items: '.tarif-card' }
-    ];
-
-    cardGroups.forEach((group) => {
-      const items = gsap.utils.toArray(`${group.selector} ${group.items}`);
-      if (items.length > 0) {
-        gsap.fromTo(items,
-          { y: 100, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: group.selector,
-              start: "top 90%",
-              toggleActions: "play none none none",
-              // markers: true // Uncomment for debugging
-            }
-          }
-        );
-      }
-    });
-
-    // Refresh ScrollTrigger after a short delay to account for hydration/layout shifts
-    setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 500);
-
+    gsap.from(".tarif-row", { y: 50, opacity: 0, duration: 0.6, stagger: 0.08, ease: "power2.out", scrollTrigger: { trigger: ".tarifs-list", start: "top 80%" } });
+    gsap.from(".social-row", { x: -40, opacity: 0, duration: 0.6, stagger: 0.1, ease: "power2.out", scrollTrigger: { trigger: ".social-section", start: "top 80%" } });
+    gsap.from(".branding-row", { x: -40, opacity: 0, duration: 0.6, stagger: 0.1, ease: "power2.out", scrollTrigger: { trigger: ".branding-section", start: "top 80%" } });
   }, { scope: containerRef });
 
-  // Simple 3D Tilt effect
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -10; // Max 10 deg
-    const rotateY = ((x - centerX) / centerX) * 10;
-    
-    gsap.to(card, {
-      rotateX,
-      rotateY,
-      transformPerspective: 1000,
-      ease: "power2.out",
-      duration: 0.4
-    });
-  };
-
-  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    gsap.to(e.currentTarget, {
-      rotateX: 0,
-      rotateY: 0,
-      ease: "power3.out",
-      duration: 0.6
-    });
-  };
-
   return (
-    <main ref={containerRef} className="flex-1 flex flex-col items-center px-0 pb-32 bg-white">
-      <PageHeader />
-      <div className="w-full flex flex-col items-center px-8 pt-16">
+    <main ref={containerRef} className="flex-1 flex flex-col bg-[#f0f0ee]">
+      <PageHeader number="03" title="TARIFS" subtitle="Nos offres & investissements" />
 
-      {/* ─── HEADER ─── */}
-      <div className="w-full max-w-7xl mb-24">
-        <div className="inline-block bg-abcs-red text-white font-bold text-xs uppercase tracking-widest px-4 py-2 mb-6">Investissement</div>
-        <h1 className="font-heading text-5xl md:text-[8rem] text-abcs-black uppercase leading-[0.8] mb-6 overflow-hidden">
-          <div className="hero-text-line">COMBIEN VAUT</div>
-          <div className="hero-text-line text-abcs-red">VRAIMENT</div>
-          <div className="hero-text-line">TON IMAGE ?</div>
-        </h1>
-        <p className="hero-text-line font-bold text-xl opacity-70 max-w-2xl">
-          Pas de frais cachés, pas de mauvaises surprises. Juste une tarification claire basée sur la valeur qu&apos;on apporte à ton business.
-        </p>
+      <section className="w-full px-8 pt-20 pb-12 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row gap-12 items-start">
+          <LineReveal className="md:w-1/2">
+            <h2 className="font-heading text-4xl md:text-5xl uppercase leading-tight">Pas de frais cachés.<br />Juste de la valeur.</h2>
+          </LineReveal>
+          <FadeUp delay={0.2} className="md:w-1/2">
+            <p className="font-bold text-lg opacity-60 leading-relaxed">Tarification claire basée sur la valeur réelle. Chaque projet fait l&apos;objet d&apos;un devis personnalisé.</p>
+          </FadeUp>
+        </div>
+      </section>
+
+      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
+        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Services Web</span>
+        <span className="font-heading text-white text-2xl">01</span>
       </div>
 
-      {/* ─── SERVICES WEB ─── */}
-      <div className="web-cards w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-8 mb-32">
-        {packs.map((p, i) => (
-          <div 
-            key={i} 
-            className={`tarif-card p-8 border-8 border-abcs-black flex flex-col transition-all relative ${p.highlight ? "bg-abcs-black text-white shadow-[16px_16px_0px_0px_rgba(255,59,0,1)]" : "bg-white shadow-[16px_16px_0px_0px_rgba(17,17,17,1)]"}`}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            style={{ transformStyle: "preserve-3d" }}
-          >
-            {p.highlight && <div className="absolute -top-5 right-8 bg-abcs-red text-white font-bold px-4 py-2 text-xs uppercase tracking-widest translate-z-[50px]">Populaire</div>}
-            <div className={`text-xs font-bold uppercase tracking-widest mb-2 ${p.highlight ? "text-abcs-red" : "opacity-50"} translate-z-[20px]`}>{p.tag}</div>
-            <h2 className="font-heading text-5xl uppercase mb-2 translate-z-[40px]">{p.title}</h2>
-            <div className={`font-script text-4xl mb-6 ${p.highlight ? "text-abcs-red" : "text-abcs-red"}`}>{p.price}</div>
-            <p className={`font-bold mb-8 ${p.highlight ? "opacity-80" : "opacity-70"}`}>{p.desc}</p>
-            <ul className="flex flex-col gap-3 mb-8">
-              {p.features.map((f, j) => (
-                <li key={j} className={`flex items-center gap-3 font-bold text-sm border-b pb-3 ${p.highlight ? "border-white/10" : "border-black/10"}`}>
-                  <span className="text-abcs-red font-heading text-lg">✓</span> {f}
-                </li>
-              ))}
-            </ul>
-            <div className={`text-xs font-bold uppercase tracking-widest mt-auto mb-6 ${p.highlight ? "opacity-50" : "opacity-40"}`}>{p.stack}</div>
-            <a href="/contact" className={`px-8 py-4 font-bold text-sm text-center uppercase tracking-widest transition-colors ${p.highlight ? "bg-abcs-red text-white hover:bg-white hover:text-abcs-black" : "bg-abcs-black text-white hover:bg-abcs-red"}`}>
-              Démarrer mon projet →
-            </a>
-          </div>
-        ))}
-      </div>
-
-      {/* ─── OFFRE PHARE ─── */}
-      <div className="w-full max-w-7xl border-t-8 border-abcs-black pt-24 mb-32">
-        <div className="inline-block bg-abcs-black text-white font-bold text-xs uppercase tracking-widest px-4 py-2 mb-6">L&apos;Offre Phare</div>
-        <div className="flex flex-col md:flex-row gap-12 items-center">
-          <div className="md:w-1/2">
-            <h2 className="font-heading text-6xl md:text-8xl uppercase leading-[0.8] mb-6">
-              LE SITE WEB<br/><span className="text-abcs-red">SUR-MESURE</span>
-            </h2>
-            <p className="font-bold text-xl opacity-70">Un site rapide, performant et optimisé pour Google. Pensé comme ton meilleur commercial automatisé.</p>
-            <div className="font-script text-abcs-red text-5xl mt-8">500€ — 5k€</div>
-            <p className="text-xs font-bold opacity-50 mt-2">*Tarif exact via devis, selon la complexité et le volume de pages.</p>
-          </div>
-          <div className="md:w-1/2 border-8 border-abcs-black p-8 bg-white shadow-[16px_16px_0px_0px_rgba(255,59,0,1)]">
-            <ul className="flex flex-col gap-4 mb-8">
-              {["Design Ultra-Premium", "Code très rapide", "Optimisé SEO On-Page", "Accessible Mobile First", "Copywriting inclus*", "Formation CMS / Admin"].map((f) => (
-                <li key={f} className="flex items-center gap-3 font-bold border-b border-black/10 pb-3">
-                  <span className="text-abcs-red font-heading text-xl">✓</span> {f}
-                </li>
-              ))}
-            </ul>
-            <div className="text-xs font-bold uppercase tracking-widest opacity-40 mb-6">React · WordPress · Next.js</div>
-            <a href="/contact" className="block bg-abcs-black text-white px-8 py-4 font-bold text-center uppercase tracking-widest hover:bg-abcs-red transition-colors">
-              Démarrer mon projet
-            </a>
+      <section className="w-full px-8 py-16 bg-[#f0f0ee]">
+        <div className="w-full max-w-7xl mx-auto">
+          <LineReveal className="mb-16">
+            <h2 className="font-heading text-6xl md:text-8xl uppercase leading-none">NOS SERVICES WEB</h2>
+          </LineReveal>
+          <div className="tarifs-list flex flex-col border-t border-black/15">
+            {webPacks.map((p, i) => (
+              <div key={i} className="tarif-row border-b border-black/15">
+                <button onClick={() => setOpenPack(openPack === i ? null : i)} className="w-full flex items-center justify-between py-7 text-left group hover:text-abcs-red transition-colors">
+                  <div className="flex items-center gap-8">
+                    <span className="font-bold text-[10px] opacity-40 w-6">0{i+1}</span>
+                    <div className="flex flex-col md:flex-row md:items-center md:gap-6">
+                      <span className="font-heading text-2xl md:text-4xl uppercase">{p.title}</span>
+                      {p.highlight && <span className="bg-abcs-red text-white font-bold text-[9px] uppercase tracking-widest px-3 py-1 w-fit">Populaire</span>}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <span className="hidden md:block font-bold text-sm opacity-50 group-hover:opacity-100 transition-opacity">{p.price}</span>
+                    <motion.span animate={{ rotate: openPack === i ? 45 : 0 }} transition={{ duration: 0.25 }} className="font-heading text-3xl">+</motion.span>
+                  </div>
+                </button>
+                <AnimatePresence>
+                  {openPack === i && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.35 }} className="overflow-hidden">
+                      <div className="pb-10 pl-14 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                          <p className="font-bold text-base opacity-60 leading-relaxed mb-6">{p.desc}</p>
+                          <ul className="flex flex-col gap-3">
+                            {p.features.map((f) => (
+                              <li key={f} className="flex items-center gap-3 font-bold text-sm border-b border-black/10 pb-3">
+                                <span className="text-abcs-red text-lg">✓</span> {f}
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="mt-6 font-bold text-[10px] uppercase tracking-widest opacity-40">{p.stack}</div>
+                        </div>
+                        <div className="flex flex-col justify-between">
+                          <div className="font-heading text-5xl text-abcs-red">{p.price}</div>
+                          <Link href="/contact" className="inline-flex items-center gap-3 bg-abcs-black text-white px-8 py-4 font-bold text-sm uppercase tracking-widest hover:bg-abcs-red transition-colors mt-8 w-fit group">
+                            <span>Démarrer mon projet</span>
+                            <span className="text-xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+                          </Link>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
           </div>
         </div>
+      </section>
+
+      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
+        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Community Management</span>
+        <span className="font-heading text-white text-2xl">02</span>
       </div>
 
-      {/* ─── PACKS RÉSEAUX SOCIAUX ─── */}
-      <div className="w-full max-w-7xl border-t-8 border-abcs-black pt-24 mb-32 relative">
-        <h2 className="font-heading text-6xl md:text-8xl text-abcs-black uppercase leading-none mb-16 text-center">Community<br/>Management</h2>
-        <div className="social-cards grid grid-cols-1 md:grid-cols-3 gap-6">
-          {socialPacks.map((p, i) => (
-            <div 
-              key={i} 
-              className={`tarif-card p-6 border-4 border-abcs-black flex flex-col hover:-translate-y-2 transition-transform ${p.highlight ? "bg-abcs-red text-white shadow-[8px_8px_0px_0px_rgba(17,17,17,1)]" : "bg-white shadow-[8px_8px_0px_0px_rgba(17,17,17,1)]"} ${i === 1 ? "-mt-4" : ""}`}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-            >
-              {p.highlight && <div className="absolute -top-5 right-6 bg-abcs-red text-white font-bold px-4 py-1 text-xs uppercase">Populaire</div>}
-              <h3 className="font-heading text-4xl uppercase mb-2">{p.title}</h3>
-              <div className={`font-script text-4xl mb-2 ${p.highlight ? "text-white" : "text-abcs-red"}`}>{p.price}</div>
-              <div className={`text-sm font-bold mb-6 ${p.highlight ? "opacity-60" : "opacity-50"}`}>{p.phrase}</div>
-              <ul className="flex flex-col gap-3 mb-8">
-                {p.features.map((f) => <li key={f} className={`flex gap-2 text-sm font-bold border-b pb-2 ${p.highlight ? "border-white/10" : "border-black/10"}`}><span className="text-abcs-red">→</span>{f}</li>)}
-              </ul>
-              <a href="/contact" className={`mt-auto px-6 py-3 font-bold text-sm text-center uppercase tracking-widest ${p.highlight ? "bg-white text-abcs-red hover:bg-black hover:text-white" : "bg-abcs-black text-white hover:bg-abcs-red"} transition-colors`}>
-                Choisir ce plan
-              </a>
-            </div>
-          ))}
+      <section className="social-section w-full px-8 py-16 bg-[#f0f0ee]">
+        <div className="w-full max-w-7xl mx-auto">
+          <LineReveal className="mb-16">
+            <h2 className="font-heading text-6xl md:text-8xl uppercase leading-none">COMMUNITY<br />MANAGEMENT</h2>
+          </LineReveal>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-black/10">
+            {socialPacks.map((p, i) => (
+              <div key={i} className={`social-row flex flex-col p-10 ${p.highlight ? "bg-abcs-black text-white" : "bg-[#f0f0ee]"} group hover:bg-abcs-red hover:text-white transition-colors duration-300`}>
+                <div className="flex items-start justify-between mb-8">
+                  <h3 className="font-heading text-4xl uppercase">{p.title}</h3>
+                  {p.highlight && <span className="bg-abcs-red group-hover:bg-white group-hover:text-abcs-red text-white font-bold text-[9px] uppercase px-3 py-1 transition-colors">Top</span>}
+                </div>
+                <div className="font-heading text-4xl mb-2">{p.price}</div>
+                <div className="font-bold text-xs opacity-50 mb-8">{p.desc}</div>
+                <ul className="flex flex-col gap-3 flex-1">
+                  {p.features.map((f) => (
+                    <li key={f} className="flex items-start gap-3 font-bold text-sm border-b border-current/10 pb-3 opacity-80">
+                      <span>→</span> {f}
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/contact" className="mt-8 inline-flex items-center gap-2 font-bold text-xs uppercase tracking-widest border-b border-current pb-1 w-fit opacity-60 hover:opacity-100 transition-opacity">
+                  Choisir ce plan ↗
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
+      </section>
+
+      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
+        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Branding & Print</span>
+        <span className="font-heading text-white text-2xl">03</span>
       </div>
 
-      {/* ─── BRANDING & PRINT ─── */}
-      <div className="w-full max-w-7xl border-t-8 border-abcs-black pt-24 mb-16">
-        <h2 className="font-heading text-6xl md:text-8xl text-abcs-black uppercase leading-none mb-16 text-center">Branding &<br/>Création</h2>
-        <div className="branding-cards grid grid-cols-1 md:grid-cols-2 gap-8">
-          {brandingPacks.map((p, i) => (
-            <div 
-              key={i} 
-              className={`tarif-card p-8 border-4 border-abcs-black flex flex-col hover:-translate-y-2 transition-transform relative ${p.highlight ? "bg-abcs-black text-white shadow-[12px_12px_0px_0px_rgba(255,59,0,1)]" : "bg-white shadow-[12px_12px_0px_0px_rgba(17,17,17,1)]"}`}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-            >
-              {p.highlight && <div className="absolute -top-5 right-8 bg-abcs-red text-white font-bold px-4 py-2 text-xs uppercase">Recommandé</div>}
-              <h3 className="font-heading text-4xl uppercase mb-2">{p.title}</h3>
-              <div className="font-script text-abcs-red text-4xl mb-2">{p.price}</div>
-              <div className={`text-sm font-bold mb-6 ${p.highlight ? "opacity-60" : "opacity-50"}`}>{p.desc}</div>
-              <ul className="flex flex-col gap-3 mb-8">
-                {p.features.map((f) => <li key={f} className={`flex gap-2 text-sm font-bold border-b pb-2 ${p.highlight ? "border-white/10" : "border-black/10"}`}><span className="text-abcs-red">✓</span>{f}</li>)}
-              </ul>
-              <div className={`text-xs font-bold uppercase tracking-widest mt-auto mb-6 ${p.highlight ? "opacity-40" : "opacity-30"}`}>{p.tools}</div>
-              <a href="/contact" className={`px-8 py-4 font-bold text-sm text-center uppercase tracking-widest transition-colors ${p.highlight ? "bg-abcs-red text-white hover:bg-white hover:text-abcs-black" : "bg-abcs-black text-white hover:bg-abcs-red"}`}>
-                Demander un devis
-              </a>
-            </div>
-          ))}
+      <section className="branding-section w-full px-8 py-16 bg-[#f0f0ee]">
+        <div className="w-full max-w-7xl mx-auto">
+          <LineReveal className="mb-16">
+            <h2 className="font-heading text-6xl md:text-8xl uppercase leading-none">BRANDING &<br />CRÉATION</h2>
+          </LineReveal>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black/10">
+            {brandingPacks.map((p, i) => (
+              <div key={i} className={`branding-row flex flex-col p-10 ${p.highlight ? "bg-abcs-black text-white" : "bg-[#f0f0ee]"} group hover:bg-abcs-red hover:text-white transition-colors duration-300`}>
+                {p.highlight && <span className="bg-abcs-red group-hover:bg-white group-hover:text-abcs-red text-white font-bold text-[9px] uppercase px-3 py-1 w-fit mb-6 transition-colors">Recommandé</span>}
+                <h3 className="font-heading text-4xl md:text-5xl uppercase mb-2">{p.title}</h3>
+                <div className="font-heading text-3xl text-abcs-red group-hover:text-white mb-2 transition-colors">{p.price}</div>
+                <div className="font-bold text-sm opacity-50 mb-8">{p.desc}</div>
+                <ul className="flex flex-col gap-3 flex-1 mb-8">
+                  {p.features.map((f) => (
+                    <li key={f} className="flex items-start gap-3 font-bold text-sm border-b border-current/10 pb-3 opacity-80">
+                      <span>✓</span> {f}
+                    </li>
+                  ))}
+                </ul>
+                <div className="font-bold text-[10px] uppercase tracking-widest opacity-30 mb-6">{p.tools}</div>
+                <Link href="/contact" className="inline-flex items-center gap-3 border border-current px-6 py-3 font-bold text-xs uppercase tracking-widest w-fit hover:bg-white hover:text-abcs-black hover:border-white transition-colors">
+                  Demander un devis ↗
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-      </div>
+      </section>
+
+      <section className="w-full bg-abcs-black text-white py-32 px-8 flex flex-col items-center text-center">
+        <LineReveal className="mb-4">
+          <h2 className="font-heading text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter">UN PROJET ?</h2>
+        </LineReveal>
+        <LineReveal delay={0.1} className="mb-12">
+          <h2 className="font-heading text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter text-abcs-red">ON EN PARLE.</h2>
+        </LineReveal>
+        <FadeUp delay={0.35}>
+          <Link href="/contact" className="inline-flex items-center gap-3 bg-white text-abcs-black px-10 py-5 font-bold text-sm uppercase tracking-widest hover:bg-abcs-red hover:text-white transition-colors group">
+            <span>Obtenir un devis gratuit</span>
+            <span className="text-xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </Link>
+        </FadeUp>
+      </section>
     </main>
   );
 }

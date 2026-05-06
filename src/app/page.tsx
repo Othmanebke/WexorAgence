@@ -1,64 +1,55 @@
 "use client";
 
-import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import CountUp from "@/components/CountUp";
-import Magnetic from "@/components/Magnetic";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const cyclicWords = ["convertissent", "sur-mesure", "performants", "mémorables", "visibles"];
+const navLinks = [
+  { label: "Tarifs", href: "/tarifs" },
+  { label: "Portfolio", href: "/portfolio" },
+  { label: "Qui je suis", href: "/about" },
+  { label: "Contact", href: "/contact" },
+];
 
 const services = [
-  { id: 1, title: "Site web sur-mesure", desc: "Design unique, responsive, optimisé SEO — développé en code ou CMS selon tes besoins et objectifs.", large: true, dark: false },
-  { id: 2, title: "Refonte & optimisation", desc: "Audit UX/UI complet, optimisation des performances et refonte stratégique pour booster tes conversions.", large: false, dark: true, tall: true },
-  { id: 3, title: "SEO & Référencement", desc: "Stratégie de visibilité on-page et technique pour grimper dans les résultats Google.", large: false, dark: false },
-  { id: 4, title: "Flyers & supports print", desc: "Création de flyers, cartes de visite, brochures et visuels print professionnels.", large: false, dark: false, accent: true },
-  { id: 5, title: "Community Management", desc: "Gestion de tes réseaux sociaux, création de contenu engageant et stratégie d'influence.", large: false, dark: false },
-  { id: 6, title: "Intégration IA", desc: "Chatbots, automatisation et outils intelligents pour enrichir l'expérience de tes visiteurs.", large: true, dark: false },
+  { n: "01", title: "Site web sur-mesure", tags: "React · Next.js · WordPress" },
+  { n: "02", title: "Refonte & Optimisation", tags: "UX/UI · Performance" },
+  { n: "03", title: "SEO & Référencement", tags: "On-page · Technique" },
+  { n: "04", title: "Flyers & Print", tags: "Figma · Adobe" },
+  { n: "05", title: "Community Management", tags: "Instagram · LinkedIn" },
+  { n: "06", title: "Intégration IA", tags: "Chatbots · Automatisation" },
 ];
-
-const testimonials = []; // Removed section
-
 
 const faqs = [
-  { q: "Comment commencer un projet avec votre agence ?", a: "Tu peux nous contacter via le formulaire ou fixer un appel découverte. On fait un brief rapide, puis on t'envoie un devis sous 48 h." },
+  { q: "Comment commencer un projet ?", a: "Via le formulaire ou un appel découverte. Brief rapide, puis devis sous 48 h." },
   { q: "Combien de temps pour un site vitrine ?", a: "Généralement 1 à 3 semaines selon le contenu et les validations." },
-  { q: "Offrez-vous la gestion des réseaux sociaux ?", a: "Oui — nous proposons des packs de community management et des campagnes d'influence sur demande." },
-  { q: "Proposez-vous des options de support/maintenance ?", a: "Oui, maintenance mensuelle, mises à jour et monitoring sont disponibles en option." },
+  { q: "Offrez-vous la gestion des réseaux sociaux ?", a: "Oui — packs community management et campagnes d'influence sur demande." },
+  { q: "Proposez-vous du support & maintenance ?", a: "Oui, maintenance mensuelle, mises à jour et monitoring disponibles en option." },
 ];
 
-const techLogos = ["React", "Next.js", "Vercel", "Figma", "Framer", "WordPress", "Tailwind", "SEO", "React", "Next.js", "Vercel", "Figma", "Framer", "WordPress", "Tailwind", "SEO"];
-
-// Reusable reveal wrapper
-function Reveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+// Clip-reveal for a single line of text
+function LineReveal({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
-  return (
-    <motion.div
-      ref={ref}
-      className={className}
-      initial={{ opacity: 0, y: 60 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function RevealLine({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: true, margin: "-60px" });
   return (
     <div ref={ref} className={`overflow-hidden ${className}`}>
       <motion.div
-        initial={{ y: "100%" }}
+        initial={{ y: "102%" }}
         animate={inView ? { y: 0 } : {}}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay }}
       >
         {children}
       </motion.div>
@@ -66,367 +57,531 @@ function RevealLine({ children, delay = 0, className = "" }: { children: React.R
   );
 }
 
+function FadeUp({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      initial={{ opacity: 0, y: 40 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 export default function Home() {
-  const heroRef = useRef(null);
-  const { scrollYProgress: heroProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const heroOpacity = useTransform(heroProgress, [0, 0.5], [1, 0]);
-  const heroScale = useTransform(heroProgress, [0, 0.5], [1, 0.96]);
-
-  const marqueeRef = useRef<HTMLDivElement>(null);
-  const bentoRef = useRef<HTMLDivElement>(null);
-
-  const [wordIdx, setWordIdx] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const bigTextRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const marqueeRef = useRef<HTMLDivElement>(null);
 
+  // GSAP parallax + scroll effects
   useGSAP(() => {
-    // Dynamic Marquee
+    // Big overflowing text parallax
+    if (bigTextRef.current) {
+      gsap.fromTo(
+        bigTextRef.current,
+        { xPercent: -8 },
+        {
+          xPercent: 4,
+          ease: "none",
+          scrollTrigger: {
+            trigger: bigTextRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1.2,
+          },
+        }
+      );
+    }
+
+    // Image parallax
+    if (imageRef.current) {
+      gsap.fromTo(
+        imageRef.current,
+        { yPercent: -8 },
+        {
+          yPercent: 8,
+          ease: "none",
+          scrollTrigger: {
+            trigger: imageRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1.5,
+          },
+        }
+      );
+    }
+
+    // Marquee
     if (marqueeRef.current) {
-      let direction = 1; // 1 = left, -1 = right
-      const marqueeInner = marqueeRef.current.querySelector('.animate-marquee-gsap');
-      
-      if (marqueeInner) {
-        // Use a continuous x animation
-        const tween = gsap.to(marqueeInner, {
+      const inner = marqueeRef.current.querySelector(".marquee-inner");
+      if (inner) {
+        gsap.to(inner, {
           xPercent: -50,
           repeat: -1,
-          duration: 15,
+          duration: 18,
           ease: "none",
-        }).totalProgress(0.5);
-
-        ScrollTrigger.create({
-          trigger: document.body,
-          start: "top top",
-          end: "bottom bottom",
-          onUpdate: (self) => {
-            if (self.direction !== direction) {
-              direction = self.direction;
-              gsap.to(tween, { timeScale: direction, overwrite: true });
-            }
-            // Add a little speed bump on scroll
-            gsap.to(tween, { timeScale: direction * 2.5, duration: 0.1, overwrite: true, onComplete: () => {
-              gsap.to(tween, { timeScale: direction, duration: 1, ease: "power2.out", overwrite: true });
-            }});
-          }
         });
       }
     }
 
-    // Bento Grid Stagger
-    if (bentoRef.current) {
-      const bentoItems = gsap.utils.toArray('.bento-item');
-      gsap.from(bentoItems, {
-        y: 150,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: bentoRef.current,
-          start: "top 75%",
-          toggleActions: "play none none reverse"
-        }
-      });
-    }
+    // Service rows stagger reveal
+    const rows = gsap.utils.toArray(".service-row-item");
+    gsap.from(rows, {
+      y: 30,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.08,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".services-section",
+        start: "top 75%",
+        toggleActions: "play none none none",
+      },
+    });
   });
 
-  useEffect(() => {
-    const t = setInterval(() => setWordIdx((i) => (i + 1) % cyclicWords.length), 2000);
-    return () => clearInterval(t);
-  }, []);
-
   return (
-    <main ref={heroRef} className="flex flex-col min-h-screen bg-white overflow-hidden pb-32">
+    <main className="flex flex-col min-h-screen bg-[#f0f0ee] overflow-hidden">
 
       {/* ─── HERO ─── */}
-      <motion.section
-        ref={heroRef}
-        style={{ opacity: heroOpacity, scale: heroScale }}
-        className="w-full min-h-screen flex flex-col pt-8 px-8 sticky top-0 will-change-transform"
-      >
-        <div className="flex flex-col lg:flex-row justify-between w-full">
-          <div className="flex flex-col overflow-hidden">
-            <motion.h1
-              className="font-heading text-abcs-red text-[12rem] md:text-[20rem] leading-[0.75] tracking-tighter"
-              initial={{ y: "110%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            >
-              WEX
-            </motion.h1>
+      <section className="w-full min-h-screen flex flex-col px-8 pt-8 pb-0 relative">
+
+        {/* Top row: Logo + Nav */}
+        <div className="flex items-start justify-between w-full">
+
+          {/* Logo block */}
+          <div className="flex flex-col">
+            <div className="overflow-hidden">
+              <motion.h1
+                className="font-heading text-abcs-red leading-[0.82] tracking-tighter select-none"
+                style={{ fontSize: "clamp(7rem, 18vw, 22rem)" }}
+                initial={{ y: "110%" }}
+                animate={{ y: 0 }}
+                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+              >
+                WEX
+              </motion.h1>
+            </div>
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
-              className="flex justify-between font-bold text-abcs-red text-xs md:text-sm tracking-widest mt-4"
+              transition={{ delay: 0.7, duration: 0.6 }}
+              className="flex justify-between font-bold text-abcs-red text-[10px] md:text-xs tracking-[0.2em] uppercase mt-3"
             >
               <span>WEXOR AGENCE</span>
               <span>CRÉATION WEB</span>
             </motion.div>
           </div>
 
-          <div className="flex flex-col justify-between items-end pt-12 lg:pt-8 gap-y-32">
-            <motion.nav
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              className="flex gap-6 font-bold text-xl md:text-3xl tracking-tight"
-            >
-              {["Tarifs", "Portfolio", "Qui je suis", "Contact"].map((label, i) => {
-                const hrefs = ["/tarifs", "/portfolio", "/about", "/contact"];
-                return (
-                  <Magnetic key={label}>
-                    <a href={hrefs[i]} className="hover:text-abcs-red transition-colors relative group overflow-hidden block">
-                      {label}{i < 3 ? "," : ""}
-                      <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-abcs-red transition-all duration-300 group-hover:w-full" />
-                    </a>
-                  </Magnetic>
-                );
-              })}
-            </motion.nav>
-          </div>
-        </div>
+          {/* Nav — comma separated */}
+          <motion.nav
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="hidden md:flex items-center gap-1 font-bold text-lg md:text-2xl lg:text-3xl tracking-tight pt-2"
+          >
+            {navLinks.map((link, i) => (
+              <span key={link.href} className="flex items-center">
+                <a
+                  href={link.href}
+                  className="hover:text-abcs-red transition-colors duration-200"
+                >
+                  {link.label}
+                </a>
+                {i < navLinks.length - 1 && (
+                  <span className="text-abcs-black/40 mr-1">,</span>
+                )}
+              </span>
+            ))}
+          </motion.nav>
 
-        {/* ─── CENTERED ANIMATED TAGLINE ─── */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.75, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="flex-1 flex flex-col items-center justify-center text-center py-12"
-        >
-          <p className="font-heading text-3xl md:text-5xl lg:text-6xl tracking-tight text-abcs-black uppercase mb-4">
-            ON CRÉE DES SITES QUI
-          </p>
-          {/* Big animated word - Sticker effect */}
-          <div className="relative pb-12 pt-0 -mt-10 md:-mt-16">
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={wordIdx}
-                initial={{ y: 50, scale: 0.2, rotate: -25, opacity: 0 }}
-                animate={{ y: 0, scale: 1.1, rotate: -5, opacity: 1 }}
-                exit={{ y: -50, scale: 0.5, rotate: 10, opacity: 0 }}
-                transition={{ 
-                  type: "spring",
-                  stiffness: 260,
-                  damping: 20
-                }}
-                className="block font-script text-abcs-red leading-none select-none drop-shadow-[0_10px_20px_rgba(255,59,0,0.2)]"
-                style={{ fontSize: "clamp(80px, 16vw, 200px)" }}
-              >
-                {cyclicWords[wordIdx]}
-              </motion.span>
-            </AnimatePresence>
-          </div>
-          <motion.p
+          {/* Mobile nav toggle placeholder */}
+          <motion.a
+            href="/contact"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.1, duration: 0.6 }}
-            className="font-bold text-sm md:text-base uppercase tracking-widest opacity-50 mt-6"
+            transition={{ delay: 0.5, duration: 0.6 }}
+            className="md:hidden font-bold text-xs uppercase tracking-widest border border-abcs-black px-4 py-2 hover:bg-abcs-black hover:text-white transition-colors"
           >
-            Sites sur-mesure · Refonte · SEO · Print
-          </motion.p>
-        </motion.div>
+            Menu
+          </motion.a>
+        </div>
 
-        {/* Stats + CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9, duration: 0.7 }}
-          className="flex flex-col md:flex-row justify-between items-end mt-auto pb-16 gap-8"
-        >
-          <div className="flex gap-12">
-            {[
-              { end: 10, prefix: "+", label: "Clients accompagnés" },
-              { end: 100, suffix: "%", label: "Satisfaction client" },
-              { end: 48, suffix: "h", label: "Délai de réponse max" },
-            ].map((s) => (
-              <div key={s.label}>
-                <div className="font-heading text-5xl text-abcs-red">
-                  <CountUp end={s.end} prefix={s.prefix} suffix={s.suffix} duration={2} />
+        {/* Center / Right tagline */}
+        <div className="flex-1 flex flex-col md:flex-row items-end md:items-center justify-between mt-8 md:mt-0 pb-16 gap-12">
+
+          {/* Bottom-left description */}
+          <motion.p
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.85, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="text-sm md:text-base font-bold opacity-60 max-w-[280px] leading-relaxed self-end md:self-auto"
+          >
+            Développé pour les marques
+            <br />ambitieuses qui refusent le
+            <br />compromis.
+          </motion.p>
+
+          {/* Right block: tagline + CTA + orange banner */}
+          <div className="flex flex-col items-start md:items-start gap-8 max-w-xl">
+            <div className="overflow-hidden">
+              <motion.h2
+                className="font-heading text-3xl md:text-5xl lg:text-6xl leading-[1.0] tracking-tight text-abcs-black"
+                initial={{ y: "102%" }}
+                animate={{ y: 0 }}
+                transition={{ delay: 0.6, duration: 1, ease: [0.22, 1, 0.36, 1] }}
+              >
+                L&apos;agence qui transforme
+                <br />ton image en
+                <br />machine de guerre.
+              </motion.h2>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.05, duration: 0.6 }}
+              className="flex flex-col gap-4"
+            >
+              <a
+                href="/contact"
+                className="inline-flex items-center gap-3 bg-abcs-black text-white px-6 py-3 font-bold text-sm uppercase tracking-widest hover:bg-abcs-red transition-colors duration-300 group"
+              >
+                <span>Nous découvrir</span>
+                <span className="text-lg leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200">↗</span>
+              </a>
+
+              {/* Numbered orange banner */}
+              <a
+                href="#about"
+                className="flex items-center justify-between bg-abcs-red text-white px-6 py-3 font-bold text-xs uppercase tracking-[0.15em] w-full hover:bg-abcs-black transition-colors duration-300 group"
+              >
+                <span>Notre approche — Qui on est</span>
+                <span className="font-heading text-2xl leading-none group-hover:translate-x-1 transition-transform">01</span>
+              </a>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── BIG SCROLLING TEXT + IMAGE (Section 01) ─── */}
+      <section id="about" className="w-full relative overflow-hidden py-24 border-t border-black/10">
+
+        {/* Overflowing massive text */}
+        <div ref={bigTextRef} className="w-max">
+          <p
+            className="font-heading text-abcs-black/10 uppercase leading-none whitespace-nowrap select-none"
+            style={{ fontSize: "clamp(8rem, 22vw, 28rem)" }}
+          >
+            ON A GRANDI POUR TES PROJETS
+          </p>
+        </div>
+
+        {/* Content overlay */}
+        <div className="w-full max-w-7xl mx-auto px-8 flex flex-col md:flex-row gap-16 items-start -mt-16 relative z-10">
+
+          {/* Image */}
+          <div className="w-full md:w-5/12 overflow-hidden relative h-[420px] md:h-[560px] flex-shrink-0">
+            <div ref={imageRef} className="w-full h-full bg-abcs-black">
+              {/* Placeholder image avec gradient */}
+              <div className="w-full h-full bg-gradient-to-br from-[#1a1a1a] to-[#333] flex items-end p-8">
+                <p className="font-bold text-white/30 text-xs uppercase tracking-widest">Wexor Studio — 2024</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Text content */}
+          <div className="w-full md:w-7/12 flex flex-col gap-8 pt-8">
+            <LineReveal>
+              <h2 className="font-heading text-5xl md:text-7xl lg:text-8xl leading-[0.85] tracking-tight uppercase">
+                Wexor,<br />c&apos;est quoi ?
+              </h2>
+            </LineReveal>
+
+            <FadeUp delay={0.2}>
+              <p className="font-bold text-xl md:text-2xl leading-snug opacity-90">
+                Une agence web fondée sur une obsession :
+                faire des sites qui <em>convertissent</em>, pas juste des sites
+                qui font beau.
+              </p>
+            </FadeUp>
+
+            <FadeUp delay={0.35}>
+              <p className="font-bold text-base opacity-55 leading-relaxed max-w-md">
+                Du code propre. Du design sur-mesure. Une stratégie pensée pour
+                tes objectifs — pas pour les nôtres. Pas de templates, pas de
+                copier-coller, juste du résultat.
+              </p>
+            </FadeUp>
+
+            <FadeUp delay={0.5}>
+              <div className="flex gap-12 pt-4 border-t border-black/15">
+                {[
+                  { end: 10, prefix: "+", label: "Clients accompagnés" },
+                  { end: 100, suffix: "%", label: "Satisfaction" },
+                  { end: 48, suffix: "h", label: "Délai de réponse" },
+                ].map((s) => (
+                  <div key={s.label}>
+                    <div className="font-heading text-4xl md:text-5xl text-abcs-red">
+                      <CountUp end={s.end} prefix={s.prefix} suffix={s.suffix} duration={2} />
+                    </div>
+                    <div className="font-bold text-[10px] uppercase tracking-widest opacity-50 mt-1">{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            </FadeUp>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── ORANGE DIVIDER 02 ─── */}
+      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
+        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Ce qu&apos;on fait</span>
+        <span className="font-heading text-white text-2xl">02</span>
+      </div>
+
+      {/* ─── SERVICES LIST ─── */}
+      <section className="services-section w-full py-16 px-8 bg-[#f0f0ee]">
+        <div className="w-full max-w-7xl mx-auto">
+          <LineReveal className="mb-16">
+            <h2 className="font-heading text-6xl md:text-9xl uppercase leading-none tracking-tight">
+              NOS SERVICES
+            </h2>
+          </LineReveal>
+
+          <div className="flex flex-col border-t border-black/15">
+            {services.map((s, i) => (
+              <a
+                key={i}
+                href="/tarifs"
+                className="service-row-item service-row flex items-center justify-between py-7 px-0 group"
+              >
+                <div className="flex items-center gap-8">
+                  <span className="font-bold text-[10px] uppercase tracking-widest opacity-40 w-8">{s.n}</span>
+                  <span className="font-heading text-2xl md:text-4xl lg:text-5xl uppercase tracking-tight">
+                    {s.title}
+                  </span>
                 </div>
-                <div className="font-bold text-xs uppercase tracking-widest opacity-70">{s.label}</div>
+                <div className="flex items-center gap-6">
+                  <span className="hidden md:block font-bold text-xs uppercase tracking-widest opacity-40 group-hover:opacity-100 transition-opacity">
+                    {s.tags}
+                  </span>
+                  <span className="service-arrow font-heading text-2xl leading-none transition-transform duration-200">↗</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── QUOTE SECTION (03) ─── */}
+      <section className="w-full py-32 px-8 border-t border-black/10 bg-[#f0f0ee] overflow-hidden">
+        <div className="w-full max-w-5xl mx-auto">
+          <LineReveal>
+            <p className="font-heading text-4xl md:text-6xl lg:text-7xl leading-[1.05] uppercase">
+              Code propre
+            </p>
+          </LineReveal>
+          <LineReveal delay={0.08}>
+            <p className="font-heading text-4xl md:text-6xl lg:text-7xl leading-[1.05] uppercase">
+              et design sur-mesure.
+            </p>
+          </LineReveal>
+          <LineReveal delay={0.16}>
+            <p className="font-heading text-4xl md:text-6xl lg:text-7xl leading-[1.05] uppercase">
+              SEO et performances.
+            </p>
+          </LineReveal>
+          <LineReveal delay={0.24}>
+            <p className="font-heading text-4xl md:text-6xl lg:text-7xl leading-[1.05] uppercase">
+              Notre langage est intentionnel,
+            </p>
+          </LineReveal>
+          <LineReveal delay={0.32}>
+            <p className="font-heading text-4xl md:text-6xl lg:text-7xl leading-[1.05] uppercase text-abcs-red">
+              construit pour convertir.
+            </p>
+          </LineReveal>
+
+          <FadeUp delay={0.5} className="mt-16">
+            <a
+              href="/tarifs"
+              className="inline-flex items-center gap-3 bg-abcs-black text-white px-8 py-4 font-bold text-sm uppercase tracking-widest hover:bg-abcs-red transition-colors duration-300 group"
+            >
+              <span>Voir nos tarifs</span>
+              <span className="text-xl leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200">↗</span>
+            </a>
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* ─── ORANGE DIVIDER 04 ─── */}
+      <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
+        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Nos réalisations</span>
+        <span className="font-heading text-white text-2xl">04</span>
+      </div>
+
+      {/* ─── PORTFOLIO GRID ─── */}
+      <section className="w-full py-16 px-8 bg-[#f0f0ee]">
+        <div className="w-full max-w-7xl mx-auto">
+          <LineReveal className="mb-16">
+            <h2 className="font-heading text-6xl md:text-9xl uppercase leading-none tracking-tight">
+              PORTFOLIO
+            </h2>
+          </LineReveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black/10">
+            {[
+              { title: "NeuroFlow SaaS", cat: "Design · React · IA", year: "2024" },
+              { title: "Maison Verdure", cat: "Site Vitrine · HTML/CSS", year: "2024" },
+              { title: "WonderCut", cat: "Concept Design · Next.js", year: "2024" },
+              { title: "LuxeCars", cat: "Location · React Vite", year: "2024" },
+            ].map((p, i) => (
+              <FadeUp key={i} delay={i * 0.1}>
+                <a
+                  href="/portfolio"
+                  className="group block bg-[#f0f0ee] p-8 h-64 flex flex-col justify-between hover:bg-abcs-black hover:text-white transition-colors duration-300 cursor-none"
+                >
+                  <div className="flex items-start justify-between">
+                    <span className="font-bold text-[10px] uppercase tracking-widest opacity-40 group-hover:opacity-60">0{i + 1}</span>
+                    <span className="font-heading text-2xl leading-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">↗</span>
+                  </div>
+                  <div>
+                    <h3 className="font-heading text-3xl md:text-4xl uppercase leading-tight mb-2">{p.title}</h3>
+                    <p className="font-bold text-xs uppercase tracking-widest opacity-40">{p.cat} · {p.year}</p>
+                  </div>
+                </a>
+              </FadeUp>
+            ))}
+          </div>
+
+          <FadeUp delay={0.3} className="mt-12 flex justify-center">
+            <a
+              href="/portfolio"
+              className="inline-flex items-center gap-3 border border-abcs-black px-8 py-4 font-bold text-sm uppercase tracking-widest hover:bg-abcs-black hover:text-white transition-colors duration-300 group"
+            >
+              <span>Voir tous les projets</span>
+              <span className="text-xl leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+            </a>
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* ─── PROCESSUS ─── */}
+      <section className="w-full py-24 px-8 border-t border-black/10 bg-[#f0f0ee]">
+        <div className="w-full max-w-7xl mx-auto">
+          {/* Orange banner 05 */}
+          <div className="flex items-center justify-between bg-abcs-red text-white px-6 py-4 mb-16">
+            <span className="font-bold text-xs uppercase tracking-[0.2em]">Comment on travaille</span>
+            <span className="font-heading text-2xl">05</span>
+          </div>
+
+          <LineReveal className="mb-16">
+            <h2 className="font-heading text-6xl md:text-9xl uppercase leading-none tracking-tight">
+              PROCESSUS
+            </h2>
+          </LineReveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-l border-black/15">
+            {[
+              { n: "01", t: "Analyse & Stratégie", d: "Audit complet. On identifie les leviers, les freins, et on construit une roadmap sur-mesure." },
+              { n: "02", t: "Design & Prototypage", d: "Maquettes haute fidélité, design system cohérent, prototypes interactifs pour valider chaque pixel." },
+              { n: "03", t: "Développement", d: "Code propre, performant, accessible. React, Next.js, WordPress — la stack qui te correspond." },
+              { n: "04", t: "Lancement & Suivi", d: "Déploiement, SEO, monitoring et optimisation continue pour des résultats qui durent." },
+            ].map((s, i) => (
+              <FadeUp key={i} delay={i * 0.1}>
+                <div className="border-b border-r border-black/15 p-8 md:p-12 flex flex-col gap-6 h-full hover:bg-abcs-red hover:text-white transition-colors duration-300 group">
+                  <span className="font-bold text-[10px] uppercase tracking-widest opacity-40 group-hover:opacity-70">{s.n}</span>
+                  <h3 className="font-heading text-3xl md:text-4xl uppercase leading-tight">{s.t}</h3>
+                  <p className="font-bold text-sm opacity-60 group-hover:opacity-80 leading-relaxed">{s.d}</p>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── FAQ ─── */}
+      <section className="w-full py-24 px-8 border-t border-black/10">
+        <div className="w-full max-w-5xl mx-auto">
+          <LineReveal className="mb-16">
+            <h2 className="font-heading text-6xl md:text-9xl uppercase leading-none tracking-tight">FAQ</h2>
+          </LineReveal>
+
+          <div className="flex flex-col border-t border-black/15">
+            {faqs.map((faq, i) => (
+              <div key={i} className="border-b border-black/15">
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between py-7 text-left hover:text-abcs-red transition-colors group"
+                >
+                  <span className="font-heading text-xl md:text-3xl uppercase pr-8 leading-tight">{faq.q}</span>
+                  <motion.span
+                    animate={{ rotate: openFaq === i ? 45 : 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="font-heading text-3xl leading-none flex-shrink-0"
+                  >
+                    +
+                  </motion.span>
+                </button>
+                <AnimatePresence>
+                  {openFaq === i && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <p className="pb-8 font-bold text-base opacity-60 leading-relaxed max-w-2xl">
+                        {faq.a}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             ))}
           </div>
-          <a href="/contact" className="group bg-abcs-black text-white px-6 py-3 font-bold text-sm hover:bg-abcs-red transition-all flex items-center gap-2 uppercase tracking-widest overflow-hidden relative">
-            <span className="relative z-10">Démarrer un projet</span>
-            <span className="relative z-10 text-xl leading-none group-hover:translate-x-1 transition-transform">↗</span>
-          </a>
-        </motion.div>
-      </motion.section>
-
-      {/* ─── Content below (z-10 to sit on top of sticky hero after scroll) ─── */}
-      <div className="relative z-10 bg-white">
-
-        {/* ─── LOGO MARQUEE ─── */}
-        <div ref={marqueeRef} className="w-full bg-abcs-black text-white py-4 overflow-hidden flex border-t-4 border-b-4 border-abcs-black">
-          <div className="animate-marquee-gsap whitespace-nowrap font-bold tracking-widest text-sm uppercase flex gap-12 w-max">
-            {[...techLogos, ...techLogos].map((t, i) => <span key={i}>{t} <span className="text-abcs-red mx-2">•</span></span>)}
-          </div>
         </div>
+      </section>
 
-        {/* ─── QUICK PRESENTATION ─── */}
-        <section className="w-full py-32 px-8 flex flex-col items-center border-t-8 border-abcs-black bg-white overflow-hidden">
-          <div className="w-full max-w-7xl flex flex-col gap-12">
-            <RevealLine>
-              <h2 className="font-heading text-6xl md:text-8xl lg:text-[10rem] text-abcs-black uppercase leading-[0.8] tracking-tighter">
-                L&apos;AGENCE QUI <br/> <span className="text-abcs-red">PROPULSE</span> <br/> TON IMAGE.
-              </h2>
-            </RevealLine>
-            <div className="flex flex-col md:flex-row gap-12 items-start">
-              <Reveal delay={0.2} className="w-full md:w-1/2">
-                <p className="font-bold text-2xl md:text-3xl leading-snug">
-                  Wexor, c&apos;est l&apos;alliance de la performance brute et d&apos;un design sur-mesure. On ne se contente pas de faire du "beau", on construit des outils de conversion.
-                </p>
-              </Reveal>
-              <Reveal delay={0.4} className="w-full md:w-1/2">
-                <p className="font-bold opacity-60 text-lg leading-relaxed">
-                  Que tu sois un entrepreneur solo ou une PME, on t&apos;accompagne pour créer une présence digitale qui te ressemble vraiment. Pas de templates, pas de compromis, juste du résultat.
-                </p>
-              </Reveal>
-            </div>
-          </div>
-        </section>
+      {/* ─── CTA FINAL ─── */}
+      <section className="w-full bg-abcs-black text-white py-32 px-8 flex flex-col items-center text-center">
+        <LineReveal className="mb-6">
+          <h2 className="font-heading text-5xl md:text-8xl lg:text-[10rem] uppercase leading-[0.85] tracking-tighter">
+            ON CRÉE
+          </h2>
+        </LineReveal>
+        <LineReveal delay={0.1} className="mb-6">
+          <h2 className="font-heading text-5xl md:text-8xl lg:text-[10rem] uppercase leading-[0.85] tracking-tighter text-abcs-red">
+            ENSEMBLE ?
+          </h2>
+        </LineReveal>
+        <FadeUp delay={0.4} className="mt-12">
+          <a
+            href="/contact"
+            className="inline-flex items-center gap-4 bg-white text-abcs-black px-10 py-5 font-bold text-sm uppercase tracking-widest hover:bg-abcs-red hover:text-white transition-colors duration-300 group"
+          >
+            <span>Démarrer un projet</span>
+            <span className="text-xl leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200">↗</span>
+          </a>
+        </FadeUp>
+      </section>
 
-        {/* ─── SERVICES BENTO GRID ─── */}
-        <section className="w-full py-32 px-8 border-t-8 border-abcs-black bg-white">
-          <div ref={bentoRef} className="w-full max-w-7xl mx-auto flex flex-col">
-            <div className="flex flex-col md:flex-row justify-between items-end mb-16 border-b-8 border-abcs-black pb-8">
-              <RevealLine>
-                <h2 className="font-heading text-6xl md:text-9xl text-abcs-black uppercase leading-none">
-                  CE QU&apos;ON <span className="text-abcs-red">FAIT</span>
-                </h2>
-              </RevealLine>
-              <Reveal delay={0.2}>
-                <p className="max-w-xs text-sm font-bold opacity-70 mt-4 md:mt-0">Des solutions digitales complètes pour chaque étape de votre croissance.</p>
-              </Reveal>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-min">
-              {[
-                { n: "01", title: "Site web sur-mesure", desc: "Design unique, responsive, optimisé SEO — développé en code ou CMS selon tes besoins.", stack: "React · Next.js · WordPress", span: "md:col-span-2", bg: "bg-white", shadow: "shadow-[12px_12px_0px_0px_rgba(17,17,17,1)] hover:shadow-[12px_12px_0px_0px_rgba(255,59,0,1)]", offset: "" },
-                { n: "02", title: "Refonte & optim.", desc: "Audit UX/UI complet, optimisation des performances et refonte stratégique pour booster tes conversions.", stack: "", span: "md:row-span-2", bg: "bg-abcs-black text-white", shadow: "shadow-[12px_12px_0px_0px_rgba(255,59,0,1)]", offset: "" },
-                { n: "03", title: "SEO & Référencement", desc: "Visibilité on-page et technique pour grimper dans Google.", stack: "", span: "", bg: "bg-white", shadow: "shadow-[12px_12px_0px_0px_rgba(17,17,17,1)] hover:shadow-[12px_12px_0px_0px_rgba(255,59,0,1)]", offset: "" },
-                { n: "04", title: "Flyers & Print", desc: "Flyers, cartes de visite, brochures et visuels print.", stack: "", span: "", bg: "bg-abcs-red text-white", shadow: "shadow-[12px_12px_0px_0px_rgba(17,17,17,1)]", offset: "" },
-                { n: "05", title: "Community Management", desc: "Réseaux sociaux, contenu engageant, stratégie d'influence.", stack: "", span: "", bg: "bg-white", shadow: "shadow-[12px_12px_0px_0px_rgba(17,17,17,1)] hover:shadow-[12px_12px_0px_0px_rgba(255,59,0,1)]", offset: "" },
-                { n: "06", title: "Intégration IA", desc: "Chatbots, automatisation et outils intelligents pour enrichir l'expérience.", stack: "", span: "md:col-span-2", bg: "bg-white", shadow: "shadow-[12px_12px_0px_0px_rgba(17,17,17,1)] hover:shadow-[12px_12px_0px_0px_rgba(255,59,0,1)]", offset: "" },
-              ].map((s, i) => (
-                <div key={i} className={`bento-item border-8 border-abcs-black p-8 flex flex-col transition-colors h-full ${s.bg} hover:bg-abcs-black hover:text-white ${s.span} group`}>
-                  <div className={`font-script text-5xl mb-2 -rotate-2 text-abcs-red`}>{s.n}</div>
-                  <h3 className="font-heading text-3xl md:text-4xl uppercase mb-4">{s.title}</h3>
-                  <div className="font-bold opacity-80 text-sm">{s.desc}</div>
-                  {s.stack && <div className="mt-6 text-xs font-bold tracking-widest uppercase opacity-40 group-hover:opacity-100">{s.stack}</div>}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ─── PROCESS ─── */}
-        <section className="w-full py-32 px-8 flex flex-col items-center border-t-8 border-abcs-black bg-gray-100">
-          <div className="w-full max-w-7xl flex flex-col">
-            <div className="flex flex-col md:flex-row justify-between items-end mb-24 border-b-8 border-abcs-black pb-8">
-              <RevealLine>
-                <h2 className="font-heading text-6xl md:text-8xl lg:text-[9rem] text-abcs-black uppercase leading-[0.8] tracking-tighter">
-                  NOTRE <br/> <span className="text-abcs-red">PROCESSUS</span>
-                </h2>
-              </RevealLine>
-              <Reveal delay={0.2}>
-                <div className="font-bold text-xl uppercase tracking-widest mt-8 md:mt-0">Comment on travaille</div>
-              </Reveal>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-              {[
-                { n: "01", t: "Analyse &\nStratégie", d: "Audit complet de ton écosystème digital. On identifie les leviers, les freins, et on construit une roadmap sur-mesure." },
-                { n: "02", t: "Design &\nPrototypage", d: "Maquettes haute fidélité, design system cohérent, et prototypes interactifs pour valider chaque pixel." },
-                { n: "03", t: "Développement\nSur-Mesure", d: "Code propre, performant, accessible. React, Next.js, WordPress — on choisit la stack qui te correspond." },
-                { n: "04", t: "Lancement &\nOptimisation", d: "Déploiement, SEO, monitoring et optimisation continue pour des résultats qui durent." },
-              ].map((s, i) => (
-                <Reveal key={i} delay={i * 0.1} className={i % 2 !== 0 ? "md:mt-16" : ""}>
-                  <div className="flex flex-col border-4 border-abcs-black p-8 bg-white shadow-[12px_12px_0px_0px_rgba(255,59,0,1)] hover:-translate-y-2 transition-transform">
-                    <div className="font-script text-abcs-red text-6xl mb-4 -rotate-3">Étape {s.n}</div>
-                    <h3 className="font-heading text-4xl uppercase mb-4 leading-none whitespace-pre-line">{s.t}</h3>
-                    <p className="font-bold font-sans opacity-80">{s.d}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-            <Reveal delay={0.2} className="mt-32 w-full flex justify-center">
-              <a href="/portfolio" className="group bg-abcs-black text-white px-12 py-6 font-bold text-xl hover:bg-abcs-red transition-colors flex items-center gap-4 uppercase tracking-widest">
-                NOS RÉALISATIONS
-                <span className="group-hover:translate-x-1 transition-transform text-3xl leading-none">↗</span>
-              </a>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ─── BIG QUOTE with horizontal scroll text ─── */}
-        <section className="w-full py-48 px-8 flex flex-col justify-center items-center border-t border-black/10 overflow-hidden">
-          <RevealLine className="text-center max-w-5xl">
-            <h2 className="font-heading text-4xl md:text-6xl lg:text-[5rem] leading-[0.9] text-abcs-black uppercase">
-              Nous ne faisons pas<br/>de sites web.
-            </h2>
-          </RevealLine>
-          <RevealLine delay={0.15} className="text-center">
-            <h2 className="font-heading text-4xl md:text-6xl lg:text-[5rem] leading-[0.9] text-abcs-black uppercase">
-              Nous créons des expériences qui
-            </h2>
-          </RevealLine>
-          <Reveal delay={0.35}>
-            <span className="font-script text-abcs-red text-[5rem] md:text-[10rem] leading-none -rotate-6 block mt-4">
-              Transforment
-            </span>
-          </Reveal>
-        </section>
-
-        {/* ─── FAQ ─── */}
-        <section className="w-full py-32 px-8 border-t-8 border-abcs-black bg-gray-100">
-          <div className="w-full max-w-4xl mx-auto">
-            <RevealLine className="mb-16">
-              <h2 className="font-heading text-6xl md:text-9xl uppercase leading-none">FAQ</h2>
-            </RevealLine>
-            <div className="flex flex-col gap-0">
-              {faqs.map((faq, i) => (
-                <Reveal key={i} delay={i * 0.06}>
-                  <div className="border-4 border-abcs-black border-b-0 last:border-b-4">
-                    <button
-                      onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                      className="w-full flex justify-between items-center p-8 text-left hover:bg-abcs-red hover:text-white group transition-colors"
-                    >
-                      <span className="font-heading text-2xl md:text-3xl uppercase pr-4">{faq.q}</span>
-                      <motion.span
-                        animate={{ rotate: openFaq === i ? 45 : 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="font-heading text-4xl shrink-0"
-                      >
-                        +
-                      </motion.span>
-                    </button>
-                    <AnimatePresence>
-                      {openFaq === i && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3, ease: "easeInOut" }}
-                          className="overflow-hidden"
-                        >
-                          <p className="px-8 pb-8 font-bold opacity-80 text-lg">{faq.a}</p>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-            <Reveal delay={0.2} className="mt-16 flex justify-center">
-              <a href="/contact" className="group bg-abcs-black text-white px-12 py-6 font-bold text-xl hover:bg-abcs-red transition-colors flex items-center gap-4 uppercase tracking-widest">
-                DÉMARRER MON PROJET
-                <span className="group-hover:translate-x-1 transition-transform text-3xl leading-none">↗</span>
-              </a>
-            </Reveal>
-          </div>
-        </section>
-
-      </div>
     </main>
   );
 }

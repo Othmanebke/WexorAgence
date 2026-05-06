@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@theme {
+  --color-abcs-red: #FF3B00;
+  --color-abcs-black: #111111;
+  
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-script: var(--font-caveat), cursive;
+
+  --animate-marquee: marquee 25s linear infinite;
+  --animate-grain: grain 8s steps(10) infinite;
+
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+  }
+
+  @keyframes grain {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-5%, -10%); }
+    20% { transform: translate(-15%, 5%); }
+    30% { transform: translate(7%, -25%); }
+    40% { transform: translate(-5%, 25%); }
+    50% { transform: translate(-15%, 10%); }
+    60% { transform: translate(15%, 0%); }
+    70% { transform: translate(0%, 15%); }
+    80% { transform: translate(3%, 35%); }
+    90% { transform: translate(-10%, 10%); }
+  }
+}
+
+* {
+  cursor: none !important;
+}
+
+body {
+  background-color: #FFFFFF;
+  color: var(--color-abcs-black);
+  font-family: var(--font-sans);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #fff;
+}
+::-webkit-scrollbar-thumb {
+  background: #111111;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FF3B00;
+}
+
+/* Selection */
+::selection {
+  background: #FF3B00;
+  color: #fff;
+}
+
+/* Grain overlay — positioned via pseudo on body */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 9998;
+  animation: grain 8s steps(10) infinite;
+}
+

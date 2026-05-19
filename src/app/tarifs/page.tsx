@@ -107,7 +107,7 @@ export default function TarifsPage() {
                 <AnimatePresence>
                   {openPack === i && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.35 }} className="overflow-hidden">
-                      <div className="pb-8 md:pb-10 pl-8 sm:pl-10 md:pl-14 grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="pb-8 md:pb-10 pl-4 sm:pl-10 md:pl-14 grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
                           <p className="font-bold text-base opacity-60 leading-relaxed mb-6">{p.desc}</p>
                           <ul className="flex flex-col gap-3">

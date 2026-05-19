@@ -38,9 +38,9 @@ export default function LegalPage() {
               <h2 className="font-heading text-4xl uppercase mb-6">{s.t}</h2>
               <div className="flex flex-col gap-3">
                 {s.content.map(([k, v]) => (
-                  <div key={k} className="flex gap-4 border-b border-black/10 pb-3">
-                    <span className="font-bold text-sm uppercase tracking-widest opacity-50 w-48 shrink-0">{k}</span>
-                    <span className="font-bold">{v}</span>
+                  <div key={k} className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 border-b border-black/10 pb-3">
+                    <span className="font-bold text-[10px] sm:text-sm uppercase tracking-widest opacity-50 sm:w-48 sm:shrink-0">{k}</span>
+                    <span className="font-bold text-sm sm:text-base break-all sm:break-normal">{v}</span>
                   </div>
                 ))}
               </div>

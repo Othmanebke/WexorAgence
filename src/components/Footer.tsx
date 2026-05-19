@@ -10,7 +10,7 @@ export default function Footer() {
     <footer className="w-full bg-abcs-black text-white">
 
       {/* ─── TOP: Vision + Nav + Contact ─── */}
-      <div className="w-full px-8 pt-24 pb-16 border-b border-white/10">
+      <div className="w-full px-6 md:px-8 pt-24 pb-16 border-b border-white/10">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-16">
 
           {/* Vision & CTA */}
@@ -99,7 +99,7 @@ export default function Footer() {
       </div>
 
       {/* ─── Bottom legal ─── */}
-      <div className="w-full px-8 py-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div className="w-full px-6 md:px-8 py-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
         <p className="font-bold text-[10px] uppercase tracking-widest opacity-30">
           © {new Date().getFullYear()} O&apos;ldev — {t("footer_rights")}
         </p>

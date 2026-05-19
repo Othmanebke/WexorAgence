@@ -246,7 +246,7 @@ export default function PortfolioPage() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 30 }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="relative bg-[#f0f0ee] text-abcs-black w-full max-w-6xl max-h-[90vh] md:max-h-[85vh] rounded-none border border-black/20 flex flex-col md:flex-row overflow-hidden shadow-[8px_8px_0px_0px_rgba(230,57,70,1)]"
+              className="relative bg-[#f0f0ee] text-abcs-black w-full max-w-6xl h-[92vh] md:h-auto max-h-[92vh] md:max-h-[85vh] rounded-none border border-black/20 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden shadow-[8px_8px_0px_0px_rgba(230,57,70,1)]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button Mobile */}
@@ -273,7 +273,7 @@ export default function PortfolioPage() {
               </div>
 
               {/* Right Column: Detailed Quick Info */}
-              <div className="md:w-5/12 p-6 md:p-8 flex flex-col justify-between overflow-y-auto max-h-[50vh] md:max-h-none">
+              <div className="md:w-5/12 p-6 md:p-8 flex flex-col justify-between md:overflow-y-auto overflow-visible">
                 {/* Upper block */}
                 <div>
                   <div className="flex justify-between items-start">

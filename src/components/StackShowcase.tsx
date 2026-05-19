@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -81,6 +81,16 @@ export default function StackShowcase() {
   const trackRef = useRef<HTMLDivElement>(null);
   const marquee1Ref = useRef<HTMLDivElement>(null);
   const marquee2Ref = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -96,74 +106,105 @@ export default function StackShowcase() {
         gsap.fromTo(inner, { xPercent: -50 }, { xPercent: 0, repeat: -1, duration: 18, ease: "none" });
       }
 
-      // ── Horizontal scroll
-      if (outerRef.current && trackRef.current) {
-        const slides = trackRef.current.querySelectorAll(".hs-slide");
-        const totalSlides = slides.length;
+      // Only run horizontal scroll pin on desktop
+      let mm = gsap.matchMedia();
 
-        gsap.to(trackRef.current, {
-          xPercent: -(100 - 100 / totalSlides),
-          ease: "none",
-          scrollTrigger: {
-            trigger: outerRef.current,
-            start: "top top",
-            end: `+=${(totalSlides - 1) * 100}%`,
-            scrub: 1.2,
-            pin: stickyRef.current,
-            anticipatePin: 1,
-          },
-        });
+      mm.add("(min-width: 768px)", () => {
+        if (outerRef.current && trackRef.current) {
+          const slides = trackRef.current.querySelectorAll(".hs-slide");
+          const totalSlides = slides.length;
 
-        // ── Progress bars animate when slide is active
-        slides.forEach((slide, i) => {
-          const bars = slide.querySelectorAll(".skill-bar-fill");
-          bars.forEach((bar) => {
-            const target = (bar as HTMLElement).dataset.level || "0";
-            gsap.fromTo(
-              bar,
-              { scaleX: 0 },
-              {
-                scaleX: parseInt(target) / 100,
-                duration: 1.2,
-                ease: "power2.out",
-                scrollTrigger: {
-                  trigger: outerRef.current,
-                  start: `${i * 100}% top`,
-                  end: `${i * 100 + 50}% top`,
-                  toggleActions: "play none none reverse",
-                },
-              }
-            );
+          gsap.to(trackRef.current, {
+            xPercent: -(100 - 100 / totalSlides),
+            ease: "none",
+            scrollTrigger: {
+              trigger: outerRef.current,
+              start: "top top",
+              end: `+=${(totalSlides - 1) * 100}%`,
+              scrub: 1.2,
+              pin: stickyRef.current,
+              anticipatePin: 1,
+            },
           });
 
-          // Number watermark parallax
-          const num = slide.querySelector(".slide-num-watermark");
-          if (num) {
-            gsap.fromTo(
-              num,
-              { y: 60, opacity: 0 },
-              {
-                y: 0,
-                opacity: 0.04,
-                duration: 1,
-                ease: "power2.out",
-                scrollTrigger: {
-                  trigger: outerRef.current,
-                  start: `${i * 100}% top`,
-                  end: `${i * 100 + 30}% top`,
-                  toggleActions: "play none none reverse",
-                },
-              }
-            );
-          }
-        });
-      }
+          // Progress bars animate when slide is active
+          slides.forEach((slide, i) => {
+            const bars = slide.querySelectorAll(".skill-bar-fill");
+            bars.forEach((bar) => {
+              const target = (bar as HTMLElement).dataset.level || "0";
+              gsap.fromTo(
+                bar,
+                { scaleX: 0 },
+                {
+                  scaleX: parseInt(target) / 100,
+                  duration: 1.2,
+                  ease: "power2.out",
+                  scrollTrigger: {
+                    trigger: outerRef.current,
+                    start: `${i * 100}% top`,
+                    end: `${i * 100 + 50}% top`,
+                    toggleActions: "play none none reverse",
+                  },
+                }
+              );
+            });
+
+            // Number watermark parallax
+            const num = slide.querySelector(".slide-num-watermark");
+            if (num) {
+              gsap.fromTo(
+                num,
+                { y: 60, opacity: 0 },
+                {
+                  y: 0,
+                  opacity: 0.04,
+                  duration: 1,
+                  ease: "power2.out",
+                  scrollTrigger: {
+                    trigger: outerRef.current,
+                    start: `${i * 100}% top`,
+                    end: `${i * 100 + 30}% top`,
+                    toggleActions: "play none none reverse",
+                  },
+                }
+              );
+            }
+          });
+        }
+      });
+
+      mm.add("(max-width: 767px)", () => {
+        // Mobile animations: animate progress bars directly on scroll for each slide
+        if (trackRef.current) {
+          const slides = trackRef.current.querySelectorAll(".hs-slide");
+          slides.forEach((slide) => {
+            const bars = slide.querySelectorAll(".skill-bar-fill");
+            bars.forEach((bar) => {
+              const target = (bar as HTMLElement).dataset.level || "0";
+              gsap.fromTo(
+                bar,
+                { scaleX: 0 },
+                {
+                  scaleX: parseInt(target) / 100,
+                  duration: 1.2,
+                  ease: "power2.out",
+                  scrollTrigger: {
+                    trigger: slide,
+                    start: "top 80%",
+                    toggleActions: "play none none none",
+                  },
+                }
+              );
+            });
+          });
+        }
+      });
 
       ScrollTrigger.refresh();
     });
 
     return () => ctx.revert();
-  }, []);
+  }, [isMobile]);
 
   return (
     <section className="w-full">
@@ -208,10 +249,20 @@ export default function StackShowcase() {
       </div>
 
       {/* ── HORIZONTAL SCROLL SECTION ── */}
-      <div ref={outerRef} style={{ height: `${categories.length * 100}vh` }} className="relative w-full">
-        <div ref={stickyRef} className="sticky top-0 h-screen w-full overflow-hidden">
-          <div ref={trackRef} className="flex h-full" style={{ width: `${categories.length * 100}vw` }}>
-
+      <div
+        ref={outerRef}
+        style={{ height: isMobile ? "auto" : `${categories.length * 100}vh` }}
+        className="relative w-full"
+      >
+        <div
+          ref={stickyRef}
+          className="relative h-auto w-full md:sticky md:top-0 md:h-screen md:overflow-hidden"
+        >
+          <div
+            ref={trackRef}
+            className="flex flex-col md:flex-row h-auto md:h-full w-full"
+            style={{ width: isMobile ? "100%" : `${categories.length * 100}vw` }}
+          >
             {categories.map((cat, i) => {
               const isDark = cat.color === "#111111" || cat.color === "#FF3B00";
               const textColor = cat.color === "#f0f0ee" ? "text-[#111]" : "text-white";
@@ -220,14 +271,18 @@ export default function StackShowcase() {
               return (
                 <div
                   key={cat.n}
-                  className="hs-slide relative h-full flex-shrink-0 overflow-hidden flex flex-col justify-between px-6 md:px-20 pt-16 md:pt-20 pb-8 md:pb-12"
-                  style={{ width: "100vw", backgroundColor: cat.color }}
+                  className="hs-slide relative flex-shrink-0 flex flex-col justify-between px-6 md:px-20 py-16 md:py-20"
+                  style={{
+                    width: isMobile ? "100%" : "100vw",
+                    height: isMobile ? "auto" : "100%",
+                    backgroundColor: cat.color,
+                  }}
                 >
                   {/* Watermark number */}
                   <div
                     className="slide-num-watermark absolute left-0 bottom-0 font-heading leading-none select-none pointer-events-none"
                     style={{
-                      fontSize: "clamp(18rem, 42vw, 56rem)",
+                      fontSize: isMobile ? "clamp(10rem, 36vw, 24rem)" : "clamp(18rem, 42vw, 56rem)",
                       color: isDark ? "#ffffff" : "#111111",
                       opacity: 0.04,
                       lineHeight: 0.75,
@@ -290,7 +345,7 @@ export default function StackShowcase() {
                   </div>
 
                   {/* Bottom label */}
-                  <div className={`flex items-center justify-between z-10 border-t ${borderColor} pt-6`}>
+                  <div className={`flex items-center justify-between z-10 border-t ${borderColor} pt-6 mt-12 md:mt-0`}>
                     <span className={`font-bold text-[10px] uppercase tracking-[0.25em] opacity-25 ${textColor}`}>Wexor Agence · Stack {cat.n}</span>
                     <span className="font-heading text-4xl" style={{ color: cat.accent }}>{cat.n}</span>
                   </div>

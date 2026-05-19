@@ -198,7 +198,7 @@ export default function Home() {
             <div className="overflow-hidden">
               <motion.h1
                 className="font-heading text-abcs-red leading-[0.82] tracking-tighter select-none"
-                style={{ fontSize: "clamp(7rem, 18vw, 22rem)" }}
+                style={{ fontSize: "clamp(4.5rem, 16vw, 22rem)" }}
                 initial={{ y: "110%" }}
                 animate={{ y: 0 }}
                 transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
@@ -338,7 +338,7 @@ export default function Home() {
         <div ref={bigTextRef} className="w-max">
           <p
             className="font-heading text-abcs-black/10 uppercase leading-none whitespace-nowrap select-none"
-            style={{ fontSize: "clamp(8rem, 22vw, 28rem)" }}
+            style={{ fontSize: "clamp(5rem, 20vw, 28rem)" }}
           >
             {t("about_big")}
           </p>

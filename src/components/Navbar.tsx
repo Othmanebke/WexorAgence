@@ -9,7 +9,7 @@ import { useLang, Lang } from "@/components/LanguageContext";
 const langLabels: Record<Lang, string> = {
   fr: "FR",
   en: "EN",
-  ma: "MA",
+  ma: "عربي",
 };
 
 export default function Navbar() {

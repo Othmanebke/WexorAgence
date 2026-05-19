@@ -114,10 +114,7 @@ export default function AboutPage() {
       }
     );
 
-    gsap.from(".exp-item", {
-      y: 60, opacity: 0, duration: 0.7, stagger: 0.12, ease: "power2.out",
-      scrollTrigger: { trigger: ".exp-section", start: "top 80%" }
-    });
+
     
     gsap.from(".skill-tag", {
       scale: 0.8, opacity: 0, duration: 0.4, stagger: 0.04, ease: "back.out(1.4)",
@@ -257,22 +254,24 @@ export default function AboutPage() {
             </LineReveal>
             <div className="flex flex-col gap-0 border-t border-current/15">
               {experiences.map((exp, i) => (
-                <div key={i} className="exp-item flex flex-col md:flex-row gap-8 py-12 border-b border-current/15 group hover:bg-abcs-red hover:text-white px-0 hover:px-8 transition-all duration-300">
-                  <div className="md:w-1/3 shrink-0">
-                    <div className="font-heading text-2xl md:text-3xl uppercase leading-tight mb-2 group-hover:text-white">{exp.title}</div>
-                    <div className="text-abcs-red group-hover:text-white font-bold text-sm uppercase tracking-widest">@ {exp.company}</div>
-                    {exp.current && (
-                      <div className="mt-3 flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                        <span className="font-bold text-xs text-emerald-400 uppercase">Poste actuel</span>
-                      </div>
-                    )}
+                <FadeUp key={i} delay={i * 0.1} className="w-full">
+                  <div className="exp-item flex flex-col md:flex-row gap-8 py-12 border-b border-current/15 group hover:bg-abcs-red hover:text-white px-0 hover:px-8 transition-all duration-300">
+                    <div className="md:w-1/3 shrink-0">
+                      <div className="font-heading text-2xl md:text-3xl uppercase leading-tight mb-2 group-hover:text-white">{exp.title}</div>
+                      <div className="text-abcs-red group-hover:text-white font-bold text-sm uppercase tracking-widest">@ {exp.company}</div>
+                      {exp.current && (
+                        <div className="mt-3 flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                          <span className="font-bold text-xs text-emerald-400 uppercase">Poste actuel</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="md:w-2/3">
+                      <div className="font-bold text-[10px] uppercase tracking-widest opacity-40 mb-4 group-hover:opacity-80">{exp.period}</div>
+                      <p className="font-bold opacity-75 group-hover:opacity-90 leading-relaxed text-base">{exp.desc}</p>
+                    </div>
                   </div>
-                  <div className="md:w-2/3">
-                    <div className="font-bold text-[10px] uppercase tracking-widest opacity-40 mb-4 group-hover:opacity-80">{exp.period}</div>
-                    <p className="font-bold opacity-75 group-hover:opacity-90 leading-relaxed text-base">{exp.desc}</p>
-                  </div>
-                </div>
+                </FadeUp>
               ))}
             </div>
           </div>

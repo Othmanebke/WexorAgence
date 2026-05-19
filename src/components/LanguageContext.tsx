@@ -149,73 +149,73 @@ export const translations = {
 
   ma: {
     // Nav
-    nav_services: "Khedmati",
-    nav_portfolio: "Portfolio",
-    nav_about: "Men ana",
-    nav_contact: "Contact",
-    nav_menu: "Menu",
-    nav_close: "Sker",
+    nav_services: "خدمات",
+    nav_portfolio: "أعمالي",
+    nav_about: "شكون أنا",
+    nav_contact: "اتصال",
+    nav_menu: "القائمة",
+    nav_close: "إغلاق",
 
     // Hero
     hero_sub1: "O'ldev",
-    hero_sub2: "FREELANCE WEB",
-    hero_tagline: "Developer li kayhawwel\nfikretk l réalité digitale.",
-    hero_cta: "T3raf 3liya",
-    hero_about_link: "Tariqa dyali — Chkoun ana",
-    hero_desc: "Sites msnawiyyin l\nambitions li ma tkompromich.",
+    hero_sub2: "مطور ويب مستقل",
+    hero_tagline: "المطور لي كيحول\nفكرتك لواقع رقمي.",
+    hero_cta: "اكتشفني",
+    hero_about_link: "طريقتي — شكون أنا",
+    hero_desc: "مواقع مصممة\nللطموحات لي مابينهاش تراجع.",
 
     // About section home
-    about_big: "KTEBT L VISION DYALK",
-    about_title: "Othmane,\nchkoun howa?",
-    about_p1: "Developer freelance, obsession wahda: nsni sites li kaysellew, machi ghir sites zwinin.",
-    about_p2: "Code nqi. Design sur-mesure. Stratégie m7soba l ahdafak — machi dyali. Ma kayn ta templates, ta copier-coller, ghir résultats.",
-    stat_clients: "Clients",
-    stat_satisfaction: "Satisfaction",
-    stat_response: "Réponse",
+    about_big: "كوديت للرؤية ديالك",
+    about_title: "عثمان،\nشكون هو؟",
+    about_p1: "مطور ويب مستقل مهووس بحاجة وحدة: نصنع مواقع لي كتجيب نتيجة، ماشي غير مواقع زوينة وصافي.",
+    about_p2: "كود نقي. تصميم على المقاس. استراتيجية محسوبة لأهدافك — ماشي ديالي. ما كاين لا قوالب واجدة ولا نسخ ولصق، كاين غير النتائج.",
+    stat_clients: "العملاء",
+    stat_satisfaction: "الرضا",
+    stat_response: "الرد",
 
     // Services
-    services_label: "Chno kadir",
-    services_title: "KHEDMATI",
+    services_label: "شنو كندير",
+    services_title: "خدماتي",
 
     // Quote
-    quote_1: "Code nqi",
-    quote_2: "o design sur-mesure.",
-    quote_3: "SEO o performance.",
-    quote_4: "Logha dyali m7soba,",
-    quote_5: "mabnia bach tsell.",
-    quote_cta: "Chof les tarifs",
+    quote_1: "كود نقي",
+    quote_2: "وتصميم على المقاس.",
+    quote_3: "SEO وأداء سريع.",
+    quote_4: "اللغة ديالي مدروسة،",
+    quote_5: "مبنية باش تنجح.",
+    quote_cta: "شوف الأسعار",
 
     // Portfolio
-    portfolio_label: "Réalisations dyali",
-    portfolio_title: "PORTFOLIO",
-    portfolio_cta: "Chof ga3 les projets",
+    portfolio_label: "الأعمال ديالي",
+    portfolio_title: "معرض الأعمال",
+    portfolio_cta: "شوف كاع المشاريع",
 
     // Process
-    process_label: "Kifach kankhdm",
-    process_title: "PROCESSUS",
+    process_label: "كيفاش كنخدم",
+    process_title: "طريقة العمل",
 
     // CTA final
-    cta_line1: "NKODDO",
-    cta_line2: "M3A B3AD?",
-    cta_btn: "Bda projet",
+    cta_line1: "نكوديو",
+    cta_line2: "مجموعين؟",
+    cta_btn: "بدا المشروع ديالك",
 
     // Footer
-    footer_vision: "Mansnich ghir sites. Kankhleq visions li tbqa o tdir lafrika.",
-    footer_cta: "Nkhdmo m3a b3ad",
-    footer_email_label: "Projets & Devis",
-    footer_social_label: "Réseaux",
-    footer_rights: "Jmi3 lhouqouq m7foutha.",
-    footer_by: "Othmane Bouakline",
+    footer_vision: "ماشي غير كنصاوب مواقع. كنخلق رؤية لي كتبقى ودوم.",
+    footer_cta: "نخدمو مجموعين",
+    footer_email_label: "المشاريع والطلبات",
+    footer_social_label: "الشبكات",
+    footer_rights: "جميع الحقوق محفوظة.",
+    footer_by: "عثمان بواكلين",
 
     // Pages
-    page_tarifs_sub: "Offres dyali",
-    page_about_sub: "Chkoun ana",
-    page_portfolio_sub: "Travaux dyali",
-    page_contact_sub: "Kansmak",
+    page_tarifs_sub: "العروض ديالي",
+    page_about_sub: "شكون أنا",
+    page_portfolio_sub: "الأعمال ديالي",
+    page_contact_sub: "كنسمعك",
 
     // Chatbot
     chatbot_name: "O'ldev Bot",
-    chatbot_status: "Mwsoul",
+    chatbot_status: "متصل",
   },
 };
 

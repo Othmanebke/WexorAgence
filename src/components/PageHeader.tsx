@@ -3,35 +3,37 @@
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-
-const navLinks = [
-  { label: "Tarifs", href: "/tarifs" },
-  { label: "Portfolio", href: "/portfolio" },
-  { label: "Qui je suis", href: "/about" },
-  { label: "Contact", href: "/contact" },
-];
+import { useLang } from "@/components/LanguageContext";
 
 interface PageHeaderProps {
   number?: string;
-  title: string;
+  title?: string;
   subtitle?: string;
 }
 
-export default function PageHeader({ number = "00", title, subtitle }: PageHeaderProps) {
+export default function PageHeader({ number = "00", title = "", subtitle }: PageHeaderProps) {
   const pathname = usePathname();
+  const { t } = useLang();
+
+  const navLinks = [
+    { label: t("nav_services"), href: "/tarifs" },
+    { label: t("nav_portfolio"), href: "/portfolio" },
+    { label: t("nav_about"), href: "/about" },
+    { label: t("nav_contact"), href: "/contact" },
+  ];
 
   return (
     <section className="w-full pt-8 pb-0 px-6 md:px-8 bg-[#f0f0ee]">
 
-      {/* ─── Top row: Logo + Nav (same as homepage hero) ─── */}
+      {/* ─── Top row: Logo + Nav ─── */}
       <div className="flex items-start justify-between w-full mb-12">
 
         {/* Logo */}
         <Link href="/" className="font-heading text-abcs-red leading-[0.82] tracking-tighter hover:opacity-70 transition-opacity select-none" style={{ fontSize: "clamp(3rem, 6vw, 6rem)" }}>
-          WEX
+          O&apos;DEV
         </Link>
 
-        {/* Comma-separated nav — active page in orange */}
+        {/* Nav */}
         <motion.nav
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -56,7 +58,7 @@ export default function PageHeader({ number = "00", title, subtitle }: PageHeade
           })}
         </motion.nav>
 
-        {/* Mobile: just show active page name */}
+        {/* Mobile: active page name */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -74,13 +76,13 @@ export default function PageHeader({ number = "00", title, subtitle }: PageHeade
         transition={{ delay: 0.35, duration: 0.5 }}
         className="flex justify-between font-bold text-abcs-red text-[10px] md:text-xs tracking-[0.2em] uppercase -mt-10 mb-16"
       >
-        <span>WEXOR AGENCE</span>
-        <span>CRÉATION WEB</span>
+        <span>O&apos;LDEV</span>
+        <span>FREELANCE WEB</span>
       </motion.div>
 
       {/* ─── Orange numbered banner ─── */}
       <div className="flex items-center justify-between bg-abcs-red text-white px-4 md:px-6 py-3 mb-8 md:mb-12">
-        <span className="font-bold text-[10px] uppercase tracking-[0.2em]">{subtitle ?? "Wexor Agence"}</span>
+        <span className="font-bold text-[10px] uppercase tracking-[0.2em]">{subtitle ?? "O'ldev"}</span>
         <span className="font-heading text-2xl">{number}</span>
       </div>
 

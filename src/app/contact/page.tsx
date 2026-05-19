@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useLang } from "@/components/LanguageContext";
 
 function LineReveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
   const ref = useRef(null);
@@ -45,6 +46,7 @@ const inputClass = "w-full bg-transparent border-b-2 border-black/20 focus:borde
 
 function ContactForm() {
   const containerRef = useRef<HTMLElement>(null);
+  const { t } = useLang();
   const searchParams = useSearchParams();
   const [form, setForm] = useState({ name: "", email: "", phone: "", type: "", budget: "", message: "" });
   const [sent, setSent] = useState(false);
@@ -90,7 +92,7 @@ function ContactForm() {
 
   return (
     <main ref={containerRef} className="flex-1 flex flex-col bg-[#f0f0ee]">
-      <PageHeader number="05" title="CONTACT" subtitle="On t'écoute" />
+      <PageHeader number="05" title="CONTACT" subtitle={t("page_contact_sub")} />
 
       {/* ─── INTRO ─── */}
       <section className="w-full px-6 md:px-8 pt-16 md:pt-20 pb-8 max-w-7xl mx-auto">
@@ -209,8 +211,9 @@ function ContactForm() {
               <span className="font-bold text-[10px] uppercase tracking-widest opacity-30 block mb-6">Réseaux sociaux</span>
               <div className="flex flex-col gap-4">
                 {[
-                  { label: "TikTok", handle: "@wexo_agence", href: "https://tiktok.com/@wexo_agence" },
-                  { label: "Instagram", handle: "@wexor_agence", href: "https://instagram.com/wexor_agence" },
+                  { label: "GitHub", handle: "@othmane-bkl", href: "https://github.com" },
+                  { label: "LinkedIn", handle: "Othmane B.", href: "https://linkedin.com" },
+                  { label: "Instagram", handle: "@o.ldev", href: "https://instagram.com" },
                 ].map((s) => (
                   <a key={s.label} href={s.href} target="_blank" rel="noreferrer"
                     className="flex items-center justify-between py-4 border-b border-black/10 group hover:text-abcs-red transition-colors">

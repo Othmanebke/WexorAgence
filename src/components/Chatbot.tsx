@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useLang } from "@/components/LanguageContext";
 
 type Step = {
   id: string;
@@ -13,11 +14,10 @@ type Step = {
   nextStep?: string;
 };
 
-// Mapping for Contact Form consistency
 const VALUE_TO_LABEL: Record<string, string> = {
   "site": "Site Vitrine (Présence)",
   "vitrine": "Site Vitrine (Présence)",
-  "ecommerce": "Application Web / SaaS", // Or add e-commerce specifically
+  "ecommerce": "Application Web / SaaS",
   "saas": "Application Web / SaaS",
   "refonte": "Refonte de site existant",
   "design": "Branding / Identité Visuelle",
@@ -30,7 +30,7 @@ const VALUE_TO_LABEL: Record<string, string> = {
 const CHAT_LOGIC: Record<string, Step> = {
   start: {
     id: "start",
-    question: "Salut ! Ravi de te voir ici. Prêt à transformer ton projet en une machine à conversion ? Dis-moi, on part sur quoi ?",
+    question: "Salut ! Je suis Othmane 👋 Prêt à transformer ton idée en réalité digitale ? On part sur quoi ?",
     type: 'options',
     options: [
       { label: "Créer un Site Web", value: "site", nextStep: "site_type" },
@@ -41,17 +41,17 @@ const CHAT_LOGIC: Record<string, Step> = {
   },
   site_type: {
     id: "site_type",
-    question: "Excellent choix. Le web, c'est notre terrain de jeu. Quel type d'expérience on va construire ?",
+    question: "Top choix. Quel type de site on va construire ensemble ?",
     type: 'options',
     options: [
       { label: "Site Vitrine (Impact)", value: "vitrine", nextStep: "budget" },
       { label: "E-commerce (Vente)", value: "ecommerce", nextStep: "budget" },
-      { label: "SaaS / App Complexe", value: "saas", nextStep: "budget" },
+      { label: "App Web / SaaS", value: "saas", nextStep: "budget" },
     ],
   },
   refonte_type: {
     id: "refonte_type",
-    question: "Ton site actuel freine ta croissance ? On va lui donner un second souffle. Quelle est l'urgence ?",
+    question: "Ton site actuel ne te représente plus ? Je m'en occupe. Quelle est la priorité ?",
     type: 'options',
     options: [
       { label: "Look & Design UX", value: "design_refresh", nextStep: "budget" },
@@ -61,7 +61,7 @@ const CHAT_LOGIC: Record<string, Step> = {
   },
   design_type: {
     id: "design_type",
-    question: "L'image, c'est 90% de la confiance client. On s'attaque à quoi ?",
+    question: "L'identité visuelle, c'est la base de tout. On s'attaque à quoi ?",
     type: 'options',
     options: [
       { label: "Logo & Identité", value: "branding", nextStep: "budget" },
@@ -70,7 +70,7 @@ const CHAT_LOGIC: Record<string, Step> = {
   },
   social_type: {
     id: "social_type",
-    question: "On va rendre ton feed irrésistible. Quel niveau d'accompagnement tu vises ?",
+    question: "On va rendre ta présence sociale irrésistible. Quel niveau ?",
     type: 'options',
     options: [
       { label: "Starter (Démarrage)", value: "social_starter", nextStep: "budget" },
@@ -80,7 +80,7 @@ const CHAT_LOGIC: Record<string, Step> = {
   },
   budget: {
     id: "budget",
-    question: "Parlons chiffres (sans tabou). Pour donner vie à tout ça, t'as prévu quel budget ?",
+    question: "Parlons budget — sans tabou, c'est pour mieux calibrer ma proposition.",
     type: 'options',
     options: [
       { label: "Budget < 1000€", value: "low", nextStep: "validate" },
@@ -90,21 +90,21 @@ const CHAT_LOGIC: Record<string, Step> = {
   },
   ask_name: {
     id: "ask_name",
-    question: "Ok ! On arrive à la fin. C'est quoi ton petit nom (ou celui de ta marque) ?",
+    question: "Parfait ! C'est quoi ton nom (ou celui de ta marque) ?",
     type: 'input',
     inputType: 'text',
     nextStep: 'ask_email'
   },
   ask_email: {
     id: "ask_email",
-    question: "Enchanté [NAME] ! Et ton mail pour que je puisse t'envoyer le devis ?",
+    question: "Enchanté [NAME] ! Ton mail pour que je t'envoie une proposition ?",
     type: 'input',
     inputType: 'email',
     nextStep: 'ask_phone'
   },
   ask_phone: {
     id: "ask_phone",
-    question: "Presque fini ! Un numéro de téléphone pour discuter du projet de vive voix ?",
+    question: "Presque ! Un numéro pour qu'on puisse se parler si besoin ?",
     type: 'input',
     inputType: 'tel',
     nextStep: 'finish'
@@ -123,6 +123,7 @@ export default function Chatbot() {
   const [error, setError] = useState("");
   const chatEndRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { t } = useLang();
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -136,7 +137,7 @@ export default function Chatbot() {
     const newAnswers = { ...answers, [currentStepId]: option.value };
     setAnswers(newAnswers);
     setHistory((prev) => [...prev, { type: 'user', text: option.label }]);
-    
+
     if (option.nextStep === "validate") {
       const service = newAnswers.site_type || newAnswers.start;
       const budget = option.value;
@@ -144,7 +145,7 @@ export default function Chatbot() {
       setTimeout(() => {
         setIsTyping(false);
         if ((service === "saas" || service === "ecommerce") && budget === "low") {
-          setHistory((prev) => [...prev, { type: 'bot', text: "Soyons honnêtes : un projet SaaS ou E-commerce à moins de 1000€, c'est du bricolage, pas du Wexor. On part sur une Vitrine ?" }]);
+          setHistory((prev) => [...prev, { type: 'bot', text: "Soyons honnêtes : un projet SaaS à moins de 1000€, c'est compliqué. On peut partir sur une vitrine pour commencer ?" }]);
           setCurrentStepId("redirect_choice");
         } else {
           goToNextStep("ask_name");
@@ -167,11 +168,7 @@ export default function Chatbot() {
   };
 
   const validateEmail = (email: string) => {
-    return String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
+    return String(email).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
   };
 
   const handleInputSubmit = (e: React.FormEvent) => {
@@ -199,12 +196,11 @@ export default function Chatbot() {
 
   const finishChat = (finalAnswers: Record<string, string>) => {
     setHistory((prev) => [
-      ...prev, 
-      { type: 'bot', text: "Parfait ! Tout est prêt. Je te redirige pour que tu n'aies plus qu'à cliquer sur envoyer." }
+      ...prev,
+      { type: 'bot', text: "Parfait ! Je te redirige vers le formulaire de contact avec tout pré-rempli 🚀" }
     ]);
 
     setTimeout(() => {
-      // Map logic for URL params
       const projectTypeRaw = finalAnswers.site_type || finalAnswers.start || "";
       const mappedType = VALUE_TO_LABEL[projectTypeRaw] || projectTypeRaw;
       const mappedBudget = VALUE_TO_LABEL[finalAnswers.budget] || finalAnswers.budget || "";
@@ -215,9 +211,9 @@ export default function Chatbot() {
         phone: finalAnswers.ask_phone || "",
         type: mappedType,
         budget: mappedBudget,
-        message: `Audit Chatbot Complet.`
+        message: `Audit Chatbot O'ldev.`
       });
-      
+
       router.push(`/contact?${params.toString()}`);
       setIsOpen(false);
       setTimeout(() => {
@@ -230,17 +226,18 @@ export default function Chatbot() {
 
   return (
     <>
+      {/* Trigger button */}
       <motion.button
         whileHover={{ scale: 1.05, rotate: -2 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[100] bg-abcs-red text-white w-16 h-16 md:w-20 md:h-20 rounded-none shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] border-[4px] border-abcs-black flex items-center justify-center overflow-hidden group"
+        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[100] bg-abcs-black text-white w-16 h-16 md:w-20 md:h-20 rounded-none shadow-[6px_6px_0px_0px_rgba(255,59,0,1)] border-[3px] border-abcs-black flex items-center justify-center overflow-hidden group"
       >
-        <div className="absolute inset-0 bg-abcs-black translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+        <div className="absolute inset-0 bg-abcs-red translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
         {isOpen ? (
-          <span className="font-heading text-4xl md:text-5xl relative z-10 group-hover:text-abcs-red transition-colors">X</span>
+          <span className="font-heading text-3xl md:text-4xl relative z-10">✕</span>
         ) : (
-          <span className="font-heading text-4xl md:text-5xl relative z-10 group-hover:text-white transition-colors">W</span>
+          <span className="font-heading text-2xl md:text-3xl relative z-10 tracking-tight">O&apos;l</span>
         )}
       </motion.button>
 
@@ -251,38 +248,55 @@ export default function Chatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.95 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed bottom-24 right-6 md:bottom-32 md:right-8 z-[100] w-[calc(100vw-48px)] md:w-[450px] h-[70vh] md:h-[600px] max-h-[800px] bg-[#f0f0ee] border-[4px] border-abcs-black shadow-[16px_16px_0px_0px_rgba(255,59,0,1)] flex flex-col overflow-hidden"
+            className="fixed bottom-24 right-6 md:bottom-32 md:right-8 z-[100] w-[calc(100vw-48px)] md:w-[440px] h-[70vh] md:h-[580px] max-h-[800px] bg-[#f0f0ee] border-[3px] border-abcs-black shadow-[12px_12px_0px_0px_rgba(255,59,0,1)] flex flex-col overflow-hidden"
           >
-            <div className="bg-abcs-black text-white px-6 py-5 flex justify-between items-center border-b-[4px] border-abcs-red">
+            {/* Header */}
+            <div className="bg-abcs-black text-white px-6 py-5 flex justify-between items-center border-b-[3px] border-abcs-red">
               <div className="flex flex-col">
-                <span className="font-heading text-2xl tracking-[0.1em] uppercase">Assistant Wexor</span>
-                <span className="text-[10px] font-bold opacity-50 uppercase tracking-widest">En ligne</span>
+                <span className="font-heading text-xl tracking-[0.08em] uppercase">{t("chatbot_name")}</span>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-[10px] font-bold opacity-60 uppercase tracking-widest">{t("chatbot_status")}</span>
+                </div>
               </div>
-              <div className="w-4 h-4 bg-green-500 rounded-full animate-pulse shadow-[0_0_15px_#22c55e]"></div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="font-heading text-2xl hover:text-abcs-red transition-colors"
+              >
+                ✕
+              </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col gap-4 bg-[#f0f0ee] scrollbar-hide">
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 md:p-5 flex flex-col gap-3 bg-[#f0f0ee]">
               {history.map((msg, i) => (
                 <motion.div
                   initial={{ opacity: 0, x: msg.type === 'bot' ? -20 : 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   key={i}
-                  className={`max-w-[85%] p-4 text-sm font-bold border-[3px] shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] ${
-                    msg.type === 'bot' 
-                    ? 'bg-white border-abcs-black text-abcs-black self-start' 
+                  className={`max-w-[85%] p-3.5 text-sm font-bold border-[2px] shadow-[3px_3px_0px_0px_rgba(17,17,17,1)] ${
+                    msg.type === 'bot'
+                    ? 'bg-white border-abcs-black text-abcs-black self-start'
                     : 'bg-abcs-red border-abcs-black text-white self-end'
                   }`}
                 >
                   {msg.text}
                 </motion.div>
               ))}
-              {isTyping && <div className="p-4 bg-white border-4 border-black self-start rounded-tr-xl rounded-br-xl rounded-bl-xl flex gap-1"><div className="w-1.5 h-1.5 bg-abcs-red rounded-full animate-bounce"></div><div className="w-1.5 h-1.5 bg-abcs-red rounded-full animate-bounce delay-100"></div><div className="w-1.5 h-1.5 bg-abcs-red rounded-full animate-bounce delay-200"></div></div>}
+              {isTyping && (
+                <div className="p-3.5 bg-white border-[2px] border-abcs-black self-start shadow-[3px_3px_0px_0px_rgba(17,17,17,1)] flex gap-1.5">
+                  <div className="w-1.5 h-1.5 bg-abcs-red rounded-full animate-bounce" />
+                  <div className="w-1.5 h-1.5 bg-abcs-red rounded-full animate-bounce" style={{ animationDelay: "0.1s" }} />
+                  <div className="w-1.5 h-1.5 bg-abcs-red rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
+                </div>
+              )}
               <div ref={chatEndRef} />
             </div>
 
-            <div className="p-4 md:p-6 bg-white border-t-[4px] border-abcs-black flex flex-col gap-3">
+            {/* Input area */}
+            <div className="p-4 bg-[#f0f0ee] border-t-[3px] border-abcs-black flex flex-col gap-2">
               {error && <div className="text-[10px] font-bold text-abcs-red uppercase tracking-widest mb-1 ml-1">{error}</div>}
-              
+
               {CHAT_LOGIC[currentStepId]?.type === 'input' ? (
                 <form onSubmit={handleInputSubmit} className="flex gap-2">
                   <input
@@ -291,14 +305,14 @@ export default function Chatbot() {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder="Tape ici..."
-                    className="flex-1 border-[3px] border-abcs-black p-3 font-bold text-sm focus:outline-none focus:border-abcs-red bg-[#f0f0ee]"
+                    className="flex-1 border-[2px] border-abcs-black p-3 font-bold text-sm focus:outline-none focus:border-abcs-red bg-white"
                   />
-                  <button type="submit" className="bg-abcs-black text-white px-5 border-[3px] border-abcs-black font-bold text-xl hover:bg-abcs-red transition-colors">→</button>
+                  <button type="submit" className="bg-abcs-black text-white px-5 border-[2px] border-abcs-black font-bold text-xl hover:bg-abcs-red transition-colors">→</button>
                 </form>
               ) : currentStepId === "redirect_choice" ? (
                 <div className="flex gap-2 w-full">
-                  <button onClick={() => router.push('/tarifs')} className="flex-1 bg-abcs-black text-white border-[3px] border-abcs-black py-3 text-xs font-bold uppercase tracking-widest shadow-[4px_4px_0px_0px_rgba(255,59,0,1)] hover:bg-abcs-red transition-colors">Tarifs</button>
-                  <button onClick={() => { setAnswers({...answers, site_type: 'vitrine'}); handleOptionClick({label: "Site Vitrine", value: "vitrine", nextStep: "ask_name"}); }} className="flex-1 bg-white border-[3px] border-abcs-black py-3 text-xs font-bold uppercase tracking-widest shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] hover:bg-[#f0f0ee] transition-colors">Ok Vitrine</button>
+                  <button onClick={() => router.push('/tarifs')} className="flex-1 bg-abcs-black text-white border-[2px] border-abcs-black py-3 text-xs font-bold uppercase tracking-widest shadow-[3px_3px_0px_0px_rgba(255,59,0,1)] hover:bg-abcs-red transition-colors">Tarifs</button>
+                  <button onClick={() => { setAnswers({...answers, site_type: 'vitrine'}); handleOptionClick({label: "Site Vitrine", value: "vitrine", nextStep: "ask_name"}); }} className="flex-1 bg-white border-[2px] border-abcs-black py-3 text-xs font-bold uppercase tracking-widest shadow-[3px_3px_0px_0px_rgba(17,17,17,1)] hover:bg-[#f0f0ee] transition-colors">Ok Vitrine</button>
                 </div>
               ) : (
                 <div className="flex flex-wrap gap-2">
@@ -306,7 +320,7 @@ export default function Chatbot() {
                     <button
                       key={i}
                       onClick={() => handleOptionClick(opt)}
-                      className="bg-[#f0f0ee] border-[3px] border-abcs-black px-4 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-abcs-red hover:text-white transition-colors shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] hover:shadow-[4px_4px_0px_0px_rgba(17,17,17,1)]"
+                      className="bg-white border-[2px] border-abcs-black px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-abcs-red hover:text-white hover:border-abcs-red transition-colors shadow-[2px_2px_0px_0px_rgba(17,17,17,1)]"
                     >
                       {opt.label}
                     </button>

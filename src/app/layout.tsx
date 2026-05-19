@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
 import Preloader from "@/components/Preloader";
 import Chatbot from "@/components/Chatbot";
+import { LangProvider } from "@/components/LanguageContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -25,8 +26,26 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
-  title: "Wexor Agency",
-  description: "Web Development Services",
+  title: "O'ldev — Othmane · Développeur Web Freelance",
+  description:
+    "O'ldev, le portfolio de Othmane — développeur web freelance spécialisé en React, Next.js, WordPress et création de sites sur-mesure, apps web et e-commerce.",
+  keywords: [
+    "développeur web freelance",
+    "création site web",
+    "React",
+    "Next.js",
+    "WordPress",
+    "e-commerce",
+    "portfolio",
+    "O'ldev",
+    "Othmane",
+  ],
+  openGraph: {
+    title: "O'ldev — Othmane · Développeur Web Freelance",
+    description:
+      "Sites sur-mesure, apps web, e-commerce — du code qui convertit.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -40,14 +59,16 @@ export default function RootLayout({
       className={`${inter.variable} ${archivoBlack.variable} ${caveat.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-white text-black">
-        <CustomCursor />
-        <Preloader />
-        <LenisProvider>
-          <Navbar />
-          <div className="flex-1 flex flex-col">{children}</div>
-          <Footer />
-          <Chatbot />
-        </LenisProvider>
+        <LangProvider>
+          <CustomCursor />
+          <Preloader />
+          <LenisProvider>
+            <Navbar />
+            <div className="flex-1 flex flex-col">{children}</div>
+            <Footer />
+            <Chatbot />
+          </LenisProvider>
+        </LangProvider>
       </body>
     </html>
   );

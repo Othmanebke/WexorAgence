@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Link from "next/link";
+import { useLang } from "@/components/LanguageContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -36,7 +37,7 @@ const webPacks = [
   { tag: "Présence Web", title: "Site Vitrine", price: "À partir de 500€", desc: "Un site vitrine professionnel qui présente ton activité avec élégance et convertit tes visiteurs en clients.", features: ["Design sur-mesure unique", "Responsive mobile first", "SEO on-page complet", "Formulaire de contact", "Google Analytics configuré", "Formation CMS incluse"], stack: "React · Next.js · WordPress" },
   { tag: "CMS", title: "Pack WordPress", price: "À partir de 1 200€", desc: "Site complet sous WordPress avec thème premium personnalisé, plugins essentiels et prise en main autonome.", features: ["Thème premium personnalisé", "Plugins SEO & sécurité", "Blog & actualités intégré", "Formulaires avancés", "Optimisation vitesse", "Formation incluse"], stack: "WordPress · WooCommerce · Elementor" },
   { tag: "Développement", title: "Application Web", price: "À partir de 2 500€", desc: "SaaS, dashboard, marketplace ou plateforme métier. Stack moderne, architecture scalable et UX premium.", features: ["Architecture sur-mesure", "Authentification & rôles", "Dashboard utilisateur", "API REST intégrée", "Base de données cloud", "CI/CD & déploiement inclus"], stack: "Next.js · React · Supabase", highlight: true },
-  { tag: "Transformation", title: "Refonte Web", price: "Sur devis", desc: "Ton site vieilli freine ta croissance ? On le modernise de fond en comble : design, SEO, taux de conversion.", features: ["Audit complet offert", "Nouveau design premium", "Migration de contenu", "Optimisation Core Web Vitals", "SEO technique avancé", "Support post-refonte"], stack: "Sur-mesure · Devis gratuit" },
+  { tag: "Transformation", title: "Refonte Web", price: "Sur devis", desc: "Ton site vieilli freine ta croissance ? Je le modernise de fond en comble : design, SEO, taux de conversion.", features: ["Audit complet offert", "Nouveau design premium", "Migration de contenu", "Optimisation Core Web Vitals", "SEO technique avancé", "Support post-refonte"], stack: "Sur-mesure · Devis gratuit" },
 ];
 
 const socialPacks = [
@@ -53,6 +54,7 @@ const brandingPacks = [
 export default function TarifsPage() {
   const [openPack, setOpenPack] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useLang();
 
   useGSAP(() => {
     gsap.from(".tarif-row", { y: 50, opacity: 0, duration: 0.6, stagger: 0.08, ease: "power2.out", scrollTrigger: { trigger: ".tarifs-list", start: "top 80%" } });
@@ -62,7 +64,7 @@ export default function TarifsPage() {
 
   return (
     <main ref={containerRef} className="flex-1 flex flex-col bg-[#f0f0ee]">
-      <PageHeader number="03" title="TARIFS" subtitle="Nos offres & investissements" />
+      <PageHeader number="03" title="TARIFS" subtitle={t("page_tarifs_sub")} />
 
       <section className="w-full px-6 md:px-8 pt-16 md:pt-20 pb-12 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
@@ -70,7 +72,7 @@ export default function TarifsPage() {
             <h2 className="font-heading text-4xl md:text-5xl uppercase leading-tight">Pas de frais cachés.<br />Juste de la valeur.</h2>
           </LineReveal>
           <FadeUp delay={0.2} className="md:w-1/2">
-            <p className="font-bold text-lg opacity-60 leading-relaxed">Tarification claire basée sur la valeur réelle. Chaque projet fait l&apos;objet d&apos;un devis personnalisé.</p>
+            <p className="font-bold text-lg opacity-60 leading-relaxed">Tarification claire basée sur la valeur réelle. Chaque projet fait l&apos;objet d&apos;un devis personnalisé gratuit.</p>
           </FadeUp>
         </div>
       </section>
@@ -83,7 +85,7 @@ export default function TarifsPage() {
       <section className="w-full px-6 md:px-8 py-16 bg-[#f0f0ee]">
         <div className="w-full max-w-7xl mx-auto">
           <LineReveal className="mb-16">
-            <h2 className="font-heading text-6xl md:text-8xl uppercase leading-none">NOS SERVICES WEB</h2>
+            <h2 className="font-heading text-6xl md:text-8xl uppercase leading-none">MES SERVICES WEB</h2>
           </LineReveal>
           <div className="tarifs-list flex flex-col border-t border-black/15">
             {webPacks.map((p, i) => (

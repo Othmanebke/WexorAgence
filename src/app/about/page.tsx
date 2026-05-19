@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Link from "next/link";
+import { useLang } from "@/components/LanguageContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -32,12 +33,12 @@ function FadeUp({ children, delay = 0, className = "" }: { children: React.React
   );
 }
 
-const skills = ["React / Next.js", "Node.js", "Intelligence Artificielle", "ServiceNow", "TypeScript", "Tailwind CSS", "HTML / CSS", "WordPress", "UX Design", "SEO", "Figma", "Vercel"];
+const skills = ["HTML / CSS", "JavaScript", "React", "Next.js", "Node.js", "WordPress", "Framer", "TypeScript", "Tailwind CSS", "Canva", "Adobe CC", "Figma", "SEO", "UX Design", "Vercel"];
 
 const timeline = [
   { period: "2018–2023", title: "Formation", desc: "Bac+5 Expert Informatique Web. Mastère spécialisé en développement & architecture web. Bases solides, projets académiques concrets.", accent: true },
   { period: "2021–2025", title: "Expérience Pro", desc: "Developer ServiceNow chez Inetum · Consultant ITSM & UX chez Fujitsu · Developer Full Stack chez AJC — 4 ans en grand compte et startups.", accent: false },
-  { period: "2025–Présent", title: "Création de Wexor", desc: "Fondation de l'agence digitale pour accompagner les TPE/PME. Design premium, code sur-mesure, relation directe sans intermédiaire.", accent: true },
+  { period: "2025–Présent", title: "Lancement O'ldev", desc: "Lancement de mon activité freelance pour accompagner TPE/PME et entrepreneurs. Design premium, code sur-mesure, relation directe sans intermédiaire.", accent: true },
 ];
 
 const experiences = [
@@ -50,12 +51,13 @@ const values = [
   { t: "Pragmatisme", d: "Des solutions axées sur les résultats, sans complexité inutile." },
   { t: "Transparence", d: "Budget et planning clairs dès le départ, zéro mauvaise surprise." },
   { t: "Qualité", d: "Performance, accessibilité et design au cœur de chaque livrable." },
-  { t: "Partenariat", d: "On travaille avec toi, pas juste pour toi — relation durable." },
+  { t: "Partenariat", d: "Je travaille avec toi, pas juste pour toi — relation durable." },
 ];
 
 export default function AboutPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const bigTextRef = useRef<HTMLDivElement>(null);
+  const { t } = useLang();
 
   useGSAP(() => {
     if (bigTextRef.current) {
@@ -80,13 +82,13 @@ export default function AboutPage() {
 
   return (
     <main ref={containerRef} className="flex-1 flex flex-col bg-[#f0f0ee]">
-      <PageHeader number="02" title="À PROPOS" subtitle="Qui je suis" />
+      <PageHeader number="02" title="À PROPOS" subtitle={t("page_about_sub")} />
 
       {/* Big scrolling text */}
       <div className="w-full overflow-hidden py-8 border-b border-black/10">
         <div ref={bigTextRef} className="w-max">
           <p className="font-heading text-[#111]/[0.06] uppercase leading-none whitespace-nowrap select-none" style={{ fontSize: "clamp(6rem, 18vw, 22rem)" }}>
-            OTHMANE BOUAKLINE WEXOR
+            OTHMANE BOUAKLINE O&apos;LDEV
           </p>
         </div>
       </div>
@@ -95,12 +97,26 @@ export default function AboutPage() {
       <section className="w-full px-6 md:px-8 py-16 md:py-24 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row gap-12 md:gap-16 items-start">
 
-          {/* Left: portrait placeholder */}
+          {/* Left: portrait card */}
           <div className="md:w-5/12 shrink-0">
             <div className="relative">
               <div className="w-full aspect-[4/5] bg-abcs-black flex flex-col items-center justify-center p-10 text-center text-white">
+                {/* Animated code decoration */}
+                <div className="absolute top-6 left-6 flex flex-col gap-1 text-left">
+                  {["// O'ldev", "const me = {", "  nom: 'Othmane',", "  stack: 'fullstack',"].map((line, i) => (
+                    <motion.span
+                      key={i}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3 + i * 0.1 }}
+                      className="font-mono text-[10px] text-white/20"
+                    >
+                      {line}
+                    </motion.span>
+                  ))}
+                </div>
                 <h2 className="font-heading text-4xl uppercase leading-none mb-4">Othmane<br />Bouakline</h2>
-                <div className="font-bold text-abcs-red text-xl mb-6">Fondateur & Dev</div>
+                <div className="font-bold text-abcs-red text-xl mb-6">Développeur Web Freelance</div>
                 <p className="font-bold opacity-50 text-sm leading-relaxed">Bac+5 Expert Informatique Web<br />Mastère spécialisé architecture web</p>
                 <div className="mt-6 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -121,7 +137,7 @@ export default function AboutPage() {
             </LineReveal>
             <FadeUp delay={0.2}>
               <p className="font-bold text-xl leading-snug opacity-90">
-                On ne crée pas des sites. On construit des <span className="text-abcs-red">leviers de croissance</span>. Je permets aux entrepreneurs de se concentrer sur leur métier pendant que je construis une présence digitale efficace et durable.
+                Un développeur web freelance avec une obsession : faire des sites qui <span className="text-abcs-red">convertissent et durent</span>. Je permets aux entrepreneurs de se concentrer sur leur métier pendant que je construis une présence digitale efficace.
               </p>
             </FadeUp>
             <FadeUp delay={0.35}>
@@ -133,7 +149,7 @@ export default function AboutPage() {
             <FadeUp delay={0.5}>
               <div className="grid grid-cols-2 gap-6 border-t border-black/15 pt-8">
                 {[
-                  { val: "50+", label: "Projets livrés" },
+                  { val: "10+", label: "Projets livrés" },
                   { val: "100%", label: "Satisfaction" },
                   { val: "48h", label: "Délai de réponse" },
                   { val: "5 ans", label: "D'expertise" },
@@ -231,14 +247,14 @@ export default function AboutPage() {
 
       {/* ─── VALUES ─── */}
       <div className="w-full bg-abcs-red flex items-center justify-between px-6 md:px-8 py-4">
-        <span className="font-bold text-white text-[10px] md:text-xs uppercase tracking-[0.2em]">Ce qui nous guide</span>
+        <span className="font-bold text-white text-[10px] md:text-xs uppercase tracking-[0.2em]">Ce qui me guide</span>
         <span className="font-heading text-white text-xl md:text-2xl">04</span>
       </div>
 
       <section className="w-full px-6 md:px-8 py-16 bg-[#f0f0ee]">
         <div className="w-full max-w-7xl mx-auto">
           <LineReveal className="mb-12 md:mb-16">
-            <h2 className="font-heading text-4xl sm:text-5xl md:text-7xl uppercase leading-none">NOS VALEURS</h2>
+            <h2 className="font-heading text-4xl sm:text-5xl md:text-7xl uppercase leading-none">MES VALEURS</h2>
           </LineReveal>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black/10">
             {values.map((v, i) => (
@@ -257,7 +273,7 @@ export default function AboutPage() {
       {/* CTA */}
       <section className="w-full bg-abcs-black text-white py-24 md:py-32 px-6 md:px-8 flex flex-col items-center text-center">
         <LineReveal className="mb-4">
-          <h2 className="font-heading text-4xl sm:text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter">ON CRÉE</h2>
+          <h2 className="font-heading text-4xl sm:text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter">ON CODE</h2>
         </LineReveal>
         <LineReveal delay={0.1} className="mb-12">
           <h2 className="font-heading text-4xl sm:text-5xl md:text-8xl uppercase leading-[0.85] tracking-tighter text-abcs-red">ENSEMBLE ?</h2>

@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useLang } from "@/components/LanguageContext";
 
 export default function Footer() {
+  const { t } = useLang();
+
   return (
     <footer className="w-full bg-abcs-black text-white">
 
@@ -11,13 +16,13 @@ export default function Footer() {
           {/* Vision & CTA */}
           <div className="md:col-span-4 flex flex-col gap-8">
             <p className="font-bold text-xl md:text-2xl leading-snug max-w-xs opacity-80">
-              On ne fait pas juste des sites. On crée des visions qui s&apos;imposent et durent.
+              {t("footer_vision")}
             </p>
             <Link
               href="/contact"
               className="inline-flex items-center gap-3 border border-white/30 px-6 py-3 font-bold text-xs uppercase tracking-widest hover:border-abcs-red hover:text-abcs-red transition-colors duration-300 group w-fit"
             >
-              <span>Travaillons ensemble</span>
+              <span>{t("footer_cta")}</span>
               <span className="text-base leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
             </Link>
           </div>
@@ -26,8 +31,8 @@ export default function Footer() {
           <div className="md:col-span-4 flex flex-col gap-2">
             {[
               { label: "Portfolio", href: "/portfolio" },
-              { label: "Services", href: "/tarifs" },
-              { label: "About", href: "/about" },
+              { label: t("nav_services"), href: "/tarifs" },
+              { label: t("nav_about"), href: "/about" },
               { label: "Contact", href: "/contact" },
             ].map((link) => (
               <Link
@@ -43,38 +48,41 @@ export default function Footer() {
           {/* Contact info */}
           <div className="md:col-span-4 flex flex-col gap-10 md:items-end">
             <div className="flex flex-col md:items-end gap-1">
-              <span className="font-bold text-[10px] uppercase tracking-widest opacity-30 mb-1">Projets & Devis</span>
+              <span className="font-bold text-[10px] uppercase tracking-widest opacity-30 mb-1">{t("footer_email_label")}</span>
               <a
-                href="mailto:studio@wexor-agence.com"
-                className="font-bold text-lg hover:text-abcs-red transition-colors"
+                href="mailto:othmane.bouakline.pro@gmail.com"
+                className="font-bold text-base hover:text-abcs-red transition-colors break-all"
               >
-                studio@wexor-agence.com
+                othmane.bouakline.pro@gmail.com
               </a>
             </div>
             <div className="flex flex-col md:items-end gap-1">
-              <span className="font-bold text-[10px] uppercase tracking-widest opacity-30 mb-1">Collaboration</span>
-              <a
-                href="mailto:work@wexor-agence.com"
-                className="font-bold text-lg hover:text-abcs-red transition-colors"
-              >
-                work@wexor-agence.com
-              </a>
+              <span className="font-bold text-[10px] uppercase tracking-widest opacity-30 mb-1">{t("footer_social_label")}</span>
+              <div className="flex gap-6">
+                {[
+                  { label: "GitHub", href: "https://github.com" },
+                  { label: "LinkedIn", href: "https://linkedin.com" },
+                  { label: "Instagram", href: "https://instagram.com" },
+                ].map((s) => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-bold text-[10px] uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-abcs-red transition-all"
+                  >
+                    {s.label}
+                  </a>
+                ))}
+              </div>
             </div>
-            <div className="flex gap-6">
-              {[
-                { label: "Instagram", href: "https://instagram.com" },
-                { label: "LinkedIn", href: "https://linkedin.com" },
-              ].map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-bold text-[10px] uppercase tracking-widest opacity-40 hover:opacity-100 hover:text-abcs-red transition-all"
-                >
-                  {s.label}
-                </a>
-              ))}
+
+            {/* Availability badge */}
+            <div className="flex items-center gap-2 md:justify-end">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-bold text-xs uppercase tracking-widest text-emerald-400">
+                Disponible pour nouveaux projets
+              </span>
             </div>
           </div>
         </div>
@@ -84,19 +92,19 @@ export default function Footer() {
       <div className="w-full overflow-hidden px-4 py-8">
         <h2
           className="font-heading text-abcs-red/20 uppercase leading-[0.8] tracking-tighter select-none text-center"
-          style={{ fontSize: "clamp(5rem, 22vw, 28rem)" }}
+          style={{ fontSize: "clamp(4rem, 20vw, 26rem)" }}
         >
-          WEXOR
+          O&apos;LDEV
         </h2>
       </div>
 
       {/* ─── Bottom legal ─── */}
       <div className="w-full px-8 py-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
         <p className="font-bold text-[10px] uppercase tracking-widest opacity-30">
-          © {new Date().getFullYear()} Wexor Studio — Tous droits réservés.
+          © {new Date().getFullYear()} O&apos;ldev — {t("footer_rights")}
         </p>
         <p className="font-bold text-[10px] uppercase tracking-widest opacity-30">
-          By Othmane Bouakline
+          By {t("footer_by")}
         </p>
       </div>
     </footer>

@@ -7,33 +7,57 @@ import StackShowcase from "@/components/StackShowcase";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { useLang } from "@/components/LanguageContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const navLinks = [
-  { label: "Tarifs", href: "/tarifs" },
-  { label: "Portfolio", href: "/portfolio" },
-  { label: "Qui je suis", href: "/about" },
-  { label: "Contact", href: "/contact" },
-];
+// ─── Text Scramble Hook ───────────────────────────────────────────────────────
+const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&";
+function useTextScramble(target: string, trigger: boolean, duration = 1200) {
+  const [display, setDisplay] = useState(target);
+  useEffect(() => {
+    if (!trigger) return;
+    let frame = 0;
+    const totalFrames = Math.ceil(duration / 16);
+    const interval = setInterval(() => {
+      frame++;
+      const progress = frame / totalFrames;
+      setDisplay(
+        target
+          .split("")
+          .map((char, i) => {
+            if (char === " " || char === "'" || char === ".") return char;
+            if (i / target.length < progress) return char;
+            return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+          })
+          .join("")
+      );
+      if (frame >= totalFrames) {
+        clearInterval(interval);
+        setDisplay(target);
+      }
+    }, 16);
+    return () => clearInterval(interval);
+  }, [trigger, target, duration]);
+  return display;
+}
 
 const services = [
   { n: "01", title: "Site web sur-mesure", tags: "React · Next.js · WordPress" },
-  { n: "02", title: "Refonte & Optimisation", tags: "UX/UI · Performance" },
-  { n: "03", title: "SEO & Référencement", tags: "On-page · Technique" },
-  { n: "04", title: "Flyers & Print", tags: "Figma · Adobe" },
-  { n: "05", title: "Community Management", tags: "Instagram · LinkedIn" },
+  { n: "02", title: "Application Web", tags: "SaaS · Dashboard · Full Stack" },
+  { n: "03", title: "E-commerce", tags: "WooCommerce · Next Commerce" },
+  { n: "04", title: "Refonte & Optimisation", tags: "UX/UI · Performance · SEO" },
+  { n: "05", title: "Branding & Print", tags: "Canva · Adobe · Identité" },
   { n: "06", title: "Intégration IA", tags: "Chatbots · Automatisation" },
 ];
 
 const faqs = [
-  { q: "Comment commencer un projet ?", a: "Via le formulaire ou un appel découverte. Brief rapide, puis devis sous 48 h." },
+  { q: "Comment commencer un projet ?", a: "Via le formulaire ou un appel découverte. Brief rapide, puis devis sous 48h." },
   { q: "Combien de temps pour un site vitrine ?", a: "Généralement 1 à 3 semaines selon le contenu et les validations." },
-  { q: "Offrez-vous la gestion des réseaux sociaux ?", a: "Oui — packs community management et campagnes d'influence sur demande." },
-  { q: "Proposez-vous du support & maintenance ?", a: "Oui, maintenance mensuelle, mises à jour et monitoring disponibles en option." },
+  { q: "Offres-tu la gestion des réseaux sociaux ?", a: "Oui — packs community management sur demande." },
+  { q: "Proposes-tu du support & maintenance ?", a: "Oui, maintenance mensuelle, mises à jour et monitoring disponibles en option." },
 ];
 
-// Clip-reveal for a single line of text
 function LineReveal({
   children,
   delay = 0,
@@ -87,10 +111,18 @@ export default function Home() {
   const bigTextRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const marqueeRef = useRef<HTMLDivElement>(null);
+  const [heroReady, setHeroReady] = useState(false);
+  const { t } = useLang();
+
+  useEffect(() => {
+    const timer = setTimeout(() => setHeroReady(true), 400);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const scrambledLogo = useTextScramble("O'DEV", heroReady, 1400);
 
   // GSAP parallax + scroll effects
   useGSAP(() => {
-    // Big overflowing text parallax
     if (bigTextRef.current) {
       gsap.fromTo(
         bigTextRef.current,
@@ -108,7 +140,6 @@ export default function Home() {
       );
     }
 
-    // Image parallax
     if (imageRef.current) {
       gsap.fromTo(
         imageRef.current,
@@ -126,7 +157,6 @@ export default function Home() {
       );
     }
 
-    // Marquee
     if (marqueeRef.current) {
       const inner = marqueeRef.current.querySelector(".marquee-inner");
       if (inner) {
@@ -139,7 +169,6 @@ export default function Home() {
       }
     }
 
-    // Service rows stagger reveal
     const rows = gsap.utils.toArray(".service-row-item");
     gsap.from(rows, {
       y: 30,
@@ -174,7 +203,7 @@ export default function Home() {
                 animate={{ y: 0 }}
                 transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
               >
-                WEX
+                {scrambledLogo}
               </motion.h1>
             </div>
             <motion.div
@@ -183,8 +212,8 @@ export default function Home() {
               transition={{ delay: 0.7, duration: 0.6 }}
               className="flex justify-between font-bold text-abcs-red text-[10px] md:text-xs tracking-[0.2em] uppercase mt-3"
             >
-              <span>WEXOR AGENCE</span>
-              <span>CRÉATION WEB</span>
+              <span>O&apos;LDEV</span>
+              <span>{t("hero_sub2")}</span>
             </motion.div>
           </div>
 
@@ -195,7 +224,12 @@ export default function Home() {
             transition={{ delay: 0.45, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="hidden md:flex items-center gap-1 font-bold text-lg md:text-2xl lg:text-3xl tracking-tight pt-2"
           >
-            {navLinks.map((link, i) => (
+            {[
+              { label: t("nav_services"), href: "/tarifs" },
+              { label: t("nav_portfolio"), href: "/portfolio" },
+              { label: t("nav_about"), href: "/about" },
+              { label: t("nav_contact"), href: "/contact" },
+            ].map((link, i, arr) => (
               <span key={link.href} className="flex items-center">
                 <a
                   href={link.href}
@@ -203,14 +237,14 @@ export default function Home() {
                 >
                   {link.label}
                 </a>
-                {i < navLinks.length - 1 && (
+                {i < arr.length - 1 && (
                   <span className="text-abcs-black/40 mr-1">,</span>
                 )}
               </span>
             ))}
           </motion.nav>
 
-          {/* Mobile nav toggle placeholder */}
+          {/* Mobile menu button */}
           <motion.a
             href="/contact"
             initial={{ opacity: 0 }}
@@ -232,12 +266,12 @@ export default function Home() {
             transition={{ delay: 0.85, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="text-sm md:text-base font-bold opacity-60 max-w-[280px] leading-relaxed self-end md:self-auto"
           >
-            Développé pour les marques
-            <br />ambitieuses qui refusent le
-            <br />compromis.
+            {t("hero_desc").split("\n").map((line, i) => (
+              <span key={i}>{line}{i < 2 && <br />}</span>
+            ))}
           </motion.p>
 
-          {/* Right block: tagline + CTA + orange banner */}
+          {/* Right block: tagline + CTA */}
           <div className="flex flex-col items-start md:items-start gap-8 max-w-xl">
             <div className="overflow-hidden">
               <motion.h2
@@ -246,9 +280,12 @@ export default function Home() {
                 animate={{ y: 0 }}
                 transition={{ delay: 0.6, duration: 1, ease: [0.22, 1, 0.36, 1] }}
               >
-                L&apos;agence qui transforme
-                <br />ton image en
-                <br /><span className="text-abcs-red">machine de guerre.</span>
+                {t("hero_tagline").split("\n").map((line, i) => (
+                  <span key={i}>
+                    {i === 2 ? <span className="text-abcs-red">{line}</span> : line}
+                    {i < 2 && <br />}
+                  </span>
+                ))}
               </motion.h2>
             </div>
 
@@ -262,22 +299,37 @@ export default function Home() {
                 href="/contact"
                 className="inline-flex items-center gap-3 bg-abcs-black text-white px-6 py-3 font-bold text-sm uppercase tracking-widest hover:bg-abcs-red transition-colors duration-300 group"
               >
-                <span>Nous découvrir</span>
+                <span>{t("hero_cta")}</span>
                 <span className="text-lg leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200">↗</span>
               </a>
 
-              {/* Numbered orange banner */}
               <a
                 href="#about"
                 className="flex items-center justify-between bg-abcs-red text-white px-4 md:px-6 py-3 font-bold text-[10px] md:text-xs uppercase tracking-[0.15em] w-full hover:bg-abcs-black transition-colors duration-300 group"
               >
-                <span>Notre approche — Qui on est</span>
+                <span>{t("hero_about_link")}</span>
                 <span className="font-heading text-xl md:text-2xl leading-none group-hover:translate-x-1 transition-transform">01</span>
               </a>
             </motion.div>
           </div>
         </div>
       </section>
+
+      {/* ─── TECH TICKER ─── */}
+      <div ref={marqueeRef} className="w-full overflow-hidden border-t border-b border-black/10 py-4 bg-[#f0f0ee]">
+        <div className="marquee-inner flex whitespace-nowrap gap-0 w-max">
+          {[...Array(2)].map((_, repeat) => (
+            <span key={repeat} className="flex items-center">
+              {["HTML", "CSS", "JAVASCRIPT", "REACT", "NEXT.JS", "NODE.JS", "WORDPRESS", "FRAMER", "CANVA", "ADOBE", "FIGMA", "TYPESCRIPT"].map((tech, i) => (
+                <span key={i} className="flex items-center">
+                  <span className="font-heading text-abcs-black/20 text-sm uppercase tracking-[0.3em] px-6">{tech}</span>
+                  <span className="text-abcs-red font-bold text-sm">·</span>
+                </span>
+              ))}
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* ─── BIG SCROLLING TEXT + IMAGE (Section 01) ─── */}
       <section id="about" className="w-full relative overflow-hidden py-24 border-t border-black/10">
@@ -288,7 +340,7 @@ export default function Home() {
             className="font-heading text-abcs-black/10 uppercase leading-none whitespace-nowrap select-none"
             style={{ fontSize: "clamp(8rem, 22vw, 28rem)" }}
           >
-            ON A GRANDI POUR TES PROJETS
+            {t("about_big")}
           </p>
         </div>
 
@@ -298,9 +350,23 @@ export default function Home() {
           {/* Image */}
           <div className="w-full md:w-5/12 overflow-hidden relative h-[420px] md:h-[560px] flex-shrink-0">
             <div ref={imageRef} className="w-full h-full bg-abcs-black">
-              {/* Placeholder image avec gradient */}
-              <div className="w-full h-full bg-gradient-to-br from-[#1a1a1a] to-[#333] flex items-end p-8">
-                <p className="font-bold text-white/30 text-xs uppercase tracking-widest">Wexor Studio — 2024</p>
+              <div className="w-full h-full bg-gradient-to-br from-[#1a1a1a] to-[#333] flex flex-col items-start justify-end p-8 gap-4">
+                {/* Fashion-style code lines */}
+                <div className="flex flex-col gap-1">
+                  {["const dev = 'Othmane';", "const brand = \"O'ldev\";", "const style = 'brutalist';", "const result = 🔥;"].map((line, i) => (
+                    <motion.p
+                      key={i}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 1.2 + i * 0.15, duration: 0.5 }}
+                      className="font-mono text-xs text-white/40"
+                    >
+                      <span className="text-abcs-red">{line.split("=")[0]}=</span>
+                      {line.split("=")[1]}
+                    </motion.p>
+                  ))}
+                </div>
+                <p className="font-bold text-white/30 text-xs uppercase tracking-widest">O&apos;ldev Studio — 2025</p>
               </div>
             </div>
           </div>
@@ -309,32 +375,30 @@ export default function Home() {
           <div className="w-full md:w-7/12 flex flex-col gap-8 pt-8">
             <LineReveal>
               <h2 className="font-heading text-5xl md:text-7xl lg:text-8xl leading-[0.85] tracking-tight uppercase">
-                Wexor,<br />c&apos;est quoi ?
+                {t("about_title").split("\n").map((line, i) => (
+                  <span key={i}>{line}{i === 0 && <br />}</span>
+                ))}
               </h2>
             </LineReveal>
 
             <FadeUp delay={0.2}>
               <p className="font-bold text-xl md:text-2xl leading-snug opacity-90">
-                Une agence web fondée sur une obsession :
-                faire des sites qui <em>convertissent</em>, pas juste des sites
-                qui font beau.
+                {t("about_p1")}
               </p>
             </FadeUp>
 
             <FadeUp delay={0.35}>
               <p className="font-bold text-base opacity-55 leading-relaxed max-w-md">
-                Du code propre. Du design sur-mesure. Une stratégie pensée pour
-                tes objectifs — pas pour les nôtres. Pas de templates, pas de
-                copier-coller, juste du résultat.
+                {t("about_p2")}
               </p>
             </FadeUp>
 
             <FadeUp delay={0.5}>
               <div className="flex flex-wrap gap-8 md:gap-12 pt-4 border-t border-black/15">
                 {[
-                  { end: 10, prefix: "+", label: "Clients" },
-                  { end: 100, suffix: "%", label: "Satisfaction" },
-                  { end: 48, suffix: "h", label: "Réponse" },
+                  { end: 10, prefix: "+", label: t("stat_clients") },
+                  { end: 100, suffix: "%", label: t("stat_satisfaction") },
+                  { end: 48, suffix: "h", label: t("stat_response") },
                 ].map((s) => (
                   <div key={s.label}>
                     <div className="font-heading text-4xl md:text-5xl text-abcs-red">
@@ -351,7 +415,7 @@ export default function Home() {
 
       {/* ─── ORANGE DIVIDER 02 ─── */}
       <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
-        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Ce qu&apos;on fait</span>
+        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">{t("services_label")}</span>
         <span className="font-heading text-white text-2xl">02</span>
       </div>
 
@@ -360,7 +424,7 @@ export default function Home() {
         <div className="w-full max-w-7xl mx-auto">
           <LineReveal className="mb-16">
             <h2 className="font-heading text-6xl md:text-9xl uppercase leading-none tracking-tight">
-              NOS SERVICES
+              {t("services_title")}
             </h2>
           </LineReveal>
 
@@ -394,27 +458,27 @@ export default function Home() {
         <div className="w-full max-w-5xl mx-auto">
           <LineReveal>
             <p className="font-heading text-4xl md:text-6xl lg:text-7xl leading-[1.05] uppercase">
-              Code propre
+              {t("quote_1")}
             </p>
           </LineReveal>
           <LineReveal delay={0.08}>
             <p className="font-heading text-4xl md:text-6xl lg:text-7xl leading-[1.05] uppercase">
-              et design sur-mesure.
+              {t("quote_2")}
             </p>
           </LineReveal>
           <LineReveal delay={0.16}>
             <p className="font-heading text-4xl md:text-6xl lg:text-7xl leading-[1.05] uppercase">
-              SEO et performances.
+              {t("quote_3")}
             </p>
           </LineReveal>
           <LineReveal delay={0.24}>
             <p className="font-heading text-4xl md:text-6xl lg:text-7xl leading-[1.05] uppercase">
-              Notre langage est intentionnel,
+              {t("quote_4")}
             </p>
           </LineReveal>
           <LineReveal delay={0.32}>
             <p className="font-heading text-4xl md:text-6xl lg:text-7xl leading-[1.05] uppercase text-abcs-red">
-              construit pour convertir.
+              {t("quote_5")}
             </p>
           </LineReveal>
 
@@ -423,7 +487,7 @@ export default function Home() {
               href="/tarifs"
               className="inline-flex items-center gap-3 bg-abcs-black text-white px-8 py-4 font-bold text-sm uppercase tracking-widest hover:bg-abcs-red transition-colors duration-300 group"
             >
-              <span>Voir nos tarifs</span>
+              <span>{t("quote_cta")}</span>
               <span className="text-xl leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200">↗</span>
             </a>
           </FadeUp>
@@ -432,7 +496,7 @@ export default function Home() {
 
       {/* ─── ORANGE DIVIDER 04 ─── */}
       <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
-        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">Nos réalisations</span>
+        <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">{t("portfolio_label")}</span>
         <span className="font-heading text-white text-2xl">04</span>
       </div>
 
@@ -441,7 +505,7 @@ export default function Home() {
         <div className="w-full max-w-7xl mx-auto">
           <LineReveal className="mb-16">
             <h2 className="font-heading text-6xl md:text-9xl uppercase leading-none tracking-tight">
-              PORTFOLIO
+              {t("portfolio_title")}
             </h2>
           </LineReveal>
 
@@ -455,7 +519,7 @@ export default function Home() {
               <FadeUp key={i} delay={i * 0.1}>
                 <a
                   href="/portfolio"
-                  className="group block bg-[#f0f0ee] p-8 h-64 flex flex-col justify-between hover:bg-abcs-black hover:text-white transition-colors duration-300 cursor-none"
+                  className="group block bg-[#f0f0ee] p-8 h-64 flex flex-col justify-between hover:bg-abcs-black hover:text-white transition-colors duration-300"
                 >
                   <div className="flex items-start justify-between">
                     <span className="font-bold text-[10px] uppercase tracking-widest opacity-40 group-hover:opacity-60">0{i + 1}</span>
@@ -475,7 +539,7 @@ export default function Home() {
               href="/portfolio"
               className="inline-flex items-center gap-3 border border-abcs-black px-8 py-4 font-bold text-sm uppercase tracking-widest hover:bg-abcs-black hover:text-white transition-colors duration-300 group"
             >
-              <span>Voir tous les projets</span>
+              <span>{t("portfolio_cta")}</span>
               <span className="text-xl leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
             </a>
           </FadeUp>
@@ -487,22 +551,22 @@ export default function Home() {
         <div className="w-full max-w-7xl mx-auto">
           {/* Orange banner 05 */}
           <div className="flex items-center justify-between bg-abcs-red text-white px-6 py-4 mb-16">
-            <span className="font-bold text-xs uppercase tracking-[0.2em]">Comment on travaille</span>
+            <span className="font-bold text-xs uppercase tracking-[0.2em]">{t("process_label")}</span>
             <span className="font-heading text-2xl">05</span>
           </div>
 
           <LineReveal className="mb-16">
             <h2 className="font-heading text-6xl md:text-9xl uppercase leading-none tracking-tight">
-              PROCESSUS
+              {t("process_title")}
             </h2>
           </LineReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-l border-black/15">
             {[
-              { n: "01", t: "Analyse & Stratégie", d: "Audit complet. On identifie les leviers, les freins, et on construit une roadmap sur-mesure." },
-              { n: "02", t: "Design & Prototypage", d: "Maquettes haute fidélité, design system cohérent, prototypes interactifs pour valider chaque pixel." },
+              { n: "01", t: "Analyse & Brief", d: "On cerne tes besoins, ta cible et tes objectifs. Brief complet, puis roadmap claire et budget défini en 48h." },
+              { n: "02", t: "Design & Maquette", d: "Maquettes haute fidélité, design system cohérent. Chaque pixel est pensé pour l'impact et la conversion." },
               { n: "03", t: "Développement", d: "Code propre, performant, accessible. React, Next.js, WordPress — la stack qui te correspond." },
-              { n: "04", t: "Lancement & Suivi", d: "Déploiement, SEO, monitoring et optimisation continue pour des résultats qui durent." },
+              { n: "04", t: "Lancement & Suivi", d: "Déploiement, SEO technique, monitoring et optimisation continue. Je reste dispo après la livraison." },
             ].map((s, i) => (
               <FadeUp key={i} delay={i * 0.1}>
                 <div className="border-b border-r border-black/15 p-8 md:p-12 flex flex-col gap-6 h-full hover:bg-abcs-red hover:text-white transition-colors duration-300 group">
@@ -567,12 +631,12 @@ export default function Home() {
       <section className="w-full bg-abcs-black text-white py-24 md:py-32 px-6 md:px-8 flex flex-col items-center text-center">
         <LineReveal className="mb-4 md:mb-6">
           <h2 className="font-heading text-4xl sm:text-5xl md:text-8xl lg:text-[10rem] uppercase leading-[0.85] tracking-tighter">
-            ON CRÉE
+            {t("cta_line1")}
           </h2>
         </LineReveal>
         <LineReveal delay={0.1} className="mb-8 md:mb-6">
           <h2 className="font-heading text-4xl sm:text-5xl md:text-8xl lg:text-[10rem] uppercase leading-[0.85] tracking-tighter text-abcs-red">
-            ENSEMBLE ?
+            {t("cta_line2")}
           </h2>
         </LineReveal>
         <FadeUp delay={0.4} className="mt-12">
@@ -580,7 +644,7 @@ export default function Home() {
             href="/contact"
             className="inline-flex items-center gap-4 bg-white text-abcs-black px-10 py-5 font-bold text-sm uppercase tracking-widest hover:bg-abcs-red hover:text-white transition-colors duration-300 group"
           >
-            <span>Démarrer un projet</span>
+            <span>{t("cta_btn")}</span>
             <span className="text-xl leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200">↗</span>
           </a>
         </FadeUp>

@@ -33,13 +33,43 @@ function FadeUp({ children, delay = 0, className = "" }: { children: React.React
   );
 }
 
-const skills = ["HTML / CSS", "JavaScript", "React", "Next.js", "Node.js", "WordPress", "Framer", "TypeScript", "Tailwind CSS", "Canva", "Adobe CC", "Figma", "SEO", "UX Design", "Vercel"];
+// 3D perspective TiltCard for portrait fashion effect
+function TiltCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
 
-const timeline = [
-  { period: "2018–2023", title: "Formation", desc: "Bac+5 Expert Informatique Web. Mastère spécialisé en développement & architecture web. Bases solides, projets académiques concrets.", accent: true },
-  { period: "2021–2025", title: "Expérience Pro", desc: "Developer ServiceNow chez Inetum · Consultant ITSM & UX chez Fujitsu · Developer Full Stack chez AJC — 4 ans en grand compte et startups.", accent: false },
-  { period: "2025–Présent", title: "Lancement O'ldev", desc: "Lancement de mon activité freelance pour accompagner TPE/PME et entrepreneurs. Design premium, code sur-mesure, relation directe sans intermédiaire.", accent: true },
-];
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = ref.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -8;
+    const rotateY = ((x - centerX) / centerX) * 8;
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
+  };
+
+  const handleMouseLeave = () => {
+    if (ref.current) {
+      ref.current.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+    }
+  };
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-transform duration-200 ease-out ${className}`}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ transformStyle: "preserve-3d" }}
+    >
+      {children}
+    </div>
+  );
+}
+
+const skills = ["HTML / CSS", "JavaScript", "React", "Next.js", "Node.js", "WordPress", "Framer", "TypeScript", "Tailwind CSS", "Canva", "Adobe CC", "Figma", "SEO", "UX Design", "Vercel"];
 
 const experiences = [
   { title: "Developer ServiceNow", company: "Inetum", period: "Sept 2025 — Présent", current: true, desc: "Développement et personnalisation de la plateforme ServiceNow : workflows, portails, intégrations API et automatisations ITSM." },
@@ -66,14 +96,29 @@ export default function AboutPage() {
         { xPercent: 3, ease: "none", scrollTrigger: { trigger: bigTextRef.current, start: "top bottom", end: "bottom top", scrub: 1.2 } }
       );
     }
-    gsap.from(".timeline-item", {
-      x: -60, opacity: 0, duration: 0.8, stagger: 0.15, ease: "power3.out",
-      scrollTrigger: { trigger: ".timeline-section", start: "top 75%" }
-    });
+    
+    // Fashion Color Inversion on Scroll for Experiences Section
+    gsap.fromTo(".exp-section-wrapper", 
+      { backgroundColor: "#f0f0ee", color: "#111111" },
+      { 
+        backgroundColor: "#111111", 
+        color: "#f0f0ee", 
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".exp-section-wrapper",
+          start: "top 60%",
+          end: "top 25%",
+          scrub: true,
+          toggleActions: "play reverse play reverse"
+        }
+      }
+    );
+
     gsap.from(".exp-item", {
       y: 60, opacity: 0, duration: 0.7, stagger: 0.12, ease: "power2.out",
       scrollTrigger: { trigger: ".exp-section", start: "top 80%" }
     });
+    
     gsap.from(".skill-tag", {
       scale: 0.8, opacity: 0, duration: 0.4, stagger: 0.04, ease: "back.out(1.4)",
       scrollTrigger: { trigger: ".skills-section", start: "top 80%" }
@@ -97,10 +142,10 @@ export default function AboutPage() {
       <section className="w-full px-6 md:px-8 py-16 md:py-24 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row gap-12 md:gap-16 items-start">
 
-          {/* Left: portrait card */}
+          {/* Left: portrait card with 3D Tilt & spin text badge */}
           <div className="md:w-5/12 shrink-0">
-            <div className="relative">
-              <div className="w-full aspect-[4/5] bg-abcs-black flex flex-col items-center justify-center p-10 text-center text-white">
+            <TiltCard className="relative">
+              <div className="w-full aspect-[4/5] bg-abcs-black flex flex-col items-center justify-center p-10 text-center text-white relative overflow-hidden">
                 {/* Animated code decoration */}
                 <div className="absolute top-6 left-6 flex flex-col gap-1 text-left">
                   {["// O'ldev", "const me = {", "  nom: 'Othmane',", "  stack: 'fullstack',"].map((line, i) => (
@@ -125,7 +170,19 @@ export default function AboutPage() {
               </div>
               {/* Red accent */}
               <div className="absolute -bottom-3 -right-3 w-full h-full bg-abcs-red -z-10" />
-            </div>
+
+              {/* Spin high-fashion circular sticker badge */}
+              <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-abcs-red rounded-full flex items-center justify-center text-white text-[8px] font-mono font-bold tracking-widest text-center uppercase z-20 select-none hidden sm:flex shadow-lg">
+                <svg viewBox="0 0 100 100" className="w-full h-full p-1 animate-[spin_20s_linear_infinite]">
+                  <path id="circlePath" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="none" />
+                  <text fill="white" className="font-bold tracking-widest text-[7px] uppercase font-mono">
+                    <textPath href="#circlePath">
+                      • O&apos;LDEV • FREELANCE • MASTER WEB • PORTFOLIO
+                    </textPath>
+                  </text>
+                </svg>
+              </div>
+            </TiltCard>
           </div>
 
           {/* Right: text */}
@@ -137,12 +194,12 @@ export default function AboutPage() {
             </LineReveal>
             <FadeUp delay={0.2}>
               <p className="font-bold text-xl leading-snug opacity-90">
-                Un développeur web freelance avec une obsession : faire des sites qui <span className="text-abcs-red">convertissent et durent</span>. Je permets aux entrepreneurs de se concentrer sur leur métier pendant que je construis une présence digitale efficace.
+                Un développeur web freelance avec une obsession : faire des sites qui <span className="text-abcs-red">convertissent et durent</span>. Diplômé d&apos;un <span className="text-abcs-red">Bac+5 Expert Informatique Web</span> avec un <span className="text-abcs-red">Mastère spécialisé en développement & architecture web</span>, j&apos;accompagne les entrepreneurs pour construire une présence digitale de haut standing.
               </p>
             </FadeUp>
             <FadeUp delay={0.35}>
               <p className="font-bold text-base opacity-55 leading-relaxed">
-                5 ans d&apos;expérience entre le grand compte (Fujitsu, Inetum) et le freelance créatif — une combinaison rare qui me permet de comprendre à la fois les enjeux techniques et business de mes clients.
+                Fort de 5 ans d&apos;expérience passés entre les grands comptes (Consultant ITSM & UX chez Fujitsu France, Développeur ServiceNow chez Inetum) et le freelance créatif, je possède une double vision : une rigueur technique absolue alliée à un sens poussé de l&apos;esthétique et de la conversion business.
               </p>
             </FadeUp>
 
@@ -186,69 +243,46 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ─── TIMELINE ─── */}
-      <div className="w-full bg-abcs-red flex items-center justify-between px-6 md:px-8 py-4">
-        <span className="font-bold text-white text-[10px] md:text-xs uppercase tracking-[0.2em]">Mon parcours</span>
-        <span className="font-heading text-white text-xl md:text-2xl">02</span>
-      </div>
-
-      <section className="timeline-section w-full px-6 md:px-8 py-16 bg-[#f0f0ee]">
-        <div className="w-full max-w-7xl mx-auto">
-          <LineReveal className="mb-12 md:mb-16">
-            <h2 className="font-heading text-4xl sm:text-5xl md:text-7xl uppercase leading-none">PARCOURS</h2>
-          </LineReveal>
-          <div className="flex flex-col gap-0 border-t border-black/15">
-            {timeline.map((item, i) => (
-              <div key={i} className="timeline-item flex flex-col md:flex-row gap-8 py-10 border-b border-black/15 group hover:bg-abcs-red hover:text-white transition-colors duration-300 px-0 hover:px-6">
-                <div className="font-heading text-3xl md:text-4xl md:w-1/3 shrink-0 leading-tight">{item.period}</div>
-                <div className="md:w-2/3">
-                  <h3 className="font-heading text-3xl uppercase mb-3">{item.title}</h3>
-                  <p className="font-bold opacity-60 group-hover:opacity-80 leading-relaxed">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* ─── EXPERIENCES (With GSAP Fashion Inversion & Custom Styling) ─── */}
+      <div className="exp-section-wrapper transition-colors duration-700">
+        <div className="w-full bg-abcs-red flex items-center justify-between px-6 md:px-8 py-4 text-white">
+          <span className="font-bold text-[10px] md:text-xs uppercase tracking-[0.2em]">Mon parcours pro</span>
+          <span className="font-heading text-xl md:text-2xl">02</span>
         </div>
-      </section>
 
-      {/* ─── EXPERIENCES ─── */}
-      <div className="w-full bg-abcs-red flex items-center justify-between px-6 md:px-8 py-4">
-        <span className="font-bold text-white text-[10px] md:text-xs uppercase tracking-[0.2em]">Expériences pro</span>
-        <span className="font-heading text-white text-xl md:text-2xl">03</span>
-      </div>
-
-      <section className="exp-section w-full px-6 md:px-8 py-16 bg-[#f0f0ee]">
-        <div className="w-full max-w-7xl mx-auto">
-          <LineReveal className="mb-12 md:mb-16">
-            <h2 className="font-heading text-4xl sm:text-5xl md:text-7xl uppercase leading-none">EXPÉRIENCES</h2>
-          </LineReveal>
-          <div className="flex flex-col gap-px bg-black/10">
-            {experiences.map((exp, i) => (
-              <div key={i} className="exp-item flex flex-col md:flex-row gap-8 p-10 bg-[#f0f0ee] group hover:bg-abcs-black hover:text-white transition-colors duration-300">
-                <div className="md:w-1/3">
-                  <div className="font-heading text-2xl md:text-3xl uppercase leading-tight mb-2">{exp.title}</div>
-                  <div className="text-abcs-red font-bold text-sm uppercase tracking-widest">@ {exp.company}</div>
-                  {exp.current && (
-                    <div className="mt-2 flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="font-bold text-xs text-emerald-400 uppercase">Poste actuel</span>
-                    </div>
-                  )}
+        <section className="exp-section w-full px-6 md:px-8 py-16 md:py-24 bg-transparent">
+          <div className="w-full max-w-7xl mx-auto">
+            <LineReveal className="mb-12 md:mb-16">
+              <h2 className="font-heading text-4xl sm:text-5xl md:text-7xl uppercase leading-none">EXPÉRIENCES</h2>
+            </LineReveal>
+            <div className="flex flex-col gap-0 border-t border-current/15">
+              {experiences.map((exp, i) => (
+                <div key={i} className="exp-item flex flex-col md:flex-row gap-8 py-12 border-b border-current/15 group hover:bg-abcs-red hover:text-white px-0 hover:px-8 transition-all duration-300">
+                  <div className="md:w-1/3 shrink-0">
+                    <div className="font-heading text-2xl md:text-3xl uppercase leading-tight mb-2 group-hover:text-white">{exp.title}</div>
+                    <div className="text-abcs-red group-hover:text-white font-bold text-sm uppercase tracking-widest">@ {exp.company}</div>
+                    {exp.current && (
+                      <div className="mt-3 flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="font-bold text-xs text-emerald-400 uppercase">Poste actuel</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="md:w-2/3">
+                    <div className="font-bold text-[10px] uppercase tracking-widest opacity-40 mb-4 group-hover:opacity-80">{exp.period}</div>
+                    <p className="font-bold opacity-75 group-hover:opacity-90 leading-relaxed text-base">{exp.desc}</p>
+                  </div>
                 </div>
-                <div className="md:w-2/3">
-                  <div className="font-bold text-[10px] uppercase tracking-widest opacity-40 mb-4">{exp.period}</div>
-                  <p className="font-bold opacity-70 group-hover:opacity-90 leading-relaxed">{exp.desc}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* ─── VALUES ─── */}
       <div className="w-full bg-abcs-red flex items-center justify-between px-6 md:px-8 py-4">
         <span className="font-bold text-white text-[10px] md:text-xs uppercase tracking-[0.2em]">Ce qui me guide</span>
-        <span className="font-heading text-white text-xl md:text-2xl">04</span>
+        <span className="font-heading text-white text-xl md:text-2xl">03</span>
       </div>
 
       <section className="w-full px-6 md:px-8 py-16 bg-[#f0f0ee]">

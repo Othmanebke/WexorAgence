@@ -188,7 +188,7 @@ export default function Home() {
     <main className="flex flex-col min-h-screen bg-[#f0f0ee] overflow-hidden">
 
       {/* ─── HERO ─── */}
-      <section className="w-full min-h-screen flex flex-col px-6 md:px-8 pt-8 pb-0 relative">
+      <section className="w-full min-h-screen flex flex-col px-6 md:px-8 pt-20 md:pt-8 pb-0 relative">
 
         {/* Top row: Logo + Nav */}
         <div className="flex items-start justify-between w-full">
@@ -244,13 +244,13 @@ export default function Home() {
             ))}
           </motion.nav>
 
-          {/* Mobile menu button */}
+          {/* Mobile menu button (hidden since we have global navbar) */}
           <motion.a
             href="/contact"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.6 }}
-            className="md:hidden font-bold text-xs uppercase tracking-widest border border-abcs-black px-4 py-2 hover:bg-abcs-black hover:text-white transition-colors"
+            className="hidden font-bold text-xs uppercase tracking-widest border border-abcs-black px-4 py-2 hover:bg-abcs-black hover:text-white transition-colors"
           >
             Menu
           </motion.a>

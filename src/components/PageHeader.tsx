@@ -23,10 +23,10 @@ export default function PageHeader({ number = "00", title = "", subtitle }: Page
   ];
 
   return (
-    <section className="w-full pt-8 pb-0 px-6 md:px-8 bg-[#f0f0ee]">
+    <section className="w-full pt-20 md:pt-8 pb-0 px-6 md:px-8 bg-[#f0f0ee]">
 
       {/* ─── Top row: Logo + Nav ─── */}
-      <div className="flex items-start justify-between w-full mb-12">
+      <div className="hidden md:flex items-start justify-between w-full mb-12">
 
         {/* Logo */}
         <Link href="/" className="font-heading text-abcs-red leading-[0.82] tracking-tighter hover:opacity-70 transition-opacity select-none" style={{ fontSize: "clamp(3rem, 6vw, 6rem)" }}>
@@ -58,7 +58,7 @@ export default function PageHeader({ number = "00", title = "", subtitle }: Page
           })}
         </motion.nav>
 
-        {/* Mobile: active page name */}
+        {/* Mobile: active page name (hidden now since we have single navbar) */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -74,7 +74,7 @@ export default function PageHeader({ number = "00", title = "", subtitle }: Page
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.35, duration: 0.5 }}
-        className="flex justify-between font-bold text-abcs-red text-[10px] md:text-xs tracking-[0.2em] uppercase -mt-10 mb-16"
+        className="hidden md:flex justify-between font-bold text-abcs-red text-[10px] md:text-xs tracking-[0.2em] uppercase -mt-10 mb-16"
       >
         <span>O&apos;LDEV</span>
         <span>FREELANCE WEB</span>

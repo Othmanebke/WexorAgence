@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
@@ -35,7 +35,7 @@ function FadeUp({ children, delay = 0, className = "" }: { children: React.React
 }
 
 // Tilt card wrapper with 3D perspective effect
-function TiltCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+function TiltCard({ children, className = "", onClick }: { children: React.ReactNode; className?: string; onClick?: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -63,6 +63,7 @@ function TiltCard({ children, className = "" }: { children: React.ReactNode; cla
       className={`transition-transform duration-200 ease-out ${className}`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onClick={onClick}
       style={{ transformStyle: "preserve-3d" }}
     >
       {children}
@@ -71,16 +72,16 @@ function TiltCard({ children, className = "" }: { children: React.ReactNode; cla
 }
 
 const projects = [
-  { id: 1, title: "Aivana", sub: "SaaS IA", cat: "Dashboard", tech: "Next.js · Tailwind · IA", desc: "Dashboard moderne propulsé par l'IA pour la génération d'insights et l'automatisation avancée.", result: "Rétention B2B augmentée.", img: "/portfolio/AivanaFlyes-SAASdashboardIA-NextTailwind.png", year: "2024" },
-  { id: 2, title: "Ajt Blog", sub: "Blog", cat: "Blog", tech: "React · Tailwind · Next.js", desc: "Blog ultra-rapide optimisé SEO avec une interface épurée.", result: "Chargement < 0.5s.", img: "/portfolio/Ajt-Blog-REACTTAILWINDnext.png", year: "2024" },
-  { id: 3, title: "Brows Creative", sub: "Salon", cat: "E-commerce", tech: "WordPress · WooCommerce", desc: "Boutique et réservation premium pour salon de beauté haut de gamme.", result: "+40% de réservations.", img: "/portfolio/BROWSCREATIVE-SalonCILS&Sourcils-WordpressWoocommerce.png", year: "2024" },
-  { id: 4, title: "Forma Immo", sub: "Immobilier", cat: "Plateforme", tech: "Next.js · Tailwind · React", desc: "Plateforme immo avec recherche avancée et filtres dynamiques.", result: "Hausse des leads qualifiés.", img: "/portfolio/FORMA-agenceimmo-NEXTtailwindReact.png", year: "2024" },
-  { id: 5, title: "Luxe Cars", sub: "Location", cat: "Web App", tech: "React · Vite · Tailwind", desc: "Réservation de véhicules de luxe avec tunnel de conversion fluide.", result: "Expérience client premium.", img: "/portfolio/luxecarsLocationDeVoitureReactViteTailwindCss.png", year: "2024" },
-  { id: 6, title: "Maison Parfumerie", sub: "E-commerce", cat: "E-commerce", tech: "React · Next.js · Tailwind", desc: "E-commerce luxe avec parcours immersif et visuels haute qualité.", result: "Hausse du panier moyen.", img: "/portfolio/Maison-ecommerceParfumerie-reactnexttailwind.png", year: "2024" },
-  { id: 7, title: "Maison Verdure", sub: "Boulangerie", cat: "Site Vitrine", tech: "HTML · CSS · JS", desc: "Site vitrine artisanal chaleureuse pour présenter le savoir-faire d'une boulangerie.", result: "Plus de clients en boutique.", img: "/portfolio/MaisonVerdure-SiteVitrineBoulangerei-HTMLCSSJS.png", year: "2024" },
-  { id: 8, title: "NeuroFlow", sub: "SaaS IA", cat: "SaaS", tech: "Vite · Tailwind · React", desc: "Plateforme SaaS propulsée par l'IA pour la gestion et l'automatisation de workflows.", result: "UX futuriste & performante.", img: "/portfolio/NeuroFlow-SAAS-IA-VITETailwindreact.png", year: "2024" },
-  { id: 9, title: "Sora Thai", sub: "Restaurant", cat: "Site Vitrine", tech: "HTML · CSS · JS", desc: "Site vitrine pour restaurant thaïlandais avec menu interactif et ambiance immersive.", result: "Réservations en ligne activées.", img: "/portfolio/SORA-RESTAUTHAI-HTMLCSSJS.png", year: "2024" },
-  { id: 10, title: "WonderCut", sub: "Barbier", cat: "Concept Design", tech: "Next.js · Tailwind", desc: "Concept design premium pour salon de barbier — UX brutalist haut de gamme.", result: "Design primé en interne.", img: "/portfolio/WONDERCUT-Concetdesignbarbeur-nexttailwinnd.png", year: "2024" },
+  { id: 1, title: "Aivana", sub: "SaaS IA", cat: "Dashboard", tech: "Next.js · Tailwind · IA", desc: "Dashboard moderne propulsé par l'IA pour la génération d'insights et l'automatisation avancée.", result: "Rétention B2B augmentée de 35%", img: "/portfolio/AivanaFlyes-SAASdashboardIA-NextTailwind.png", year: "2024" },
+  { id: 2, title: "Ajt Blog", sub: "Blog", cat: "Blog", tech: "React · Tailwind · Next.js", desc: "Blog ultra-rapide optimisé SEO avec une interface épurée et un système de gestion de contenu performant.", result: "Chargement sous les 0.5s", img: "/portfolio/Ajt-Blog-REACTTAILWINDnext.png", year: "2024" },
+  { id: 3, title: "Brows Creative", sub: "Salon", cat: "E-commerce", tech: "WordPress · WooCommerce", desc: "Boutique et réservation en ligne haut de gamme pour un salon de beauté spécialisé.", result: "+40% de réservations directes", img: "/portfolio/BROWSCREATIVE-SalonCILS&Sourcils-WordpressWoocommerce.png", year: "2024" },
+  { id: 4, title: "Forma Immo", sub: "Immobilier", cat: "Plateforme", tech: "Next.js · Tailwind · React", desc: "Plateforme immobilière haut de gamme avec recherche géolocalisée et filtres de propriétés avancés.", result: "Hausse substantielle des leads qualifiés", img: "/portfolio/FORMA-agenceimmo-NEXTtailwindReact.png", year: "2024" },
+  { id: 5, title: "Luxe Cars", sub: "Location", cat: "Web App", tech: "React · Vite · Tailwind", desc: "Application de réservation de véhicules de luxe dotée d'un catalogue dynamique et d'un tunnel de conversion optimisé.", result: "Expérience client premium sans couture", img: "/portfolio/luxecarsLocationDeVoitureReactViteTailwindCss.png", year: "2024" },
+  { id: 6, title: "Maison Parfumerie", sub: "E-commerce", cat: "E-commerce", tech: "React · Next.js · Tailwind", desc: "Boutique e-commerce de haute parfumerie avec animations immersives et parcours d'achat sensoriel.", result: "Augmentation du panier moyen de 25%", img: "/portfolio/Maison-ecommerceParfumerie-reactnexttailwind.png", year: "2024" },
+  { id: 7, title: "Maison Verdure", sub: "Boulangerie", cat: "Site Vitrine", tech: "HTML · CSS · JS", desc: "Site vitrine artisanal mettant en valeur les produits, le fournil et l'histoire d'une boulangerie de quartier.", result: "Augmentation des visites en magasin", img: "/portfolio/MaisonVerdure-SiteVitrineBoulangerei-HTMLCSSJS.png", year: "2024" },
+  { id: 8, title: "NeuroFlow", sub: "SaaS IA", cat: "SaaS", tech: "Vite · Tailwind · React", desc: "Plateforme SaaS propulsée par l'intelligence artificielle pour simplifier et optimiser les flux de travail complexes.", result: "Interface utilisateur futuriste & performante", img: "/portfolio/NeuroFlow-SAAS-IA-VITETailwindreact.png", year: "2024" },
+  { id: 9, title: "Sora Thai", sub: "Restaurant", cat: "Site Vitrine", tech: "HTML · CSS · JS", desc: "Site vitrine élégant pour un restaurant thaïlandais gastronomique avec menu dynamique et réservation.", result: "Réservations en ligne augmentées", img: "/portfolio/SORA-RESTAUTHAI-HTMLCSSJS.png", year: "2024" },
+  { id: 10, title: "WonderCut", sub: "Barbier", cat: "Concept Design", tech: "Next.js · Tailwind", desc: "Concept de design premium et brutaliste pour salon de barbier moderne et soins homme.", result: "Design récompensé par la communauté", img: "/portfolio/WONDERCUT-Concetdesignbarbeur-nexttailwinnd.png", year: "2024" },
 ];
 
 export default function PortfolioPage() {
@@ -88,6 +89,7 @@ export default function PortfolioPage() {
   const bigTextRef = useRef<HTMLDivElement>(null);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
   const { t } = useLang();
 
   useGSAP(() => {
@@ -107,7 +109,7 @@ export default function PortfolioPage() {
   return (
     <main
       ref={containerRef}
-      className="flex-1 flex flex-col bg-[#f0f0ee]"
+      className="flex-1 flex flex-col bg-[#f0f0ee] relative"
       onMouseMove={(e) => setMousePos({ x: e.clientX, y: e.clientY })}
     >
       <PageHeader number="04" title="PORTFOLIO" subtitle={t("page_portfolio_sub")} />
@@ -131,7 +133,7 @@ export default function PortfolioPage() {
           </LineReveal>
           <FadeUp delay={0.25} className="md:w-1/3">
             <p className="font-bold text-base opacity-55 leading-relaxed">
-              Chaque réalisation est le fruit d&apos;une collaboration étroite — design, code et stratégie alignés sur un seul objectif : ton résultat.
+              Chaque réalisation est le fruit d&apos;une collaboration étroite — design, code et stratégie alignés sur un seul objectif : ton résultat. Click sur un projet pour le découvrir en détail.
             </p>
           </FadeUp>
         </div>
@@ -150,9 +152,10 @@ export default function PortfolioPage() {
             {projects.map((p, i) => (
               <div
                 key={p.id}
-                className="project-row border-b border-black/15 group"
+                className="project-row border-b border-black/15 group cursor-pointer"
                 onMouseEnter={() => setHoveredIdx(i)}
                 onMouseLeave={() => setHoveredIdx(null)}
+                onClick={() => setSelectedProject(p)}
               >
                 <div className="flex items-center justify-between py-6 md:py-8 transition-colors duration-200 group-hover:text-abcs-red">
                   <div className="flex items-center gap-4 md:gap-8">
@@ -188,7 +191,7 @@ export default function PortfolioPage() {
               animate={{ opacity: hoveredIdx === i ? 1 : 0, scale: hoveredIdx === i ? 1 : 0.92, y: hoveredIdx === i ? 0 : 20 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             >
-              <Image src={p.img} alt={p.title} fill className="object-cover" sizes="288px" />
+              <Image src={p.img} alt={p.title} fill className="object-cover object-top" sizes="288px" />
               <div className="absolute inset-0 bg-abcs-black/20" />
               <div className="absolute bottom-3 left-3 bg-abcs-red text-white font-bold text-[9px] uppercase tracking-widest px-3 py-1">{p.result}</div>
               <div className="absolute top-3 right-3 bg-abcs-black text-white font-bold text-[9px] uppercase tracking-widest px-3 py-1">{p.cat}</div>
@@ -206,9 +209,9 @@ export default function PortfolioPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {projects.map((p, i) => (
               <FadeUp key={p.id} delay={i * 0.06}>
-                <TiltCard>
+                <TiltCard className="cursor-pointer" onClick={() => setSelectedProject(p)}>
                   <div className="relative bg-abcs-black overflow-hidden h-64 md:h-80 group">
-                    <Image src={p.img} alt={p.title} fill className="object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700" sizes="(max-width: 768px) 100vw, 50vw" />
+                    <Image src={p.img} alt={p.title} fill className="object-cover object-top opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700" sizes="(max-width: 768px) 100vw, 50vw" />
                     <div className="absolute inset-0 bg-gradient-to-t from-abcs-black/80 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
                       <div>
@@ -228,6 +231,123 @@ export default function PortfolioPage() {
         </div>
       </section>
 
+      {/* Project Details Modal Pop-up */}
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[9999] bg-abcs-black/90 backdrop-blur-md flex items-center justify-center p-4 md:p-8"
+            onClick={() => setSelectedProject(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 30 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 30 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="relative bg-[#f0f0ee] text-abcs-black w-full max-w-6xl max-h-[90vh] md:max-h-[85vh] rounded-none border border-black/20 flex flex-col md:flex-row overflow-hidden shadow-[8px_8px_0px_0px_rgba(230,57,70,1)]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button Mobile */}
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="absolute top-4 right-4 z-50 md:hidden bg-abcs-black text-white w-10 h-10 flex items-center justify-center font-bold rounded-full hover:bg-abcs-red transition-colors"
+                aria-label="Fermer"
+              >
+                ✕
+              </button>
+
+              {/* Left Column: Full Scrollable Website Screenshot */}
+              <div className="md:w-7/12 bg-black relative h-[320px] md:h-auto overflow-y-auto overflow-x-hidden scrollbar-thin select-none group/img-container">
+                {/* Scroll Indicator Overlay */}
+                <div className="absolute bottom-4 left-4 right-4 bg-abcs-black/60 backdrop-blur-sm text-white font-bold text-[9px] uppercase tracking-widest py-2 px-3 text-center pointer-events-none z-10 opacity-70 group-hover/img-container:opacity-0 transition-opacity">
+                  Défiler pour voir le site en entier ↕
+                </div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={selectedProject.img}
+                  alt={selectedProject.title}
+                  className="w-full h-auto object-cover object-top block"
+                />
+              </div>
+
+              {/* Right Column: Detailed Quick Info */}
+              <div className="md:w-5/12 p-6 md:p-8 flex flex-col justify-between overflow-y-auto max-h-[50vh] md:max-h-none">
+                {/* Upper block */}
+                <div>
+                  <div className="flex justify-between items-start">
+                    <span className="font-bold text-[10px] uppercase tracking-[0.2em] text-abcs-red">
+                      {selectedProject.cat} · {selectedProject.year}
+                    </span>
+                    <button
+                      onClick={() => setSelectedProject(null)}
+                      className="hidden md:flex items-center justify-center font-bold text-xs uppercase tracking-widest hover:text-abcs-red transition-colors"
+                    >
+                      [ Fermer ✕ ]
+                    </button>
+                  </div>
+
+                  <h2 className="font-heading text-4xl sm:text-5xl uppercase leading-none mt-4 mb-2">
+                    {selectedProject.title}
+                  </h2>
+                  <p className="font-bold text-xs opacity-50 uppercase tracking-widest mb-6">
+                    {selectedProject.sub}
+                  </p>
+
+                  <div className="h-px bg-black/10 my-4" />
+
+                  {/* Tech Stack Tags */}
+                  <div className="flex flex-wrap gap-1.5 mb-6">
+                    {selectedProject.tech.split(" · ").map((t) => (
+                      <span
+                        key={t}
+                        className="font-bold text-[9px] uppercase tracking-wider bg-black/5 px-2.5 py-1 border border-black/10 text-abcs-black/70"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Detailed Description */}
+                  <div className="mb-6">
+                    <h4 className="font-bold text-[10px] uppercase tracking-widest opacity-40 mb-2">Description du projet</h4>
+                    <p className="font-bold text-sm leading-relaxed opacity-85">
+                      {selectedProject.desc}
+                    </p>
+                  </div>
+
+                  {/* Results */}
+                  <div className="mb-8 p-4 bg-abcs-red/5 border-l-2 border-abcs-red">
+                    <h4 className="font-bold text-[10px] uppercase tracking-widest text-abcs-red mb-1">Impact & Résultat</h4>
+                    <p className="font-heading text-xl uppercase leading-tight text-abcs-black">
+                      {selectedProject.result}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Footer Action buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-black/10 mt-auto">
+                  <Link
+                    href="/contact"
+                    onClick={() => setSelectedProject(null)}
+                    className="flex-1 bg-abcs-red text-white text-center font-bold text-xs uppercase tracking-widest py-4 hover:bg-abcs-black transition-colors"
+                  >
+                    Lancer un projet similaire
+                  </Link>
+                  <button
+                    onClick={() => setSelectedProject(null)}
+                    className="flex-1 border border-black text-center font-bold text-xs uppercase tracking-widest py-4 hover:bg-abcs-black hover:text-white transition-colors"
+                  >
+                    Retour au portfolio
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* CTA */}
       <section className="w-full bg-abcs-black text-white py-24 md:py-32 px-6 md:px-8 flex flex-col items-center text-center">
         <LineReveal className="mb-4">
@@ -246,3 +366,4 @@ export default function PortfolioPage() {
     </main>
   );
 }
+

@@ -3,7 +3,7 @@
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLang, Lang } from "@/components/LanguageContext";
 
 const langLabels: Record<Lang, string> = {
@@ -15,10 +15,20 @@ const langLabels: Record<Lang, string> = {
 export default function Navbar() {
   const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const pathname = usePathname();
   const { lang, setLang, t } = useLang();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 120);
@@ -37,8 +47,8 @@ export default function Navbar() {
     <motion.header
       initial={{ y: -60, opacity: 0 }}
       animate={{
-        y: isScrolled ? 0 : -60,
-        opacity: isScrolled ? 1 : 0,
+        y: (isScrolled || isMobile) ? 0 : -60,
+        opacity: (isScrolled || isMobile) ? 1 : 0,
       }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="fixed z-50 top-0 left-0 right-0 bg-[#f0f0ee]/95 backdrop-blur-sm border-b border-black/10"

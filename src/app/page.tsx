@@ -119,7 +119,7 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  const scrambledLogo = useTextScramble("O'DEV", heroReady, 1400);
+  const scrambledLogo = useTextScramble("O'LDEV", heroReady, 1400);
 
   // GSAP parallax + scroll effects
   useGSAP(() => {
@@ -210,9 +210,9 @@ export default function Home() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7, duration: 0.6 }}
-              className="flex justify-between font-bold text-abcs-red text-[10px] md:text-xs tracking-[0.2em] uppercase mt-3"
+              className="flex flex-col sm:flex-row justify-between gap-1 sm:gap-0 font-bold text-abcs-red text-[9px] sm:text-[10px] md:text-xs tracking-[0.15em] sm:tracking-[0.2em] uppercase mt-3"
             >
-              <span>O&apos;LDEV</span>
+              <span>othmane developer full stack</span>
               <span>{t("hero_sub2")}</span>
             </motion.div>
           </div>

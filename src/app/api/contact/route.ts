@@ -271,7 +271,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch (err) {
-    console.error("[Contact API]", err);
-    return NextResponse.json({ error: "Erreur serveur, réessaie." }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("[Contact API]", msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

@@ -126,22 +126,7 @@ export default function AboutPage() {
 
   return (
     <main ref={containerRef} className="flex-1 flex flex-col bg-[#f0f0ee]">
-      <PageHeader number="02" title="À PROPOS" subtitle={t("page_about_sub")}>
-        <div className="relative w-36 h-36 lg:w-48 lg:h-48">
-          <div className="w-full h-full rounded-full overflow-hidden border-[3px] border-abcs-black shadow-[6px_6px_0px_0px_rgba(255,59,0,1)]">
-            <Image
-              src={avatarPhoto}
-              alt="Othmane Bouakline"
-              width={192}
-              height={192}
-              className="w-full h-full object-cover object-top scale-150 translate-y-3"
-            />
-          </div>
-          <div className="absolute -bottom-2 -left-2 bg-abcs-red text-white font-bold text-[9px] uppercase tracking-widest px-3 py-1">
-            O&apos;ldev
-          </div>
-        </div>
-      </PageHeader>
+      <PageHeader number="02" title="À PROPOS" subtitle={t("page_about_sub")} />
 
       {/* Big scrolling text */}
       <div className="w-full overflow-hidden py-8 border-b border-black/10">
@@ -153,7 +138,7 @@ export default function AboutPage() {
       </div>
 
       {/* ─── HERO INTRO ─── */}
-      <section className="w-full px-6 md:px-8 py-16 md:py-24 max-w-7xl mx-auto">
+      <section className="w-full px-6 md:px-8 py-16 md:py-24 max-w-7xl mx-auto relative">
         <div className="flex flex-col md:flex-row gap-12 md:gap-16 items-start">
 
           {/* Left: portrait card with 3D Tilt & spin text badge */}
@@ -230,6 +215,28 @@ export default function AboutPage() {
                     <div className="font-bold text-[10px] uppercase tracking-widest opacity-50 mt-1">{s.label}</div>
                   </div>
                 ))}
+              </div>
+            </FadeUp>
+
+            {/* Avatar éditorial — bas droite */}
+            <FadeUp delay={0.65} className="hidden md:flex items-end justify-end gap-5 mt-4">
+              <div className="flex flex-col items-end gap-1">
+                <span className="font-heading text-2xl uppercase leading-none">Othmane</span>
+                <span className="font-bold text-[10px] uppercase tracking-[0.25em] text-abcs-red">Bouakline · O&apos;ldev</span>
+              </div>
+              <div className="relative shrink-0">
+                <div className="w-24 h-24 lg:w-32 lg:h-32 rounded-full overflow-hidden border-[3px] border-abcs-black shadow-[-6px_6px_0px_0px_rgba(255,59,0,1)]">
+                  <Image
+                    src={avatarPhoto}
+                    alt="Othmane Bouakline"
+                    width={128}
+                    height={128}
+                    className="w-full h-full object-cover object-top scale-150 translate-y-3"
+                  />
+                </div>
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-abcs-red rounded-full flex items-center justify-center">
+                  <span className="text-white text-[8px] font-bold">✓</span>
+                </div>
               </div>
             </FadeUp>
           </div>

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY!;
-const OWNER_EMAIL = "othmane.bouakline.pro@gmail.com";
+const OWNER_EMAIL = "obouakline@gmail.com";
 const OWNER_NAME = "Othmane — O'ldev";
-const SENDER_EMAIL = "othmane.bouakline.pro@gmail.com";
+const SENDER_EMAIL = "obouakline@gmail.com";
 const SENDER_NAME = "O'ldev";
 
 async function sendBrevoEmail(payload: object) {
@@ -220,7 +220,7 @@ function confirmationHtml(name: string, type: string, budget: string) {
               <tr>
                 <td>
                   <span style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:4px;">Contact direct</span>
-                  <a href="mailto:othmane.bouakline.pro@gmail.com" style="font-size:15px;font-weight:700;color:#fff;text-decoration:none;">othmane.bouakline.pro@gmail.com</a>
+                  <a href="mailto:obouakline@gmail.com" style="font-size:15px;font-weight:700;color:#fff;text-decoration:none;">obouakline@gmail.com</a>
                 </td>
                 <td align="right">
                   <a href="https://oldev.vercel.app" style="display:inline-block;background:#fff;color:#FF3B00;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:12px 20px;text-decoration:none;">Portfolio ↗</a>

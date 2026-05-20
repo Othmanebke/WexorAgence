@@ -268,8 +268,8 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* CENTER — Avatar grand format, au premier plan */}
-        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-full md:w-[94%] max-w-[1500px] z-[5]">
+        {/* CENTER — Avatar grand format, au premier plan (desktop only) */}
+        <div className="hidden md:block absolute inset-y-0 left-1/2 -translate-x-1/2 w-[94%] max-w-[1500px] z-[5]">
           <Image
             src={heroPhoto}
             alt="Othmane"
@@ -280,22 +280,21 @@ export default function Home() {
           />
         </div>
 
-        {/* ── MOBILE / TABLETTE : layout empilé ── */}
-        <div className="md:hidden flex flex-col min-h-screen pb-32">
-          {/* Image — prend 60% de l'écran */}
-          <div className="relative w-full" style={{ height: "60svh" }}>
-            <Image
-              src={heroPhoto}
-              alt="Othmane"
-              fill
-              className="object-contain object-bottom"
-              priority
-              unoptimized
-            />
-          </div>
-          {/* Texte — sous l'image */}
-          <div className="px-6 pt-5 pb-4 flex flex-col gap-3">
-            {/* Prénom + Nom sur deux lignes */}
+        {/* ── MOBILE : avatar plein écran, texte en overlay ── */}
+        <div className="md:hidden relative min-h-screen overflow-hidden">
+          {/* Avatar plein écran */}
+          <Image
+            src={heroPhoto}
+            alt="Othmane"
+            fill
+            className="object-cover object-top"
+            priority
+            unoptimized
+          />
+          {/* Gradient haut pour lisibilité du texte */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#f0f0ee] via-[#f0f0ee]/75 to-transparent" />
+          {/* Texte en overlay — haut */}
+          <div className="absolute top-0 left-0 right-0 z-10 px-6 pt-10 flex flex-col gap-3">
             <div>
               <div className="overflow-hidden">
                 <motion.h1
@@ -323,7 +322,7 @@ export default function Home() {
             <p className="font-bold text-[10px] tracking-[0.2em] uppercase text-abcs-black/40">
               Développeur Web · Full Stack
             </p>
-            <p className="text-sm font-bold text-abcs-black/50 leading-relaxed">
+            <p className="text-sm font-bold text-abcs-black/60 leading-relaxed max-w-[280px]">
               {t("hero_desc").split("\n").join(" ")}
             </p>
             <div className="flex flex-wrap items-center gap-3 pt-1">

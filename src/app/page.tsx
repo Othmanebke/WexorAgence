@@ -280,10 +280,10 @@ export default function Home() {
           />
         </div>
 
-        {/* ── MOBILE : layout empilé ── */}
-        <div className="md:hidden flex flex-col min-h-screen pt-6 pb-32">
-          {/* Image mobile — haut de page */}
-          <div className="relative flex-1 min-h-[65vw]">
+        {/* ── MOBILE / TABLETTE : layout empilé ── */}
+        <div className="md:hidden flex flex-col min-h-screen pb-32">
+          {/* Image — prend 60% de l'écran */}
+          <div className="relative w-full" style={{ height: "60svh" }}>
             <Image
               src={heroPhoto}
               alt="Othmane"
@@ -293,34 +293,48 @@ export default function Home() {
               unoptimized
             />
           </div>
-          {/* Texte mobile — bas */}
-          <div className="px-6 pt-4 pb-6 flex flex-col gap-4">
-            <div className="overflow-hidden">
-              <motion.h1
-                className="font-heading text-abcs-black leading-[0.85] tracking-tighter uppercase"
-                style={{ fontSize: "clamp(2.5rem, 12vw, 4rem)" }}
-                initial={{ y: "110%" }}
-                animate={{ y: 0 }}
-                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-              >
-                {scrambledLogo}
-              </motion.h1>
+          {/* Texte — sous l'image */}
+          <div className="px-6 pt-5 pb-4 flex flex-col gap-3">
+            {/* Prénom + Nom sur deux lignes */}
+            <div>
+              <div className="overflow-hidden">
+                <motion.h1
+                  className="font-heading text-abcs-black leading-[0.82] tracking-tighter uppercase"
+                  style={{ fontSize: "clamp(2.8rem, 11vw, 5rem)" }}
+                  initial={{ y: "110%" }}
+                  animate={{ y: 0 }}
+                  transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {scrambledLogo}
+                </motion.h1>
+              </div>
+              <div className="overflow-hidden">
+                <motion.h2
+                  className="font-heading text-abcs-black leading-[0.82] tracking-tighter uppercase"
+                  style={{ fontSize: "clamp(2.8rem, 11vw, 5rem)" }}
+                  initial={{ y: "110%" }}
+                  animate={{ y: 0 }}
+                  transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+                >
+                  BOUAKLINE
+                </motion.h2>
+              </div>
             </div>
             <p className="font-bold text-[10px] tracking-[0.2em] uppercase text-abcs-black/40">
               Développeur Web · Full Stack
             </p>
-            <p className="text-sm font-bold text-abcs-black/50 leading-relaxed max-w-xs">
+            <p className="text-sm font-bold text-abcs-black/50 leading-relaxed">
               {t("hero_desc").split("\n").join(" ")}
             </p>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3 pt-1">
               <a
                 href="/contact"
-                className="inline-flex items-center gap-3 bg-abcs-black text-white px-6 py-3 font-bold text-xs uppercase tracking-widest hover:bg-abcs-red transition-colors duration-300 group w-fit"
+                className="inline-flex items-center gap-2 bg-abcs-black text-white px-5 py-3 font-bold text-xs uppercase tracking-widest hover:bg-abcs-red transition-colors duration-300 group"
               >
                 <span>{t("hero_cta")}</span>
                 <span className="text-base leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
               </a>
-              <div className="flex items-center gap-2 ml-2">
+              <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
                 <span className="font-bold text-[10px] uppercase tracking-widest text-abcs-black/40">Disponible</span>
               </div>
@@ -363,7 +377,7 @@ export default function Home() {
         <div className="w-full max-w-7xl mx-auto px-6 md:px-8 flex flex-col md:flex-row gap-12 md:gap-16 items-start -mt-8 md:-mt-16 relative z-10">
 
           {/* Image */}
-          <div className="w-full md:w-5/12 overflow-hidden relative h-[420px] md:h-[560px] flex-shrink-0">
+          <div className="w-full sm:w-3/4 sm:mx-auto md:w-5/12 md:mx-0 overflow-hidden relative h-[380px] sm:h-[440px] md:h-[560px] flex-shrink-0">
             <div ref={imageRef} className="w-full h-full bg-abcs-black">
               <div className="w-full h-full relative overflow-hidden">
                 {/* Avatar 3D — remplit tout le bloc */}

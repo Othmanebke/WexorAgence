@@ -113,6 +113,7 @@ const CHAT_LOGIC: Record<string, Step> = {
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
   const [currentStepId, setCurrentStepId] = useState("start");
   const [history, setHistory] = useState<{ type: 'bot' | 'user'; text: string }[]>([
     { type: 'bot', text: CHAT_LOGIC.start.question }
@@ -124,6 +125,12 @@ export default function Chatbot() {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { t } = useLang();
+
+  useEffect(() => {
+    const onScroll = () => setPastHero(window.scrollY > window.innerHeight * 0.8);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -226,12 +233,15 @@ export default function Chatbot() {
 
   return (
     <>
-      {/* Trigger button */}
+      {/* Trigger button — visible seulement après le hero */}
       <motion.button
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: pastHero ? 1 : 0, scale: pastHero ? 1 : 0.8, pointerEvents: pastHero ? "auto" : "none" } as never}
+        transition={{ duration: 0.3 }}
         whileHover={{ scale: 1.05, rotate: -2 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[100] bg-abcs-black text-white w-16 h-16 md:w-20 md:h-20 rounded-none shadow-[6px_6px_0px_0px_rgba(255,59,0,1)] border-[3px] border-abcs-black flex items-center justify-center overflow-hidden group"
+        className="fixed bottom-24 right-4 md:bottom-28 md:right-8 z-[100] bg-abcs-black text-white w-12 h-12 md:w-20 md:h-20 rounded-none shadow-[4px_4px_0px_0px_rgba(255,59,0,1)] md:shadow-[6px_6px_0px_0px_rgba(255,59,0,1)] border-[2px] md:border-[3px] border-abcs-black flex items-center justify-center overflow-hidden group"
       >
         <div className="absolute inset-0 bg-abcs-red translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
         {isOpen ? (
@@ -248,7 +258,7 @@ export default function Chatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.95 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed bottom-24 right-6 md:bottom-32 md:right-8 z-[100] w-[calc(100vw-48px)] md:w-[440px] h-[70vh] md:h-[580px] max-h-[800px] bg-[#f0f0ee] border-[3px] border-abcs-black shadow-[12px_12px_0px_0px_rgba(255,59,0,1)] flex flex-col overflow-hidden"
+            className="fixed bottom-[9.5rem] right-4 md:bottom-[11rem] md:right-8 z-[100] w-[calc(100vw-32px)] md:w-[440px] h-[65vh] md:h-[580px] max-h-[800px] bg-[#f0f0ee] border-[2px] md:border-[3px] border-abcs-black shadow-[8px_8px_0px_0px_rgba(255,59,0,1)] md:shadow-[12px_12px_0px_0px_rgba(255,59,0,1)] flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="bg-abcs-black text-white px-6 py-5 flex justify-between items-center border-b-[3px] border-abcs-red">

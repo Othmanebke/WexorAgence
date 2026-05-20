@@ -9,7 +9,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useLang } from "@/components/LanguageContext";
-import heroPhoto from "@/img/Gemini_Generated_Image_.png";
+import heroPhoto from "@/img/Gemini_Generated_Image_zdg0rbzdg0rbzdg0.png";
+import aboutPhoto from "@/img/ChatGPT Image 20 mai 2026, 14_12_06.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -121,7 +122,7 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  const scrambledLogo = useTextScramble("O'LDEV", heroReady, 1400);
+  const scrambledLogo = useTextScramble("OTHMANE", heroReady, 1400);
 
   // GSAP parallax + scroll effects
   useGSAP(() => {
@@ -190,14 +191,16 @@ export default function Home() {
     <main className="flex flex-col min-h-screen bg-[#f0f0ee] overflow-hidden">
 
       {/* ─── HERO ─── */}
-      <section className="w-full min-h-screen grid grid-cols-1 md:grid-cols-[1fr_320px_1fr] xl:grid-cols-[1fr_400px_1fr] overflow-hidden">
+      <section className="w-full min-h-screen relative overflow-hidden">
 
-        {/* LEFT — Titre */}
-        <div className="flex flex-col justify-end px-8 md:px-12 xl:px-16 pb-12 md:pb-32 pt-16 md:pt-0 z-10 order-2 md:order-1">
-          <div className="overflow-hidden">
+        {/* ── DESKTOP : textes derrière, avatar devant ── */}
+
+        {/* LEFT — Prénom (z derrière l'image) */}
+        <div className="hidden md:flex absolute inset-y-0 left-0 w-[55%] flex-col justify-end px-8 xl:px-12 pb-[30%] z-[1]">
+          <div className="overflow-visible">
             <motion.h1
-              className="font-heading text-abcs-black leading-[0.85] tracking-tighter uppercase"
-              style={{ fontSize: "clamp(2.8rem, 4.8vw, 5.5rem)" }}
+              className="font-heading text-abcs-black leading-[0.82] tracking-tighter uppercase whitespace-nowrap"
+              style={{ fontSize: "clamp(4rem, 7.5vw, 9rem)" }}
               initial={{ y: "110%" }}
               animate={{ y: 0 }}
               transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
@@ -209,20 +212,19 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7, duration: 0.6 }}
-            className="font-bold text-[9px] md:text-[10px] tracking-[0.2em] uppercase mt-3 text-abcs-black/40"
+            className="font-bold text-[10px] tracking-[0.2em] uppercase mt-3 text-abcs-black/40"
           >
             Développeur Web · Full Stack
           </motion.p>
-
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1, duration: 0.6 }}
-            className="mt-8 hidden md:flex items-center gap-2"
+            className="mt-8"
           >
             <a
               href="/contact"
-              className="inline-flex items-center gap-2 border border-abcs-black/20 px-5 py-2.5 font-bold text-[10px] uppercase tracking-widest hover:border-abcs-red hover:text-abcs-red transition-colors group"
+              className="inline-flex items-center gap-2 border border-abcs-black/20 px-5 py-2.5 font-bold text-[10px] uppercase tracking-widest hover:border-abcs-red hover:text-abcs-red transition-colors group w-fit"
             >
               <span>{t("hero_cta")}</span>
               <span className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
@@ -230,48 +232,102 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* CENTER — Photo */}
-        <div className="relative h-[55vw] md:h-auto md:min-h-screen overflow-hidden order-1 md:order-2 bg-[#111111]">
-          <Image
-            src={heroPhoto}
-            alt="Othmane"
-            fill
-            className="object-cover object-top"
-            priority
-          />
+        {/* RIGHT — Nom de famille */}
+        <div className="hidden md:flex absolute inset-y-0 right-0 w-[55%] flex-col justify-end items-end px-8 xl:px-12 pb-[32%] z-[1]">
+          <div className="overflow-visible">
+            <motion.h2
+              className="font-heading text-abcs-black leading-[0.82] tracking-tighter uppercase whitespace-nowrap"
+              style={{ fontSize: "clamp(4rem, 7.5vw, 9rem)" }}
+              initial={{ y: "110%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+            >
+              BOUAKLINE
+            </motion.h2>
+          </div>
         </div>
 
-        {/* RIGHT — Description */}
-        <div className="flex flex-col justify-center px-8 md:px-12 xl:px-16 pb-12 md:pb-32 pt-8 md:pt-0 z-10 order-3">
+        {/* RIGHT — Description au niveau du coude */}
+        <div className="hidden md:flex absolute bottom-[28%] right-0 w-[32%] flex-col items-start px-8 xl:px-12 z-[1]">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.85, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="text-sm font-bold text-abcs-black/50 max-w-[260px] leading-relaxed"
+            className="text-sm font-bold text-abcs-black/50 max-w-[240px] leading-relaxed"
           >
             {t("hero_desc").split("\n").join(" ")}
           </motion.p>
-
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.15, duration: 0.6 }}
-            className="mt-6 flex flex-col gap-5"
+            className="mt-5 flex items-center gap-2"
           >
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-              <span className="font-bold text-[10px] uppercase tracking-widest text-abcs-black/40">Disponible</span>
-            </div>
-
-            <a
-              href="/contact"
-              className="md:hidden inline-flex items-center gap-3 bg-abcs-black text-white px-6 py-3 font-bold text-xs uppercase tracking-widest hover:bg-abcs-red transition-colors duration-300 group w-fit"
-            >
-              <span>{t("hero_cta")}</span>
-              <span className="text-base leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
-            </a>
+            <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+            <span className="font-bold text-[10px] uppercase tracking-widest text-abcs-black/40">Disponible</span>
           </motion.div>
         </div>
+
+        {/* CENTER — Avatar grand format, au premier plan */}
+        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-full md:w-[94%] max-w-[1500px] z-[5]">
+          <Image
+            src={heroPhoto}
+            alt="Othmane"
+            fill
+            className="object-contain object-bottom"
+            priority
+            unoptimized
+          />
+        </div>
+
+        {/* ── MOBILE : layout empilé ── */}
+        <div className="md:hidden flex flex-col min-h-screen pt-6 pb-32">
+          {/* Image mobile — haut de page */}
+          <div className="relative flex-1 min-h-[65vw]">
+            <Image
+              src={heroPhoto}
+              alt="Othmane"
+              fill
+              className="object-contain object-bottom"
+              priority
+              unoptimized
+            />
+          </div>
+          {/* Texte mobile — bas */}
+          <div className="px-6 pt-4 pb-6 flex flex-col gap-4">
+            <div className="overflow-hidden">
+              <motion.h1
+                className="font-heading text-abcs-black leading-[0.85] tracking-tighter uppercase"
+                style={{ fontSize: "clamp(2.5rem, 12vw, 4rem)" }}
+                initial={{ y: "110%" }}
+                animate={{ y: 0 }}
+                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {scrambledLogo}
+              </motion.h1>
+            </div>
+            <p className="font-bold text-[10px] tracking-[0.2em] uppercase text-abcs-black/40">
+              Développeur Web · Full Stack
+            </p>
+            <p className="text-sm font-bold text-abcs-black/50 leading-relaxed max-w-xs">
+              {t("hero_desc").split("\n").join(" ")}
+            </p>
+            <div className="flex items-center gap-3">
+              <a
+                href="/contact"
+                className="inline-flex items-center gap-3 bg-abcs-black text-white px-6 py-3 font-bold text-xs uppercase tracking-widest hover:bg-abcs-red transition-colors duration-300 group w-fit"
+              >
+                <span>{t("hero_cta")}</span>
+                <span className="text-base leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+              </a>
+              <div className="flex items-center gap-2 ml-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                <span className="font-bold text-[10px] uppercase tracking-widest text-abcs-black/40">Disponible</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </section>
 
       {/* ─── TECH TICKER ─── */}
@@ -309,9 +365,19 @@ export default function Home() {
           {/* Image */}
           <div className="w-full md:w-5/12 overflow-hidden relative h-[420px] md:h-[560px] flex-shrink-0">
             <div ref={imageRef} className="w-full h-full bg-abcs-black">
-              <div className="w-full h-full bg-gradient-to-br from-[#1a1a1a] to-[#333] flex flex-col items-start justify-end p-8 gap-4">
-                {/* Fashion-style code lines */}
-                <div className="flex flex-col gap-1">
+              <div className="w-full h-full relative overflow-hidden">
+                {/* Avatar 3D — remplit tout le bloc */}
+                <Image
+                  src={aboutPhoto}
+                  alt="Othmane"
+                  fill
+                  className="object-cover object-top scale-[1.1] origin-top"
+                  unoptimized
+                />
+                {/* Gradient sombre en bas pour lisibilité du texte */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/70 to-transparent" />
+                {/* Fashion-style code lines — en haut */}
+                <div className="flex flex-col gap-1 absolute top-8 left-8 z-10">
                   {["const dev = 'Othmane';", "const brand = \"O'ldev\";", "const style = 'brutalist';", "const result = 🔥;"].map((line, i) => (
                     <motion.p
                       key={i}
@@ -325,7 +391,7 @@ export default function Home() {
                     </motion.p>
                   ))}
                 </div>
-                <p className="font-bold text-white/30 text-xs uppercase tracking-widest">O&apos;ldev Studio — 2025</p>
+                <p className="font-bold text-white/30 text-xs uppercase tracking-widest absolute bottom-8 left-8 z-10">O&apos;ldev Studio — 2025</p>
               </div>
             </div>
           </div>

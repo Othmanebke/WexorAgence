@@ -2,12 +2,14 @@
 
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import Image from "next/image";
 import CountUp from "@/components/CountUp";
 import StackShowcase from "@/components/StackShowcase";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useLang } from "@/components/LanguageContext";
+import heroPhoto from "@/img/Gemini_Generated_Image_.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -188,130 +190,87 @@ export default function Home() {
     <main className="flex flex-col min-h-screen bg-[#f0f0ee] overflow-hidden">
 
       {/* ─── HERO ─── */}
-      <section className="w-full min-h-screen flex flex-col px-6 md:px-8 pt-20 md:pt-8 pb-0 relative">
+      <section className="w-full min-h-screen grid grid-cols-1 md:grid-cols-[1fr_320px_1fr] xl:grid-cols-[1fr_400px_1fr] overflow-hidden">
 
-        {/* Top row: Logo + Nav */}
-        <div className="flex items-start justify-between w-full">
-
-          {/* Logo block */}
-          <div className="flex flex-col">
-            <div className="overflow-hidden">
-              <motion.h1
-                className="font-heading text-abcs-red leading-[0.82] tracking-tighter select-none"
-                style={{ fontSize: "clamp(4.5rem, 16vw, 22rem)" }}
-                initial={{ y: "110%" }}
-                animate={{ y: 0 }}
-                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-              >
-                {scrambledLogo}
-              </motion.h1>
-            </div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.7, duration: 0.6 }}
-              className="flex flex-col sm:flex-row justify-between gap-1 sm:gap-0 font-bold text-abcs-red text-[9px] sm:text-[10px] md:text-xs tracking-[0.15em] sm:tracking-[0.2em] uppercase mt-3"
+        {/* LEFT — Titre */}
+        <div className="flex flex-col justify-end px-8 md:px-12 xl:px-16 pb-12 md:pb-32 pt-16 md:pt-0 z-10 order-2 md:order-1">
+          <div className="overflow-hidden">
+            <motion.h1
+              className="font-heading text-abcs-black leading-[0.85] tracking-tighter uppercase"
+              style={{ fontSize: "clamp(2.8rem, 4.8vw, 5.5rem)" }}
+              initial={{ y: "110%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
             >
-              <span>othmane developer full stack</span>
-              <span>{t("hero_sub2")}</span>
-            </motion.div>
+              {scrambledLogo}
+            </motion.h1>
           </div>
-
-          {/* Nav — comma separated */}
-          <motion.nav
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="hidden md:flex items-center gap-1 font-bold text-lg md:text-2xl lg:text-3xl tracking-tight pt-2"
-          >
-            {[
-              { label: t("nav_services"), href: "/tarifs" },
-              { label: t("nav_portfolio"), href: "/portfolio" },
-              { label: t("nav_about"), href: "/about" },
-              { label: t("nav_contact"), href: "/contact" },
-            ].map((link, i, arr) => (
-              <span key={link.href} className="flex items-center">
-                <a
-                  href={link.href}
-                  className="hover:text-abcs-red transition-colors duration-200"
-                >
-                  {link.label}
-                </a>
-                {i < arr.length - 1 && (
-                  <span className="text-abcs-black/40 mr-1">,</span>
-                )}
-              </span>
-            ))}
-          </motion.nav>
-
-          {/* Mobile menu button (hidden since we have global navbar) */}
-          <motion.a
-            href="/contact"
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-            className="hidden font-bold text-xs uppercase tracking-widest border border-abcs-black px-4 py-2 hover:bg-abcs-black hover:text-white transition-colors"
+            transition={{ delay: 0.7, duration: 0.6 }}
+            className="font-bold text-[9px] md:text-[10px] tracking-[0.2em] uppercase mt-3 text-abcs-black/40"
           >
-            Menu
-          </motion.a>
-        </div>
-
-        {/* Center / Right tagline */}
-        <div className="flex-1 flex flex-col md:flex-row items-end md:items-center justify-between mt-8 md:mt-0 pb-16 gap-12">
-
-          {/* Bottom-left description */}
-          <motion.p
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.85, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="text-sm md:text-base font-bold opacity-60 max-w-[280px] leading-relaxed self-end md:self-auto"
-          >
-            {t("hero_desc").split("\n").map((line, i) => (
-              <span key={i}>{line}{i < 2 && <br />}</span>
-            ))}
+            Développeur Web · Full Stack
           </motion.p>
 
-          {/* Right block: tagline + CTA */}
-          <div className="flex flex-col items-start md:items-start gap-8 max-w-xl">
-            <div className="overflow-hidden">
-              <motion.h2
-                className="font-heading text-3xl md:text-5xl lg:text-6xl leading-[1.0] tracking-tight text-abcs-black"
-                initial={{ y: "102%" }}
-                animate={{ y: 0 }}
-                transition={{ delay: 0.6, duration: 1, ease: [0.22, 1, 0.36, 1] }}
-              >
-                {t("hero_tagline").split("\n").map((line, i) => (
-                  <span key={i}>
-                    {i === 2 ? <span className="text-abcs-red">{line}</span> : line}
-                    {i < 2 && <br />}
-                  </span>
-                ))}
-              </motion.h2>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.1, duration: 0.6 }}
+            className="mt-8 hidden md:flex items-center gap-2"
+          >
+            <a
+              href="/contact"
+              className="inline-flex items-center gap-2 border border-abcs-black/20 px-5 py-2.5 font-bold text-[10px] uppercase tracking-widest hover:border-abcs-red hover:text-abcs-red transition-colors group"
+            >
+              <span>{t("hero_cta")}</span>
+              <span className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
+            </a>
+          </motion.div>
+        </div>
+
+        {/* CENTER — Photo */}
+        <div className="relative h-[55vw] md:h-auto md:min-h-screen overflow-hidden order-1 md:order-2 bg-[#111111]">
+          <Image
+            src={heroPhoto}
+            alt="Othmane"
+            fill
+            className="object-cover object-top"
+            priority
+          />
+        </div>
+
+        {/* RIGHT — Description */}
+        <div className="flex flex-col justify-center px-8 md:px-12 xl:px-16 pb-12 md:pb-32 pt-8 md:pt-0 z-10 order-3">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.85, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="text-sm font-bold text-abcs-black/50 max-w-[260px] leading-relaxed"
+          >
+            {t("hero_desc").split("\n").join(" ")}
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.15, duration: 0.6 }}
+            className="mt-6 flex flex-col gap-5"
+          >
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+              <span className="font-bold text-[10px] uppercase tracking-widest text-abcs-black/40">Disponible</span>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.05, duration: 0.6 }}
-              className="flex flex-col gap-4"
+            <a
+              href="/contact"
+              className="md:hidden inline-flex items-center gap-3 bg-abcs-black text-white px-6 py-3 font-bold text-xs uppercase tracking-widest hover:bg-abcs-red transition-colors duration-300 group w-fit"
             >
-              <a
-                href="/contact"
-                className="inline-flex items-center gap-3 bg-abcs-black text-white px-6 py-3 font-bold text-sm uppercase tracking-widest hover:bg-abcs-red transition-colors duration-300 group"
-              >
-                <span>{t("hero_cta")}</span>
-                <span className="text-lg leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200">↗</span>
-              </a>
-
-              <a
-                href="#about"
-                className="flex items-center justify-between bg-abcs-red text-white px-4 md:px-6 py-3 font-bold text-[10px] md:text-xs uppercase tracking-[0.15em] w-full hover:bg-abcs-black transition-colors duration-300 group"
-              >
-                <span>{t("hero_about_link")}</span>
-                <span className="font-heading text-xl md:text-2xl leading-none group-hover:translate-x-1 transition-transform">01</span>
-              </a>
-            </motion.div>
-          </div>
+              <span>{t("hero_cta")}</span>
+              <span className="text-base leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+            </a>
+          </motion.div>
         </div>
       </section>
 

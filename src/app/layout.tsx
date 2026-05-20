@@ -64,7 +64,7 @@ export default function RootLayout({
           <Preloader />
           <LenisProvider>
             <Navbar />
-            <div className="flex-1 flex flex-col">{children}</div>
+            <div className="flex-1 flex flex-col pb-24">{children}</div>
             <Footer />
             <Chatbot />
           </LenisProvider>

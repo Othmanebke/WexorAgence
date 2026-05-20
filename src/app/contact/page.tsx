@@ -50,6 +50,8 @@ function ContactForm() {
   const searchParams = useSearchParams();
   const [form, setForm] = useState({ name: "", email: "", phone: "", type: "", budget: "", message: "" });
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const name = searchParams.get("name");
@@ -85,9 +87,24 @@ function ContactForm() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Erreur inconnue");
+      setSent(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Une erreur s'est produite, réessaie.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -172,13 +189,29 @@ function ContactForm() {
                   <textarea required name="message" value={form.message} onChange={handleChange} rows={5} placeholder="Décris ton projet en quelques lignes..." className={`${inputClass} resize-none`} />
                 </div>
 
+                {error && (
+                  <div className="text-abcs-red font-bold text-sm border border-abcs-red/30 bg-abcs-red/5 px-4 py-3">
+                    {error}
+                  </div>
+                )}
+
                 <div className="form-line">
                   <button
                     type="submit"
-                    className="w-full bg-abcs-black text-white py-6 font-bold text-sm uppercase tracking-widest hover:bg-abcs-red transition-colors duration-300 flex items-center justify-center gap-4 group"
+                    disabled={loading}
+                    className="w-full bg-abcs-black text-white py-6 font-bold text-sm uppercase tracking-widest hover:bg-abcs-red transition-colors duration-300 flex items-center justify-center gap-4 group disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    <span>Envoyer mon projet</span>
-                    <span className="text-xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+                    {loading ? (
+                      <>
+                        <span>Envoi en cours</span>
+                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      </>
+                    ) : (
+                      <>
+                        <span>Envoyer mon projet</span>
+                        <span className="text-xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+                      </>
+                    )}
                   </button>
                 </div>
               </form>

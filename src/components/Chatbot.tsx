@@ -241,7 +241,7 @@ export default function Chatbot() {
         whileHover={{ scale: 1.05, rotate: -2 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-24 right-4 md:bottom-28 md:right-8 z-[100] bg-abcs-black text-white w-12 h-12 md:w-20 md:h-20 rounded-none shadow-[4px_4px_0px_0px_rgba(255,59,0,1)] md:shadow-[6px_6px_0px_0px_rgba(255,59,0,1)] border-[2px] md:border-[3px] border-abcs-black flex items-center justify-center overflow-hidden group"
+        className="fixed bottom-24 right-4 md:bottom-28 md:right-8 z-[100] bg-abcs-black text-white w-12 h-12 md:w-20 md:h-20 rounded-none shadow-[-4px_4px_0px_0px_rgba(255,59,0,1)] md:shadow-[-6px_6px_0px_0px_rgba(255,59,0,1)] border-[2px] md:border-[3px] border-abcs-black flex items-center justify-center overflow-hidden group"
       >
         <div className="absolute inset-0 bg-abcs-red translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
         {isOpen ? (
@@ -258,7 +258,7 @@ export default function Chatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.95 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed bottom-[9.5rem] right-4 md:bottom-[11rem] md:right-8 z-[100] w-[calc(100vw-32px)] md:w-[440px] h-[65vh] md:h-[580px] max-h-[800px] bg-[#f0f0ee] border-[2px] md:border-[3px] border-abcs-black shadow-[8px_8px_0px_0px_rgba(255,59,0,1)] md:shadow-[12px_12px_0px_0px_rgba(255,59,0,1)] flex flex-col overflow-hidden"
+            className="fixed bottom-[9.5rem] right-4 md:bottom-[11rem] md:right-8 z-[100] w-[calc(100vw-32px)] md:w-[440px] h-[65vh] md:h-[580px] max-h-[800px] bg-[#f0f0ee] border-[2px] md:border-[3px] border-abcs-black shadow-[-8px_8px_0px_0px_rgba(255,59,0,1)] md:shadow-[-12px_12px_0px_0px_rgba(255,59,0,1)] flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="bg-abcs-black text-white px-6 py-5 flex justify-between items-center border-b-[3px] border-abcs-red">

@@ -3,11 +3,13 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import PageHeader from "@/components/PageHeader";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Link from "next/link";
 import { useLang } from "@/components/LanguageContext";
+import avatarPhoto from "@/img/Gemini_Generated_Image_zdg0rbzdg0rbzdg0.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -124,7 +126,22 @@ export default function AboutPage() {
 
   return (
     <main ref={containerRef} className="flex-1 flex flex-col bg-[#f0f0ee]">
-      <PageHeader number="02" title="À PROPOS" subtitle={t("page_about_sub")} />
+      <PageHeader number="02" title="À PROPOS" subtitle={t("page_about_sub")}>
+        <div className="relative w-36 h-36 lg:w-48 lg:h-48">
+          <div className="w-full h-full rounded-full overflow-hidden border-[3px] border-abcs-black shadow-[6px_6px_0px_0px_rgba(255,59,0,1)]">
+            <Image
+              src={avatarPhoto}
+              alt="Othmane Bouakline"
+              width={192}
+              height={192}
+              className="w-full h-full object-cover object-top scale-150 translate-y-3"
+            />
+          </div>
+          <div className="absolute -bottom-2 -left-2 bg-abcs-red text-white font-bold text-[9px] uppercase tracking-widest px-3 py-1">
+            O&apos;ldev
+          </div>
+        </div>
+      </PageHeader>
 
       {/* Big scrolling text */}
       <div className="w-full overflow-hidden py-8 border-b border-black/10">

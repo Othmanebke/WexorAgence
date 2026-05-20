@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+
 
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -72,7 +72,7 @@ export default function CustomCursor() {
       {/* Big ring */}
       <div
         ref={cursorRef}
-        className="fixed top-0 left-0 w-10 h-10 pointer-events-none z-[9999] mix-blend-difference transition-all duration-100"
+        className="fixed top-0 left-0 w-10 h-10 pointer-events-none z-[99999] mix-blend-difference transition-all duration-100"
         style={{ willChange: "transform" }}
       >
         <div
@@ -90,7 +90,7 @@ export default function CustomCursor() {
       {/* Small dot */}
       <div
         ref={dotRef}
-        className="fixed top-0 left-0 w-2 h-2 pointer-events-none z-[9999] mix-blend-difference"
+        className="fixed top-0 left-0 w-2 h-2 pointer-events-none z-[99999] mix-blend-difference"
         style={{ willChange: "transform" }}
       >
         <div className="w-full h-full rounded-full bg-white" />

@@ -8,8 +8,7 @@ import CustomCursor from "@/components/CustomCursor";
 import Preloader from "@/components/Preloader";
 import Chatbot from "@/components/Chatbot";
 import { LangProvider } from "@/components/LanguageContext";
-import Image from "next/image";
-import avatarChatgpt from "@/img/ChatGPT Image 20 mai 2026, 14_12_06.png";
+import FooterStrip from "@/components/FooterStrip";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -68,17 +67,7 @@ export default function RootLayout({
             <Navbar />
             <div className="flex-1 flex flex-col">{children}</div>
 
-            {/* Strip avatar entre contenu et footer */}
-            <div className="w-full bg-[#f0f0ee] flex items-end justify-center overflow-hidden" style={{ height: "9rem" }}>
-              <Image
-                src={avatarChatgpt}
-                alt="Othmane"
-                width={140}
-                height={180}
-                className="object-cover object-top scale-[1.6] translate-y-4"
-                unoptimized
-              />
-            </div>
+            <FooterStrip />
 
             <Footer />
             <Chatbot />

@@ -10,7 +10,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useLang } from "@/components/LanguageContext";
 import heroPhoto from "@/img/Gemini_Generated_Image_zdg0rbzdg0rbzdg0.png";
-import aboutPhoto from "@/img/ChatGPT Image 20 mai 2026, 14_12_06.png";
+import aboutPhoto from "@/img/cravate orange.png";
 
 gsap.registerPlugin(ScrollTrigger);
 

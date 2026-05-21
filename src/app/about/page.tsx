@@ -9,7 +9,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Link from "next/link";
 import { useLang } from "@/components/LanguageContext";
-import avatarPhoto from "@/img/Gemini_Generated_Image_zdg0rbzdg0rbzdg0.png";
+import avatarPhoto from "@/img/pose bg.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -167,7 +167,7 @@ export default function AboutPage() {
               </div>
 
               {/* Photo */}
-              <div className="relative w-full overflow-hidden">
+              <div className="relative w-full overflow-hidden bg-abcs-black">
                 <Image
                   src={avatarPhoto}
                   alt="Othmane Bouakline"

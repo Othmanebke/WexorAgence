@@ -69,12 +69,12 @@ export default function RootLayout({
             <div className="flex-1 flex flex-col">{children}</div>
 
             {/* Strip avatar entre contenu et footer */}
-            <div className="w-full bg-[#f0f0ee] flex items-end justify-center overflow-hidden" style={{ height: "7rem" }}>
+            <div className="w-full bg-[#f0f0ee] flex items-end justify-center overflow-hidden" style={{ height: "9rem" }}>
               <Image
                 src={avatarChatgpt}
                 alt="Othmane"
-                width={100}
-                height={130}
+                width={140}
+                height={180}
                 className="object-cover object-top scale-[1.6] translate-y-4"
                 unoptimized
               />

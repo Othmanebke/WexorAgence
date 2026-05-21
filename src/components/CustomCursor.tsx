@@ -14,7 +14,11 @@ export default function CustomCursor() {
   const raf = useRef<number>(0);
 
   useEffect(() => {
-    setIsFinePointer(window.matchMedia("(pointer: fine)").matches);
+    const mq = window.matchMedia("(pointer: fine)");
+    const handler = () => setIsFinePointer(mq.matches);
+    handler();
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
   }, []);
 
   useEffect(() => {

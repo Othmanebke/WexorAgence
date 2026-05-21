@@ -107,7 +107,7 @@ export default function StackShowcase() {
       }
 
       // Only run horizontal scroll pin on desktop
-      let mm = gsap.matchMedia();
+      const mm = gsap.matchMedia();
 
       mm.add("(min-width: 768px)", () => {
         if (outerRef.current && trackRef.current) {

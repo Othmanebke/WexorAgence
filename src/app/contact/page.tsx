@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect, Suspense } from "react";
+import { useRef, useState, Suspense } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import PageHeader from "@/components/PageHeader";
 import gsap from "gsap";
@@ -38,35 +38,25 @@ function ContactForm() {
   const containerRef = useRef<HTMLElement>(null);
   const { t } = useLang();
   const searchParams = useSearchParams();
-  const [form, setForm] = useState({ name: "", email: "", phone: "", type: "", budget: "", message: "" });
+  const [form, setForm] = useState(() => {
+    const type = searchParams.get("type") || "";
+    const matchedService = Object.values(SERVICES).find(s =>
+      s.label.toLowerCase().includes(type.toLowerCase())
+    );
+    return {
+      name:    searchParams.get("name")    || "",
+      email:   searchParams.get("email")   || "",
+      phone:   searchParams.get("phone")   || "",
+      type:    matchedService?.label || type,
+      budget:  searchParams.get("budget")  || "",
+      message: searchParams.get("message") || "",
+    };
+  });
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const budgetOptions = form.type ? getBudgets(form.type) : [];
-
-  useEffect(() => {
-    const name = searchParams.get("name");
-    const email = searchParams.get("email");
-    const phone = searchParams.get("phone");
-    const type = searchParams.get("type");
-    const budget = searchParams.get("budget");
-    const message = searchParams.get("message");
-    if (name || email || phone || type || budget || message) {
-      const matchedService = Object.values(SERVICES).find(s =>
-        s.label.toLowerCase().includes((type || "").toLowerCase())
-      );
-      setForm((prev) => ({
-        ...prev,
-        name: name || prev.name,
-        email: email || prev.email,
-        phone: phone || prev.phone,
-        type: matchedService?.label || type || prev.type,
-        budget: budget || prev.budget,
-        message: message || prev.message,
-      }));
-    }
-  }, [searchParams]);
 
   useGSAP(() => {
     gsap.from(".form-line", {

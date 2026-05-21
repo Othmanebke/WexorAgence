@@ -141,46 +141,67 @@ export default function AboutPage() {
       <section className="w-full px-6 md:px-8 pt-16 md:pt-24 pb-0 max-w-7xl mx-auto relative">
         <div className="flex flex-col md:flex-row gap-12 md:gap-16 items-start">
 
-          {/* Left: portrait card with 3D Tilt & spin text badge */}
+          {/* Left: avatar + infos autour */}
           <div className="md:w-5/12 shrink-0">
-            <TiltCard className="relative">
-              <div className="w-full aspect-[4/5] bg-abcs-black flex flex-col items-center justify-center p-10 text-center text-white relative overflow-hidden">
-                {/* Animated code decoration */}
-                <div className="absolute top-6 left-6 flex flex-col gap-1 text-left">
-                  {["// O'ldev", "const me = {", "  nom: 'Othmane',", "  stack: 'fullstack',"].map((line, i) => (
-                    <motion.span
-                      key={i}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3 + i * 0.1 }}
-                      className="font-mono text-[10px] text-white/20"
-                    >
-                      {line}
-                    </motion.span>
-                  ))}
-                </div>
-                <h2 className="font-heading text-4xl uppercase leading-none mb-4">Othmane<br />Bouakline</h2>
-                <div className="font-bold text-abcs-red text-xl mb-6">Développeur Web Freelance</div>
-                <p className="font-bold opacity-50 text-sm leading-relaxed">Bac+5 Expert Informatique Web<br />Mastère spécialisé architecture web</p>
-                <div className="mt-6 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="font-bold text-xs uppercase tracking-widest text-emerald-400">Disponible</span>
-                </div>
-              </div>
-              {/* Red accent */}
-              <div className="absolute -bottom-3 -right-3 w-full h-full bg-abcs-red -z-10" />
+            <TiltCard className="relative flex flex-col gap-4">
 
-              {/* Spin high-fashion circular sticker badge */}
-              <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-abcs-red rounded-full flex items-center justify-center text-white text-[8px] font-mono font-bold tracking-widest text-center uppercase z-20 select-none hidden sm:flex shadow-lg">
-                <svg viewBox="0 0 100 100" className="w-full h-full p-1 animate-[spin_20s_linear_infinite]">
-                  <path id="circlePath" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="none" />
-                  <text fill="white" className="font-bold tracking-widest text-[7px] uppercase font-mono">
-                    <textPath href="#circlePath">
-                      • O&apos;LDEV • FREELANCE • MASTER WEB • PORTFOLIO
-                    </textPath>
-                  </text>
-                </svg>
+              {/* Nom + disponible */}
+              <div className="flex items-end justify-between">
+                <motion.h2
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="font-heading text-4xl md:text-5xl uppercase leading-[0.85]"
+                >
+                  Othmane<br />Bouakline
+                </motion.h2>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="flex items-center gap-2 pb-1"
+                >
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="font-bold text-[10px] uppercase tracking-widest text-emerald-400">Disponible</span>
+                </motion.div>
               </div>
+
+              {/* Photo */}
+              <div className="relative w-full overflow-hidden">
+                <Image
+                  src={avatarPhoto}
+                  alt="Othmane Bouakline"
+                  width={600}
+                  height={700}
+                  className="w-full h-auto object-cover object-top scale-[1.15] origin-top"
+                />
+                {/* Barre rouge bas photo */}
+                <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-abcs-red" />
+              </div>
+
+              {/* Titre + tags + badge */}
+              <div className="flex items-start justify-between">
+                <div className="flex flex-col gap-2">
+                  <span className="font-bold text-abcs-red text-sm uppercase tracking-widest">Développeur Web Freelance</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {["Bac+5", "Mastère Web", "5 ans XP"].map((tag) => (
+                      <span key={tag} className="font-bold text-[9px] uppercase tracking-wider border border-black/20 px-2.5 py-1">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                {/* Spinning badge */}
+                <div className="w-16 h-16 bg-abcs-red rounded-full shrink-0 select-none shadow-lg">
+                  <svg viewBox="0 0 100 100" className="w-full h-full p-1 animate-[spin_20s_linear_infinite]">
+                    <path id="circlePath2" d="M 50,50 m -35,0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="none" />
+                    <text fill="white" className="font-bold text-[7px] uppercase font-mono">
+                      <textPath href="#circlePath2">• O&apos;LDEV • FREELANCE • MASTER WEB •</textPath>
+                    </text>
+                  </svg>
+                </div>
+              </div>
+
             </TiltCard>
           </div>
 
@@ -218,21 +239,6 @@ export default function AboutPage() {
               </div>
             </FadeUp>
 
-            {/* Avatar — collé à la ligne orange */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
-              className="hidden md:block absolute bottom-0 right-0 w-32 lg:w-44 overflow-hidden"
-            >
-              <Image
-                src={avatarPhoto}
-                alt="Othmane Bouakline"
-                width={176}
-                height={220}
-                className="w-full h-auto object-cover object-top scale-[1.6] translate-y-8"
-              />
-            </motion.div>
           </div>
         </div>
       </section>

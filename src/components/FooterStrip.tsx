@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import avatarChatgpt from "@/img/ChatGPT Image 20 mai 2026, 14_12_06.png";
 
-const techs = ["HTML", "CSS", "JAVASCRIPT", "REACT", "NEXT.JS", "NODE.JS", "WORDPRESS", "FRAMER", "CANVA", "ADOBE", "FIGMA", "TYPESCRIPT"];
+const techs = ["JEUNE", "MAROCAIN", "BEAUGOSS", "AMBITIEUX", "CRÉATIF", "PASSIONNÉ", "FREELANCE", "DISPONIBLE", "SÉRIEUX", "DIFFÉRENT", "MOTIVÉ", "RÉSULTATS"];
 
 export default function FooterStrip() {
   return (

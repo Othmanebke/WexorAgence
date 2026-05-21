@@ -3,7 +3,7 @@
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import CountUp from "@/components/CountUp";
+
 import StackShowcase from "@/components/StackShowcase";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -123,6 +123,7 @@ export default function Home() {
   }, []);
 
   const scrambledLogo = useTextScramble("OTHMANE", heroReady, 1400);
+  const scrambledLastName = useTextScramble("BOUAKLINE", heroReady, 1700);
 
   // GSAP parallax + scroll effects
   useGSAP(() => {
@@ -242,7 +243,7 @@ export default function Home() {
               animate={{ y: 0 }}
               transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
             >
-              BOUAKLINE
+              {scrambledLastName}
             </motion.h2>
           </div>
         </div>
@@ -315,7 +316,7 @@ export default function Home() {
                   animate={{ y: 0 }}
                   transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
                 >
-                  BOUAKLINE
+                  {scrambledLastName}
                 </motion.h2>
               </div>
             </div>
@@ -410,8 +411,8 @@ export default function Home() {
           </div>
 
           {/* Text content */}
-          <div className="w-full md:w-7/12 flex flex-col gap-8 pt-8">
-            <LineReveal>
+          <div className="w-full md:w-7/12 flex flex-col gap-0 pt-8">
+            <LineReveal className="mb-10">
               <h2 className="font-heading text-5xl md:text-7xl lg:text-8xl leading-[0.85] tracking-tight uppercase">
                 {t("about_title").split("\n").map((line, i) => (
                   <span key={i}>{line}{i === 0 && <br />}</span>
@@ -419,33 +420,40 @@ export default function Home() {
               </h2>
             </LineReveal>
 
-            <FadeUp delay={0.2}>
-              <p className="font-bold text-xl md:text-2xl leading-snug opacity-90">
-                {t("about_p1")}
-              </p>
-            </FadeUp>
-
-            <FadeUp delay={0.35}>
-              <p className="font-bold text-base opacity-55 leading-relaxed max-w-md">
-                {t("about_p2")}
-              </p>
-            </FadeUp>
-
-            <FadeUp delay={0.5}>
-              <div className="flex flex-wrap gap-8 md:gap-12 pt-4 border-t border-black/15">
-                {[
-                  { end: 10, prefix: "+", label: t("stat_clients") },
-                  { end: 100, suffix: "%", label: t("stat_satisfaction") },
-                  { end: 48, suffix: "h", label: t("stat_response") },
-                ].map((s) => (
-                  <div key={s.label}>
-                    <div className="font-heading text-4xl md:text-5xl text-abcs-red">
-                      <CountUp end={s.end} prefix={s.prefix} suffix={s.suffix} duration={2} />
-                    </div>
-                    <div className="font-bold text-[10px] uppercase tracking-widest opacity-50 mt-1">{s.label}</div>
+            {/* Manifesto lines */}
+            <div className="flex flex-col border-t border-black/15">
+              {[
+                { n: "01", text: "Sites qui convertissent — pas juste qui font beau." },
+                { n: "02", text: "Code propre · Design sur-mesure · Zéro template." },
+                { n: "03", text: "Résultats mesurables. Livraison sans stress. Toujours." },
+                { n: "04", text: "Freelance, France & remote — réponse sous 48h." },
+              ].map((item, i) => (
+                <FadeUp key={i} delay={0.1 + i * 0.1}>
+                  <div className="flex items-start gap-6 py-5 border-b border-black/10 group hover:text-abcs-red transition-colors duration-200">
+                    <span className="font-bold text-[10px] text-abcs-red/60 tracking-widest mt-1.5 shrink-0">{item.n}</span>
+                    <p className="font-bold text-lg md:text-xl leading-snug">{item.text}</p>
                   </div>
-                ))}
-              </div>
+                </FadeUp>
+              ))}
+            </div>
+
+            {/* Tags */}
+            <FadeUp delay={0.6} className="flex flex-wrap gap-2 mt-8">
+              {["Full Stack", "Next.js", "WordPress", "SEO first", "UX/UI", "IA"].map((tag) => (
+                <span key={tag} className="border border-black/20 px-4 py-2 font-bold text-[10px] uppercase tracking-widest hover:bg-abcs-black hover:text-white hover:border-abcs-black transition-colors duration-200">
+                  {tag}
+                </span>
+              ))}
+            </FadeUp>
+
+            <FadeUp delay={0.75} className="mt-8">
+              <a
+                href="/about"
+                className="inline-flex items-center gap-3 border border-abcs-black px-7 py-4 font-bold text-xs uppercase tracking-widest hover:bg-abcs-black hover:text-white transition-colors duration-300 group w-fit"
+              >
+                <span>Découvrir mon parcours</span>
+                <span className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+              </a>
             </FadeUp>
           </div>
         </div>

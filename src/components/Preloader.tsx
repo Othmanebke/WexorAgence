@@ -54,7 +54,7 @@ export default function Preloader() {
         {isLoading && (
           <motion.div
             key="preloader-overlay"
-            className="fixed inset-0 z-[9998] bg-abcs-black text-white overflow-hidden flex items-center justify-between px-8 md:px-16"
+            className="fixed inset-0 z-[9998] bg-abcs-black text-white overflow-hidden"
             exit={{ y: "-100%" }}
             transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
           >
@@ -64,21 +64,21 @@ export default function Preloader() {
               style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")", backgroundSize: "128px" }}
             />
 
-            {/* Chiffre — gauche */}
-            <span
-              className="font-heading text-abcs-red leading-none tracking-tighter tabular-nums select-none relative z-10"
-              style={{ fontSize: "clamp(5rem, 18vw, 16rem)" }}
-            >
-              {Math.floor(progress).toString().padStart(3, "0")}
-            </span>
-
-            {/* % — droite */}
-            <span
-              className="font-heading text-white/20 leading-none tracking-tighter select-none relative z-10"
-              style={{ fontSize: "clamp(5rem, 18vw, 16rem)" }}
-            >
-              %
-            </span>
+            {/* Chiffre + % — bas gauche */}
+            <div className="absolute bottom-16 md:bottom-20 left-8 md:left-16 z-10 flex items-end gap-3 select-none">
+              <span
+                className="font-heading text-abcs-red leading-none tracking-tighter tabular-nums"
+                style={{ fontSize: "clamp(4rem, 12vw, 10rem)" }}
+              >
+                {Math.floor(progress).toString().padStart(3, "0")}
+              </span>
+              <span
+                className="font-heading text-white/20 leading-none tracking-tighter pb-1"
+                style={{ fontSize: "clamp(2rem, 6vw, 5rem)" }}
+              >
+                %
+              </span>
+            </div>
 
             {/* Barre de progression — bas */}
             <div className="absolute bottom-8 left-8 md:left-16 right-8 md:right-16 z-10">

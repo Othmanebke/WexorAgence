@@ -111,6 +111,8 @@ function FadeUp({
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const bigTextRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const marqueeRef = useRef<HTMLDivElement>(null);
@@ -542,7 +544,10 @@ export default function Home() {
       </div>
 
       {/* ─── PORTFOLIO GRID ─── */}
-      <section className="w-full py-16 px-6 md:px-8 bg-[#f0f0ee]">
+      <section
+        className="w-full py-16 px-6 md:px-8 bg-[#f0f0ee] relative"
+        onMouseMove={(e) => setMousePos({ x: e.clientX, y: e.clientY })}
+      >
         <div className="w-full max-w-7xl mx-auto">
           <LineReveal className="mb-16">
             <h2 className="font-heading text-6xl md:text-9xl uppercase leading-none tracking-tight">
@@ -552,15 +557,17 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-black/10">
             {[
-              { title: "NeuroFlow SaaS", cat: "Design · React · IA", year: "2024" },
-              { title: "Maison Verdure", cat: "Site Vitrine · HTML/CSS", year: "2024" },
-              { title: "WonderCut", cat: "Concept Design · Next.js", year: "2024" },
-              { title: "LuxeCars", cat: "Location · React Vite", year: "2024" },
+              { title: "NeuroFlow SaaS",  cat: "Design · React · IA",       year: "2024", img: "/portfolio/NeuroFlow-SAAS-IA-VITETailwindreact.png" },
+              { title: "Maison Verdure",  cat: "Site Vitrine · HTML/CSS",    year: "2024", img: "/portfolio/MaisonVerdure-SiteVitrineBoulangerei-HTMLCSSJS.png" },
+              { title: "WonderCut",       cat: "Concept Design · Next.js",   year: "2024", img: "/portfolio/WONDERCUT-Concetdesignbarbeur-nexttailwinnd.png" },
+              { title: "LuxeCars",        cat: "Location · React Vite",      year: "2024", img: "/portfolio/luxecarsLocationDeVoitureReactViteTailwindCss.png" },
             ].map((p, i) => (
               <FadeUp key={i} delay={i * 0.1}>
                 <a
                   href="/portfolio"
                   className="group block bg-[#f0f0ee] p-8 h-64 flex flex-col justify-between hover:bg-abcs-black hover:text-white transition-colors duration-300"
+                  onMouseEnter={() => setHoveredCard(i)}
+                  onMouseLeave={() => setHoveredCard(null)}
                 >
                   <div className="flex items-start justify-between">
                     <span className="font-bold text-[10px] uppercase tracking-widest opacity-40 group-hover:opacity-60">0{i + 1}</span>
@@ -584,6 +591,30 @@ export default function Home() {
               <span className="text-xl leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
             </a>
           </FadeUp>
+        </div>
+
+        {/* Image flottante qui suit la souris */}
+        <div
+          className="hidden lg:block fixed pointer-events-none z-40 w-64 h-44 overflow-hidden"
+          style={{ left: mousePos.x + 24, top: mousePos.y - 88 }}
+        >
+          {[
+            "/portfolio/NeuroFlow-SAAS-IA-VITETailwindreact.png",
+            "/portfolio/MaisonVerdure-SiteVitrineBoulangerei-HTMLCSSJS.png",
+            "/portfolio/WONDERCUT-Concetdesignbarbeur-nexttailwinnd.png",
+            "/portfolio/luxecarsLocationDeVoitureReactViteTailwindCss.png",
+          ].map((img, i) => (
+            <motion.div
+              key={i}
+              className="absolute inset-0"
+              initial={{ opacity: 0, scale: 0.92, y: 16 }}
+              animate={{ opacity: hoveredCard === i ? 1 : 0, scale: hoveredCard === i ? 1 : 0.92, y: hoveredCard === i ? 0 : 16 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <Image src={img} alt="" fill className="object-cover object-top" sizes="256px" />
+              <div className="absolute inset-0 bg-abcs-black/10" />
+            </motion.div>
+          ))}
         </div>
       </section>
 

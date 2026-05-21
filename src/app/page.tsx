@@ -414,46 +414,41 @@ export default function Home() {
           <div className="w-full md:w-7/12 flex flex-col gap-0 pt-8">
             <LineReveal className="mb-10">
               <h2 className="font-heading text-5xl md:text-7xl lg:text-8xl leading-[0.85] tracking-tight uppercase">
-                {t("about_title").split("\n").map((line, i) => (
-                  <span key={i}>{line}{i === 0 && <br />}</span>
-                ))}
+                Ce que<br />je fais.
               </h2>
             </LineReveal>
 
-            {/* Manifesto lines */}
+            {/* Prestations */}
             <div className="flex flex-col border-t border-black/15">
               {[
-                { n: "01", text: "Sites qui convertissent — pas juste qui font beau." },
-                { n: "02", text: "Code propre · Design sur-mesure · Zéro template." },
-                { n: "03", text: "Résultats mesurables. Livraison sans stress. Toujours." },
-                { n: "04", text: "Freelance, France & remote — réponse sous 48h." },
+                { n: "01", label: "Site Vitrine · Landing · E-commerce", text: "Un site qui transforme tes visiteurs en clients — pas juste une belle carte de visite." },
+                { n: "02", label: "Application Web · SaaS", text: "Je construis ton outil métier, dashboard ou plateforme — stack moderne, scalable." },
+                { n: "03", label: "Refonte Web complète", text: "Ton site vieilli freine ta croissance ? Je le modernise — design, SEO, conversion." },
+                { n: "04", label: "Branding · Social Media", text: "Identité visuelle sur-mesure et présence sociale qui marque les esprits." },
               ].map((item, i) => (
                 <FadeUp key={i} delay={0.1 + i * 0.1}>
-                  <div className="flex items-start gap-6 py-5 border-b border-black/10 group hover:text-abcs-red transition-colors duration-200">
+                  <a href="/tarifs" className="flex items-start gap-6 py-5 border-b border-black/10 group hover:text-abcs-red transition-colors duration-200">
                     <span className="font-bold text-[10px] text-abcs-red/60 tracking-widest mt-1.5 shrink-0">{item.n}</span>
-                    <p className="font-bold text-lg md:text-xl leading-snug">{item.text}</p>
-                  </div>
+                    <div>
+                      <p className="font-bold text-[10px] uppercase tracking-[0.2em] opacity-40 group-hover:opacity-70 mb-1">{item.label}</p>
+                      <p className="font-bold text-base md:text-lg leading-snug">{item.text}</p>
+                    </div>
+                    <span className="ml-auto font-heading text-xl opacity-0 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-200 shrink-0 mt-1">↗</span>
+                  </a>
                 </FadeUp>
               ))}
             </div>
 
-            {/* Tags */}
-            <FadeUp delay={0.6} className="flex flex-wrap gap-2 mt-8">
-              {["Full Stack", "Next.js", "WordPress", "SEO first", "UX/UI", "IA"].map((tag) => (
-                <span key={tag} className="border border-black/20 px-4 py-2 font-bold text-[10px] uppercase tracking-widest hover:bg-abcs-black hover:text-white hover:border-abcs-black transition-colors duration-200">
-                  {tag}
-                </span>
-              ))}
-            </FadeUp>
-
-            <FadeUp delay={0.75} className="mt-8">
+            {/* Prix + CTA */}
+            <FadeUp delay={0.6} className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <a
-                href="/about"
-                className="inline-flex items-center gap-3 border border-abcs-black px-7 py-4 font-bold text-xs uppercase tracking-widest hover:bg-abcs-black hover:text-white transition-colors duration-300 group w-fit"
+                href="/tarifs"
+                className="inline-flex items-center gap-3 bg-abcs-black text-white px-7 py-4 font-bold text-xs uppercase tracking-widest hover:bg-abcs-red transition-colors duration-300 group"
               >
-                <span>Découvrir mon parcours</span>
+                <span>Voir mes offres & prix</span>
                 <span className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
               </a>
+              <span className="font-bold text-[10px] uppercase tracking-widest opacity-40">À partir de 300€ · Devis gratuit 48h</span>
             </FadeUp>
           </div>
         </div>

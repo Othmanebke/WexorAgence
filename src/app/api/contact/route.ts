@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const OWNER_EMAIL = "othmane.bouakline.pro@gmail.com";
 const SENDER_NAME = "O'ldev";
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
+  },
+});
 
 function notificationHtml(name: string, email: string, phone: string, type: string, budget: string, message: string) {
   return `<!DOCTYPE html>
@@ -235,26 +242,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Champs manquants" }, { status: 400 });
     }
 
-    const from = `${SENDER_NAME} <onboarding@resend.dev>`;
+    const from = `${SENDER_NAME} <${process.env.GMAIL_USER}>`;
 
     // 1. Notification to Othmane
-    const n = await resend.emails.send({
+    await transporter.sendMail({
       from,
       to: OWNER_EMAIL,
       replyTo: email,
       subject: `🚀 Nouveau projet — ${type} · ${name}`,
       html: notificationHtml(name, email, phone, type, budget, message),
     });
-    if (n.error) throw new Error(JSON.stringify(n.error));
 
     // 2. Confirmation to client
-    const c = await resend.emails.send({
+    await transporter.sendMail({
       from,
       to: email,
       subject: `Bien reçu ${name.split(" ")[0]} ! Je te reviens sous 48h 👋`,
       html: confirmationHtml(name, type, budget),
     });
-    if (c.error) throw new Error(JSON.stringify(c.error));
 
     return NextResponse.json({ ok: true });
   } catch (err) {

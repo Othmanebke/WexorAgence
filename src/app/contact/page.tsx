@@ -274,9 +274,9 @@ function ContactForm() {
               <span className="font-bold text-[10px] uppercase tracking-widest opacity-30 block mb-6">Réseaux sociaux</span>
               <div className="flex flex-col gap-4">
                 {[
-                  { label: "GitHub", handle: "@othmane-bkl", href: "https://github.com" },
-                  { label: "LinkedIn", handle: "Othmane B.", href: "https://linkedin.com" },
-                  { label: "Instagram", handle: "@o.ldev", href: "https://instagram.com" },
+                  { label: "Instagram", handle: "@o.ldev", href: "https://www.instagram.com/o.ldev/" },
+                  { label: "LinkedIn", handle: "Othmane Bouakline", href: "https://www.linkedin.com/in/othmane-bouakline/" },
+                  { label: "TikTok", handle: "@o.ldev", href: "https://www.tiktok.com/@o.ldev" },
                 ].map((s) => (
                   <a key={s.label} href={s.href} target="_blank" rel="noreferrer"
                     className="flex items-center justify-between py-4 border-b border-black/10 group hover:text-abcs-red transition-colors">

@@ -60,9 +60,9 @@ export default function Footer() {
               <span className="font-bold text-[10px] uppercase tracking-widest opacity-30 mb-1">{t("footer_social_label")}</span>
               <div className="flex gap-6">
                 {[
-                  { label: "GitHub", href: "https://github.com" },
-                  { label: "LinkedIn", href: "https://linkedin.com" },
-                  { label: "Instagram", href: "https://instagram.com" },
+                  { label: "Instagram", href: "https://www.instagram.com/o.ldev/" },
+                  { label: "LinkedIn", href: "https://www.linkedin.com/in/othmane-bouakline/" },
+                  { label: "TikTok", href: "https://www.tiktok.com/@o.ldev" },
                 ].map((s) => (
                   <a
                     key={s.label}

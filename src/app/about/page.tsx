@@ -138,7 +138,7 @@ export default function AboutPage() {
       </div>
 
       {/* ─── HERO INTRO ─── */}
-      <section className="w-full px-6 md:px-8 pt-16 md:pt-24 pb-0 max-w-7xl mx-auto relative">
+      <section className="w-full px-6 md:px-8 pt-16 md:pt-24 pb-12 md:pb-16 max-w-7xl mx-auto relative">
         <div className="flex flex-col md:flex-row gap-12 md:gap-16 items-start">
 
           {/* Left: avatar + infos autour */}

@@ -8,6 +8,8 @@ import CustomCursor from "@/components/CustomCursor";
 import Preloader from "@/components/Preloader";
 import Chatbot from "@/components/Chatbot";
 import { LangProvider } from "@/components/LanguageContext";
+import Image from "next/image";
+import avatarChatgpt from "@/img/ChatGPT Image 20 mai 2026, 14_12_06.png";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -64,7 +66,20 @@ export default function RootLayout({
           <Preloader />
           <LenisProvider>
             <Navbar />
-            <div className="flex-1 flex flex-col pb-24">{children}</div>
+            <div className="flex-1 flex flex-col">{children}</div>
+
+            {/* Strip avatar entre contenu et footer */}
+            <div className="w-full bg-[#f0f0ee] flex items-end justify-center overflow-hidden" style={{ height: "7rem" }}>
+              <Image
+                src={avatarChatgpt}
+                alt="Othmane"
+                width={100}
+                height={130}
+                className="object-cover object-top scale-[1.6] translate-y-4"
+                unoptimized
+              />
+            </div>
+
             <Footer />
             <Chatbot />
           </LenisProvider>

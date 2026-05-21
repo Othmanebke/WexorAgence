@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import avatarChatgpt from "@/img/ChatGPT Image 20 mai 2026, 14_12_06.png";
 
-const techs = ["JEUNE", "MAROCAIN", "BEAUGOSS", "AMBITIEUX", "CRÉATIF", "PASSIONNÉ", "FREELANCE", "DISPONIBLE", "SÉRIEUX", "DIFFÉRENT", "MOTIVÉ", "RÉSULTATS"];
+const techs = ["JEUNE", "MAROCAIN", "BEAUGOSS", "AMBITIEUX", "CRÉATIF", "DISTINGUÉ", "FREELANCE", "DISPONIBLE", "SÉRIEUX", "DIFFÉRENT", "MOTIVÉ", "OMERTA 47"];
 
 export default function FooterStrip() {
   return (

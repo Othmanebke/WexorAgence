@@ -92,6 +92,68 @@ export default function Preloader() {
               style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")", backgroundSize: "128px" }}
             />
 
+            {/* BOUAKLINE géant en filigrane */}
+            <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none select-none">
+              <motion.span
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 0.04, y: 0 }}
+                transition={{ delay: 0.2, duration: 1.2 }}
+                className="font-heading text-white uppercase whitespace-nowrap"
+                style={{ fontSize: "clamp(5rem, 18vw, 22rem)", lineHeight: 1 }}
+              >
+                BOUAKLINE
+              </motion.span>
+            </div>
+
+            {/* Lignes horizontales éditorial */}
+            {[20, 40, 60, 80].map((pct) => (
+              <motion.div
+                key={pct}
+                className="absolute left-0 right-0 h-px bg-white/5"
+                style={{ top: `${pct}%` }}
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ delay: 0.3 + pct * 0.004, duration: 1.2, ease: "easeOut" }}
+              />
+            ))}
+
+            {/* Marqueurs de coins */}
+            {[
+              "top-6 left-6 border-t border-l",
+              "top-6 right-6 border-t border-r",
+              "bottom-6 left-6 border-b border-l",
+              "bottom-6 right-6 border-b border-r",
+            ].map((cls) => (
+              <motion.div
+                key={cls}
+                className={`absolute w-6 h-6 border-white/20 ${cls}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+              />
+            ))}
+
+            {/* Ligne rouge verticale — séparation compteur / avatar */}
+            <motion.div
+              className="absolute top-0 bottom-0 w-px bg-abcs-red/30 hidden md:block"
+              style={{ left: "42%" }}
+              initial={{ scaleY: 0 }}
+              animate={{ scaleY: 1 }}
+              transition={{ delay: 0.3, duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            />
+
+            {/* Numéro de page style — haut droite discret */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="absolute top-8 right-6 md:top-12 md:right-14 text-right select-none z-10"
+            >
+              <span className="font-heading text-[10rem] md:text-[14rem] text-white/[0.03] leading-none tracking-tighter">
+                01
+              </span>
+            </motion.div>
+
             {/* Branding — haut gauche */}
             <motion.div
               initial={{ opacity: 0, y: -10 }}

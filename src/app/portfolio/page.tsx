@@ -112,7 +112,7 @@ export default function PortfolioPage() {
       className="flex-1 flex flex-col bg-[#f0f0ee] relative"
       onMouseMove={(e) => setMousePos({ x: e.clientX, y: e.clientY })}
     >
-      <PageHeader number="04" title="PORTFOLIO" subtitle={t("page_portfolio_sub")} />
+      <PageHeader number="03" title="PORTFOLIO" subtitle={t("page_portfolio_sub")} />
 
       {/* Scrolling big text */}
       <div className="w-full overflow-hidden py-12 border-b border-black/10">

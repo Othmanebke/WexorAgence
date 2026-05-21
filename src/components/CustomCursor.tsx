@@ -9,8 +9,13 @@ export default function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [cursorText, setCursorText] = useState("");
+  const [isFinePinter, setIsFinePointer] = useState(false);
   const pos = useRef({ x: -100, y: -100 });
   const raf = useRef<number>(0);
+
+  useEffect(() => {
+    setIsFinePointer(window.matchMedia("(pointer: fine)").matches);
+  }, []);
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -66,6 +71,8 @@ export default function CustomCursor() {
       observer.disconnect();
     };
   }, []);
+
+  if (!isFinePinter) return null;
 
   return (
     <>

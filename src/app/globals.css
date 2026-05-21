@@ -32,8 +32,11 @@
 }
 
 * {
-  cursor: none !important;
   box-sizing: border-box;
+}
+
+@media (pointer: fine) {
+  * { cursor: none !important; }
 }
 
 html {

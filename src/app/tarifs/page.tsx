@@ -65,7 +65,7 @@ export default function TarifsPage() {
 
   return (
     <main ref={containerRef} className="flex-1 flex flex-col bg-[#f0f0ee]">
-      <PageHeader number="03" title="TARIFS" subtitle={t("page_tarifs_sub")} />
+      <PageHeader number="02" title="TARIFS" subtitle={t("page_tarifs_sub")} />
 
       <section className="w-full px-6 md:px-8 pt-16 md:pt-20 pb-12 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">

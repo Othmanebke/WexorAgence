@@ -126,7 +126,7 @@ export default function AboutPage() {
 
   return (
     <main ref={containerRef} className="flex-1 flex flex-col bg-[#f0f0ee]">
-      <PageHeader number="02" title="À PROPOS" subtitle={t("page_about_sub")} />
+      <PageHeader number="04" title="À PROPOS" subtitle={t("page_about_sub")} />
 
       {/* Big scrolling text */}
       <div className="w-full overflow-hidden py-8 border-b border-black/10">

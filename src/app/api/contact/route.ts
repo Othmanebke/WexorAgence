@@ -1,26 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Resend } from "resend";
 
-const BREVO_API_KEY = process.env.BREVO_API_KEY!;
-const OWNER_EMAIL = "obouakline@gmail.com";
-const OWNER_NAME = "Othmane — O'ldev";
-const SENDER_EMAIL = "obouakline@gmail.com";
+const resend = new Resend(process.env.RESEND_API_KEY);
+const OWNER_EMAIL = "othmane.bouakline.pro@gmail.com";
 const SENDER_NAME = "O'ldev";
-
-async function sendBrevoEmail(payload: object) {
-  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: {
-      "api-key": BREVO_API_KEY,
-      "Content-Type": "application/json",
-      accept: "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Brevo: ${res.status} — ${text}`);
-  }
-}
 
 function notificationHtml(name: string, email: string, phone: string, type: string, budget: string, message: string) {
   return `<!DOCTYPE html>
@@ -220,7 +203,7 @@ function confirmationHtml(name: string, type: string, budget: string) {
               <tr>
                 <td>
                   <span style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:4px;">Contact direct</span>
-                  <a href="mailto:obouakline@gmail.com" style="font-size:15px;font-weight:700;color:#fff;text-decoration:none;">obouakline@gmail.com</a>
+                  <a href="mailto:othmane.bouakline.pro@gmail.com" style="font-size:15px;font-weight:700;color:#fff;text-decoration:none;">othmane.bouakline.pro@gmail.com</a>
                 </td>
                 <td align="right">
                   <a href="https://oldev.vercel.app" style="display:inline-block;background:#fff;color:#FF3B00;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:12px 20px;text-decoration:none;">Portfolio ↗</a>
@@ -252,22 +235,26 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Champs manquants" }, { status: 400 });
     }
 
+    const from = `${SENDER_NAME} <onboarding@resend.dev>`;
+
     // 1. Notification to Othmane
-    await sendBrevoEmail({
-      sender: { name: SENDER_NAME, email: SENDER_EMAIL },
-      to: [{ email: OWNER_EMAIL, name: OWNER_NAME }],
-      replyTo: { email, name },
+    const n = await resend.emails.send({
+      from,
+      to: OWNER_EMAIL,
+      replyTo: email,
       subject: `🚀 Nouveau projet — ${type} · ${name}`,
-      htmlContent: notificationHtml(name, email, phone, type, budget, message),
+      html: notificationHtml(name, email, phone, type, budget, message),
     });
+    if (n.error) throw new Error(JSON.stringify(n.error));
 
     // 2. Confirmation to client
-    await sendBrevoEmail({
-      sender: { name: SENDER_NAME, email: SENDER_EMAIL },
-      to: [{ email, name }],
+    const c = await resend.emails.send({
+      from,
+      to: email,
       subject: `Bien reçu ${name.split(" ")[0]} ! Je te reviens sous 48h 👋`,
-      htmlContent: confirmationHtml(name, type, budget),
+      html: confirmationHtml(name, type, budget),
     });
+    if (c.error) throw new Error(JSON.stringify(c.error));
 
     return NextResponse.json({ ok: true });
   } catch (err) {

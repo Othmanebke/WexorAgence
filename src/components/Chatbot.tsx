@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLang } from "@/components/LanguageContext";
+import { SERVICES } from "@/lib/services";
 
 type Step = {
   id: string;
@@ -14,78 +15,76 @@ type Step = {
   nextStep?: string;
 };
 
-const VALUE_TO_LABEL: Record<string, string> = {
-  "site": "Site Vitrine (Présence)",
-  "vitrine": "Site Vitrine (Présence)",
-  "ecommerce": "Application Web / SaaS",
-  "saas": "Application Web / SaaS",
-  "refonte": "Refonte de site existant",
-  "design": "Branding / Identité Visuelle",
-  "social": "Community Management",
-  "low": "<1000",
-  "mid": "1000-3000",
-  "high": "3000-5000"
-};
-
 const CHAT_LOGIC: Record<string, Step> = {
   start: {
     id: "start",
     question: "Salut ! Je suis Othmane 👋 Prêt à transformer ton idée en réalité digitale ? On part sur quoi ?",
     type: 'options',
     options: [
-      { label: "Créer un Site Web", value: "site", nextStep: "site_type" },
-      { label: "Une Refonte Totale", value: "refonte", nextStep: "refonte_type" },
-      { label: "Branding & Print", value: "design", nextStep: "design_type" },
-      { label: "Social Media", value: "social", nextStep: "social_type" },
+      { label: "Créer un Site Web", value: "web", nextStep: "web_type" },
+      { label: "Refonte Web",       value: "refonte", nextStep: "budget_refonte" },
+      { label: "Branding & Print",  value: "branding", nextStep: "branding_type" },
+      { label: "Social Media",      value: "social", nextStep: "social_type" },
     ],
   },
-  site_type: {
-    id: "site_type",
-    question: "Top choix. Quel type de site on va construire ensemble ?",
+  web_type: {
+    id: "web_type",
+    question: "Top ! Quel type de site on construit ?",
     type: 'options',
     options: [
-      { label: "Site Vitrine (Impact)", value: "vitrine", nextStep: "budget" },
-      { label: "E-commerce (Vente)", value: "ecommerce", nextStep: "budget" },
-      { label: "App Web / SaaS", value: "saas", nextStep: "budget" },
+      { label: "Landing Page — 300€",             value: "landing",   nextStep: "budget_web_landing" },
+      { label: "Site Vitrine — à partir de 750€",  value: "vitrine",   nextStep: "budget_web_vitrine" },
+      { label: "Pack WordPress — à partir de 1 200€", value: "wordpress", nextStep: "budget_web_wordpress" },
+      { label: "App Web / SaaS — à partir de 2 500€", value: "webapp",  nextStep: "budget_web_app" },
     ],
   },
-  refonte_type: {
-    id: "refonte_type",
-    question: "Ton site actuel ne te représente plus ? Je m'en occupe. Quelle est la priorité ?",
+  budget_web_landing: {
+    id: "budget_web_landing",
+    question: "Landing Page à 300€ — tu es dans quelle fourchette ?",
     type: 'options',
-    options: [
-      { label: "Look & Design UX", value: "design_refresh", nextStep: "budget" },
-      { label: "Vitesse & SEO", value: "perf_seo", nextStep: "budget" },
-      { label: "Nouvelles Fonctions", value: "features", nextStep: "budget" },
-    ],
+    options: SERVICES.landing.budgets.map(b => ({ label: b, value: b, nextStep: "ask_name" })),
   },
-  design_type: {
-    id: "design_type",
-    question: "L'identité visuelle, c'est la base de tout. On s'attaque à quoi ?",
+  budget_web_vitrine: {
+    id: "budget_web_vitrine",
+    question: "Site Vitrine à partir de 750€ — ton budget ?",
+    type: 'options',
+    options: SERVICES.vitrine.budgets.map(b => ({ label: b, value: b, nextStep: "ask_name" })),
+  },
+  budget_web_wordpress: {
+    id: "budget_web_wordpress",
+    question: "Pack WordPress à partir de 1 200€ — ton budget ?",
+    type: 'options',
+    options: SERVICES.wordpress.budgets.map(b => ({ label: b, value: b, nextStep: "ask_name" })),
+  },
+  budget_web_app: {
+    id: "budget_web_app",
+    question: "Application Web / SaaS à partir de 2 500€ — ton budget ?",
+    type: 'options',
+    options: SERVICES.webapp.budgets.map(b => ({ label: b, value: b, nextStep: "ask_name" })),
+  },
+  budget_refonte: {
+    id: "budget_refonte",
+    question: "Refonte Web — sur devis. Tu es dans quelle fourchette ?",
+    type: 'options',
+    options: SERVICES.refonte.budgets.map(b => ({ label: b, value: b, nextStep: "ask_name" })),
+  },
+  branding_type: {
+    id: "branding_type",
+    question: "L'identité visuelle, c'est la base. Quel niveau de production ?",
     type: 'options',
     options: [
-      { label: "Logo & Identité", value: "branding", nextStep: "budget" },
-      { label: "Flyers & Supports Print", value: "print", nextStep: "budget" },
+      { label: "Pack Canva Pro — 150–350€",  value: "branding_canva", nextStep: "ask_name" },
+      { label: "Pack Adobe CC — 600–1 200€", value: "branding_adobe", nextStep: "ask_name" },
     ],
   },
   social_type: {
     id: "social_type",
-    question: "On va rendre ta présence sociale irrésistible. Quel niveau ?",
+    question: "On rend ta présence sociale irrésistible. Quel plan ?",
     type: 'options',
     options: [
-      { label: "Starter (Démarrage)", value: "social_starter", nextStep: "budget" },
-      { label: "Growth (Visibilité)", value: "social_growth", nextStep: "budget" },
-      { label: "Pro (Domination)", value: "social_pro", nextStep: "budget" },
-    ],
-  },
-  budget: {
-    id: "budget",
-    question: "Parlons budget — sans tabou, c'est pour mieux calibrer ma proposition.",
-    type: 'options',
-    options: [
-      { label: "Budget < 1000€", value: "low", nextStep: "validate" },
-      { label: "Entre 1000€ et 3000€", value: "mid", nextStep: "validate" },
-      { label: "Plus de 3000€", value: "high", nextStep: "validate" },
+      { label: "Starter — 150€/mois",    value: "social_starter", nextStep: "ask_name" },
+      { label: "Growth — 450€/mois",     value: "social_growth",  nextStep: "ask_name" },
+      { label: "Pro — 1 500€/mois",      value: "social_pro",     nextStep: "ask_name" },
     ],
   },
   ask_name: {
@@ -93,22 +92,22 @@ const CHAT_LOGIC: Record<string, Step> = {
     question: "Parfait ! C'est quoi ton nom (ou celui de ta marque) ?",
     type: 'input',
     inputType: 'text',
-    nextStep: 'ask_email'
+    nextStep: 'ask_email',
   },
   ask_email: {
     id: "ask_email",
     question: "Enchanté [NAME] ! Ton mail pour que je t'envoie une proposition ?",
     type: 'input',
     inputType: 'email',
-    nextStep: 'ask_phone'
+    nextStep: 'ask_phone',
   },
   ask_phone: {
     id: "ask_phone",
     question: "Presque ! Un numéro pour qu'on puisse se parler si besoin ?",
     type: 'input',
     inputType: 'tel',
-    nextStep: 'finish'
-  }
+    nextStep: 'finish',
+  },
 };
 
 export default function Chatbot() {
@@ -144,23 +143,7 @@ export default function Chatbot() {
     const newAnswers = { ...answers, [currentStepId]: option.value };
     setAnswers(newAnswers);
     setHistory((prev) => [...prev, { type: 'user', text: option.label }]);
-
-    if (option.nextStep === "validate") {
-      const service = newAnswers.site_type || newAnswers.start;
-      const budget = option.value;
-      setIsTyping(true);
-      setTimeout(() => {
-        setIsTyping(false);
-        if ((service === "saas" || service === "ecommerce") && budget === "low") {
-          setHistory((prev) => [...prev, { type: 'bot', text: "Soyons honnêtes : un projet SaaS à moins de 1000€, c'est compliqué. On peut partir sur une vitrine pour commencer ?" }]);
-          setCurrentStepId("redirect_choice");
-        } else {
-          goToNextStep("ask_name");
-        }
-      }, 800);
-    } else if (option.nextStep) {
-      goToNextStep(option.nextStep);
-    }
+    if (option.nextStep) goToNextStep(option.nextStep);
   };
 
   const goToNextStep = (nextStepId: string, customName?: string) => {
@@ -204,21 +187,34 @@ export default function Chatbot() {
   const finishChat = (finalAnswers: Record<string, string>) => {
     setHistory((prev) => [
       ...prev,
-      { type: 'bot', text: "Parfait ! Je te redirige vers le formulaire de contact avec tout pré-rempli 🚀" }
+      { type: 'bot', text: "Parfait ! Je te redirige vers le formulaire avec tout pré-rempli 🚀" }
     ]);
 
     setTimeout(() => {
-      const projectTypeRaw = finalAnswers.site_type || finalAnswers.start || "";
-      const mappedType = VALUE_TO_LABEL[projectTypeRaw] || projectTypeRaw;
-      const mappedBudget = VALUE_TO_LABEL[finalAnswers.budget] || finalAnswers.budget || "";
+      // Retrouver le service sélectionné
+      const serviceKey = (
+        finalAnswers.web_type ||
+        finalAnswers.branding_type ||
+        finalAnswers.social_type
+      ) as keyof typeof SERVICES | undefined;
+
+      const serviceLabel = serviceKey && SERVICES[serviceKey]
+        ? SERVICES[serviceKey].label
+        : "";
+
+      // Budget = valeur sélectionnée dans l'étape budget_*
+      const budget = Object.entries(finalAnswers).find(([k]) => k.startsWith("budget_"))?.[1] ||
+        finalAnswers.social_type && SERVICES[finalAnswers.social_type as keyof typeof SERVICES]?.budgets[0] ||
+        finalAnswers.branding_type && SERVICES[finalAnswers.branding_type as keyof typeof SERVICES]?.budgets[0] ||
+        "";
 
       const params = new URLSearchParams({
-        name: finalAnswers.ask_name || "",
-        email: finalAnswers.ask_email || "",
-        phone: finalAnswers.ask_phone || "",
-        type: mappedType,
-        budget: mappedBudget,
-        message: `Audit Chatbot O'ldev.`
+        name:    finalAnswers.ask_name  || "",
+        email:   finalAnswers.ask_email || "",
+        phone:   finalAnswers.ask_phone || "",
+        type:    serviceLabel,
+        budget,
+        message: "Demande via chatbot O'ldev.",
       });
 
       router.push(`/contact?${params.toString()}`);
@@ -319,11 +315,6 @@ export default function Chatbot() {
                   />
                   <button type="submit" className="bg-abcs-black text-white px-5 border-[2px] border-abcs-black font-bold text-xl hover:bg-abcs-red transition-colors">→</button>
                 </form>
-              ) : currentStepId === "redirect_choice" ? (
-                <div className="flex gap-2 w-full">
-                  <button onClick={() => router.push('/tarifs')} className="flex-1 bg-abcs-black text-white border-[2px] border-abcs-black py-3 text-xs font-bold uppercase tracking-widest shadow-[3px_3px_0px_0px_rgba(255,59,0,1)] hover:bg-abcs-red transition-colors">Tarifs</button>
-                  <button onClick={() => { setAnswers({...answers, site_type: 'vitrine'}); handleOptionClick({label: "Site Vitrine", value: "vitrine", nextStep: "ask_name"}); }} className="flex-1 bg-white border-[2px] border-abcs-black py-3 text-xs font-bold uppercase tracking-widest shadow-[3px_3px_0px_0px_rgba(17,17,17,1)] hover:bg-[#f0f0ee] transition-colors">Ok Vitrine</button>
-                </div>
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {CHAT_LOGIC[currentStepId]?.options?.map((opt, i) => (

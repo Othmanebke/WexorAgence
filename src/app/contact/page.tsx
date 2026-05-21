@@ -1,13 +1,14 @@
 "use client";
 
 import { useRef, useState, useEffect, Suspense } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import PageHeader from "@/components/PageHeader";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useLang } from "@/components/LanguageContext";
+import { SERVICES, SERVICE_GROUPS, getBudgets } from "@/lib/services";
 
 function LineReveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
   const ref = useRef(null);
@@ -31,17 +32,6 @@ function FadeUp({ children, delay = 0, className = "" }: { children: React.React
   );
 }
 
-const projectTypes = [
-  "Site Vitrine (Présence)",
-  "Pack WordPress (Autonomie)",
-  "Application Web / SaaS",
-  "Refonte de site existant",
-  "Branding / Identité Visuelle",
-  "Pack Flyers & Print",
-  "Community Management",
-  "Autre projet sur-mesure",
-];
-
 const inputClass = "w-full bg-transparent border-b-2 border-black/20 focus:border-abcs-red py-4 font-bold text-lg placeholder:opacity-30 placeholder:font-bold outline-none transition-colors duration-200";
 
 function ContactForm() {
@@ -53,6 +43,8 @@ function ContactForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const budgetOptions = form.type ? getBudgets(form.type) : [];
+
   useEffect(() => {
     const name = searchParams.get("name");
     const email = searchParams.get("email");
@@ -61,13 +53,16 @@ function ContactForm() {
     const budget = searchParams.get("budget");
     const message = searchParams.get("message");
     if (name || email || phone || type || budget || message) {
+      const matchedService = Object.values(SERVICES).find(s =>
+        s.label.toLowerCase().includes((type || "").toLowerCase())
+      );
       setForm((prev) => ({
         ...prev,
         name: name || prev.name,
         email: email || prev.email,
         phone: phone || prev.phone,
-        type: projectTypes.find(t => t.toLowerCase().includes((type || "").toLowerCase())) || type || prev.type,
-        budget: budget === "low" ? "<1000" : budget === "mid" ? "1000-3000" : budget === "high" ? ">5000" : budget || prev.budget,
+        type: matchedService?.label || type || prev.type,
+        budget: budget || prev.budget,
         message: message || prev.message,
       }));
     }
@@ -166,23 +161,58 @@ function ContactForm() {
                   </div>
                   <div className="form-line flex flex-col gap-1">
                     <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Type de projet *</label>
-                    <select required name="type" value={form.type} onChange={handleChange} className={`${inputClass} bg-transparent appearance-none`}>
+                    <select
+                      required
+                      name="type"
+                      value={form.type}
+                      onChange={(e) => setForm({ ...form, type: e.target.value, budget: "" })}
+                      className={`${inputClass} bg-transparent appearance-none`}
+                    >
                       <option value="">Choisir...</option>
-                      {projectTypes.map((t) => <option key={t} value={t}>{t}</option>)}
+                      {SERVICE_GROUPS.map((g) => (
+                        <optgroup key={g.label} label={g.label}>
+                          {g.keys.map((k) => (
+                            <option key={k} value={SERVICES[k].label}>
+                              {SERVICES[k].label} — {SERVICES[k].price}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))}
                     </select>
                   </div>
                 </div>
 
-                <div className="form-line flex flex-col gap-1">
-                  <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Budget estimé *</label>
-                  <select required name="budget" value={form.budget} onChange={handleChange} className={`${inputClass} bg-transparent appearance-none`}>
-                    <option value="">Choisir un budget...</option>
-                    <option value="<1000">Moins de 1 000€</option>
-                    <option value="1000-3000">1 000€ — 3 000€</option>
-                    <option value="3000-5000">3 000€ — 5 000€</option>
-                    <option value=">5000">Plus de 5 000€</option>
-                  </select>
-                </div>
+                <AnimatePresence mode="wait">
+                  {form.type && (
+                    <motion.div
+                      key={form.type}
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.2 }}
+                      className="form-line flex flex-col gap-3"
+                    >
+                      <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Budget *</label>
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        {budgetOptions.map((b) => (
+                          <button
+                            key={b}
+                            type="button"
+                            onClick={() => setForm({ ...form, budget: b })}
+                            className={`px-5 py-3 font-bold text-sm border-2 transition-all duration-150 ${
+                              form.budget === b
+                                ? "bg-abcs-black text-white border-abcs-black"
+                                : "bg-transparent border-black/20 hover:border-abcs-black"
+                            }`}
+                          >
+                            {b}
+                          </button>
+                        ))}
+                      </div>
+                      <input type="hidden" name="budget" value={form.budget} required />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 <div className="form-line flex flex-col gap-1">
                   <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Message *</label>

@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
 import { useLang, Lang } from "@/components/LanguageContext";
-import avatarPhoto from "@/img/cravate orange.png";
+import avatarPhoto from "@/img/cravate-orange.png";
 
 const langLabels: Record<Lang, string> = {
   fr: "FR",

@@ -9,7 +9,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Link from "next/link";
 import { useLang } from "@/components/LanguageContext";
-import avatarPhoto from "@/img/pose bg.png";
+import avatarPhoto from "@/img/pose-bg.png";
 
 gsap.registerPlugin(ScrollTrigger);
 

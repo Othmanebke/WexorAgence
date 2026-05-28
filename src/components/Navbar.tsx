@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
 import { useLang, Lang } from "@/components/LanguageContext";
+import { useContactModal } from "@/components/ContactModalProvider";
 import avatarPhoto from "@/img/cravate-orange.png";
 
 const langLabels: Record<Lang, string> = {
@@ -19,12 +20,13 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const { lang, setLang, t } = useLang();
+  const { openModal } = useContactModal();
 
   const links = [
     { label: "Home", href: "/" },
-    { label: t("nav_services"), href: "/tarifs" },
-    { label: t("nav_portfolio"), href: "/portfolio" },
-    { label: t("nav_about"), href: "/about" },
+    { label: t("nav_portfolio"), href: "/#portfolio" },
+    { label: t("nav_services"), href: "/#services" },
+    { label: t("nav_about"), href: "/#about" },
   ];
 
   const otherLangs = (["fr", "en", "ma"] as Lang[]).filter((l) => l !== lang);
@@ -53,7 +55,7 @@ export default function Navbar() {
         {/* Nav links — desktop */}
         <nav className="hidden md:flex items-center">
           {links.map((link) => {
-            const active = pathname === link.href;
+            const active = pathname === "/" && link.href === "/";
             return (
               <Link
                 key={link.href}
@@ -102,13 +104,13 @@ export default function Navbar() {
         </div>
 
         {/* Contact button */}
-        <Link
-          href="/contact"
+        <button
+          onClick={openModal}
           className="bg-white text-abcs-black font-bold text-[11px] uppercase tracking-[0.1em] px-5 py-2.5 rounded-full hover:bg-abcs-red hover:text-white transition-all duration-200 flex items-center gap-1.5 flex-shrink-0 ml-1"
         >
           <span>{t("nav_contact")}</span>
           <span className="text-sm leading-none">+</span>
-        </Link>
+        </button>
 
         {/* Mobile menu toggle */}
         <button
@@ -135,15 +137,17 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className={`font-bold text-sm uppercase tracking-[0.1em] py-3 px-4 rounded-2xl transition-all ${
-                  pathname === link.href
-                    ? "text-white bg-white/10"
-                    : "text-white/50 hover:text-white hover:bg-white/5"
-                }`}
+                className="font-bold text-sm uppercase tracking-[0.1em] py-3 px-4 rounded-2xl transition-all text-white/50 hover:text-white hover:bg-white/5"
               >
                 {link.label}
               </Link>
             ))}
+            <button
+              onClick={() => { openModal(); setMenuOpen(false); }}
+              className="font-bold text-sm uppercase tracking-[0.1em] py-3 px-4 rounded-2xl transition-all text-white bg-abcs-red hover:bg-red-600 mt-1 text-left"
+            >
+              {t("nav_contact")}
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

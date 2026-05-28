@@ -9,6 +9,7 @@ import Preloader from "@/components/Preloader";
 import Chatbot from "@/components/Chatbot";
 import { LangProvider } from "@/components/LanguageContext";
 import FooterStrip from "@/components/FooterStrip";
+import ContactModalProvider from "@/components/ContactModalProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -61,17 +62,19 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans bg-white text-black">
         <LangProvider>
-          <CustomCursor />
-          <Preloader />
-          <LenisProvider>
-            <Navbar />
-            <div className="flex-1 flex flex-col">{children}</div>
+          <ContactModalProvider>
+            <CustomCursor />
+            <Preloader />
+            <LenisProvider>
+              <Navbar />
+              <div className="flex-1 flex flex-col">{children}</div>
 
-            <FooterStrip />
+              <FooterStrip />
 
-            <Footer />
-            <Chatbot />
-          </LenisProvider>
+              <Footer />
+              <Chatbot />
+            </LenisProvider>
+          </ContactModalProvider>
         </LangProvider>
       </body>
     </html>

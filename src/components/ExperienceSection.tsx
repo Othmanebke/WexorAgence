@@ -118,11 +118,12 @@ export default function ExperienceSection() {
       <div
         ref={outerRef}
         className="hidden md:block relative bg-[#f0f0ee]"
-        style={{ height: `${N * 100}vh` }}
+        style={{ height: `${(N + 1) * 100}vh` }}
       >
+        {/* z-20 keeps sticky above any following sections while scrolling */}
         <div
           ref={stickyRef}
-          className="sticky top-0 h-screen overflow-hidden bg-[#f0f0ee]"
+          className="sticky top-0 h-screen overflow-hidden bg-[#f0f0ee] z-20"
         >
           {/* Progress bar */}
           <div className="absolute top-0 left-0 right-0 h-0.5 bg-black/10 z-20">

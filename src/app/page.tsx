@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 
@@ -51,54 +51,84 @@ function useTextScramble(target: string, trigger: boolean, duration = 1200) {
 // ─── Data ────────────────────────────────────────────────────────────────────
 
 const services = [
-  { n: "01", title: "Site web sur-mesure", tags: "React · Next.js · WordPress" },
-  { n: "02", title: "Application Web", tags: "SaaS · Dashboard · Full Stack" },
-  { n: "03", title: "E-commerce", tags: "WooCommerce · Next Commerce" },
-  { n: "04", title: "Refonte & Optimisation", tags: "UX/UI · Performance · SEO" },
-  { n: "05", title: "Branding & Print", tags: "Canva · Adobe · Identité" },
-  { n: "06", title: "Intégration IA", tags: "Chatbots · Automatisation" },
+  {
+    n: "01", title: "Site web sur-mesure", tags: "React · Next.js · WordPress",
+    price: "À partir de 750€",
+    desc: "Site vitrine, landing page ou site institutionnel développé sur-mesure. Design unique, performant, optimisé SEO et livré en 2–3 semaines.",
+    includes: ["Design UI/UX personnalisé", "Responsive mobile & tablette", "SEO technique intégré", "Formulaire de contact & CTA", "Déploiement & mise en ligne inclus"],
+  },
+  {
+    n: "02", title: "Application Web", tags: "SaaS · Dashboard · Full Stack",
+    price: "À partir de 2 500€",
+    desc: "Application web complexe : SaaS, tableau de bord, outil métier. Stack moderne, scalable, avec authentification et base de données.",
+    includes: ["Architecture full stack (React + Node.js)", "Authentification & gestion des rôles", "Base de données PostgreSQL / Supabase", "API REST & intégrations tierces", "Documentation technique livrée"],
+  },
+  {
+    n: "03", title: "E-commerce", tags: "WooCommerce · Next Commerce",
+    price: "À partir de 1 200€",
+    desc: "Boutique en ligne complète avec gestion produits, panier, paiement sécurisé et tableau de bord vendeur.",
+    includes: ["Catalogue produits & variantes", "Paiement Stripe / PayPal intégré", "Gestion des commandes & stocks", "Fiches produits optimisées SEO", "Interface admin intuitive"],
+  },
+  {
+    n: "04", title: "Refonte & Optimisation", tags: "UX/UI · Performance · SEO",
+    price: "À partir de 500€",
+    desc: "Modernisation complète de votre site existant : nouveau design, amélioration des performances, migration technique.",
+    includes: ["Audit complet de l'existant", "Nouveau design UX/UI", "Optimisation Core Web Vitals", "Migration & redirections SEO", "Formation à l'utilisation"],
+  },
+  {
+    n: "05", title: "Branding & Print", tags: "Canva · Adobe · Identité",
+    price: "À partir de 350€",
+    desc: "Création d'identité visuelle complète : logo, charte graphique, supports print et digital pour une image de marque cohérente.",
+    includes: ["Logo + déclinaisons", "Charte graphique (couleurs, typographies)", "Carte de visite & flyers", "Templates réseaux sociaux", "Fichiers sources livrés (AI, PDF, PNG)"],
+  },
+  {
+    n: "06", title: "Intégration IA", tags: "Chatbots · Automatisation",
+    price: "À partir de 800€",
+    desc: "Intégration d'agents IA, chatbots intelligents et automatisations dans vos outils via API OpenAI, Zapier ou Make.",
+    includes: ["Chatbot personnalisé (OpenAI / Claude)", "Automatisation de workflows métier", "Intégration Zapier / Make / n8n", "Connexion à vos outils existants", "Documentation & formation incluses"],
+  },
 ];
 
 
 const diplomes = [
   {
     level: "Bac+5",
-    title: "Expert Informatique Web",
-    subtitle: "Mastère spécialisé — Développement & Architecture Web",
+    title: "Master 2 Expert Informatique Web",
+    subtitle: "Développement & Architecture Web — en cours",
     school: "RNCP Niveau 7",
-    year: "2022",
+    year: "2026",
     highlight: true,
   },
   {
     level: "Bac+4",
-    title: "Master 1 — Informatique Web",
-    subtitle: "Développement web avancé & architecture logicielle",
-    school: "À compléter",
-    year: "2021",
+    title: "Master 1 Expert Informatique Web",
+    subtitle: "Développement & Architecture Web",
+    school: "RNCP Niveau 7",
+    year: "2025",
     highlight: false,
   },
   {
     level: "Bac+3",
-    title: "Licence Professionnelle",
-    subtitle: "Développement Web & Applications",
-    school: "À compléter",
-    year: "2020",
+    title: "Bachelor Informatique",
+    subtitle: "Informatique & Développement Logiciel",
+    school: "Formation professionnelle",
+    year: "2023",
     highlight: false,
   },
   {
     level: "Bac+2",
-    title: "BTS SIO — SLAM",
-    subtitle: "Solutions Logicielles et Applications Métiers",
-    school: "À compléter",
-    year: "2019",
+    title: "Développeur Full Stack",
+    subtitle: "Développement web & applications métier",
+    school: "AJC Formation",
+    year: "2022",
     highlight: false,
   },
   {
     level: "Bac",
-    title: "Baccalauréat",
-    subtitle: "Série générale",
-    school: "À compléter",
-    year: "2017",
+    title: "Baccalauréat Technologique",
+    subtitle: "Sciences & Technologies du Management",
+    school: "Lycée",
+    year: "2019",
     highlight: false,
   },
 ];
@@ -158,6 +188,7 @@ function FadeUp({
 export default function Home() {
   const marqueeRef = useRef<HTMLDivElement>(null);
   const [heroReady, setHeroReady] = useState(false);
+  const [openService, setOpenService] = useState<number | null>(null);
   const { t } = useLang();
   const { openModal } = useContactModal();
 
@@ -481,26 +512,88 @@ export default function Home() {
           </LineReveal>
 
           <div className="flex flex-col border-t border-black/15">
-            {services.map((s, i) => (
-              <button
-                key={i}
-                onClick={openModal}
-                className="service-row-item service-row flex items-center justify-between py-7 px-0 group text-left w-full"
-              >
-                <div className="flex items-center gap-4 md:gap-8">
-                  <span className="font-bold text-[10px] uppercase tracking-widest opacity-40 w-6 md:w-8">{s.n}</span>
-                  <span className="font-heading text-xl sm:text-2xl md:text-4xl lg:text-5xl uppercase tracking-tight">
-                    {s.title}
-                  </span>
+            {services.map((s, i) => {
+              const isOpen = openService === i;
+              return (
+                <div key={i} className="border-b border-black/15">
+                  {/* Row header */}
+                  <button
+                    onClick={() => setOpenService(isOpen ? null : i)}
+                    className={`service-row-item w-full flex items-center justify-between py-6 px-0 text-left transition-colors duration-300 group ${
+                      isOpen ? "text-abcs-black" : "hover:text-abcs-red"
+                    }`}
+                  >
+                    <div className="flex items-center gap-4 md:gap-8">
+                      <span className={`font-bold text-[10px] uppercase tracking-widest w-6 md:w-8 transition-colors duration-200 ${isOpen ? "text-abcs-red" : "opacity-40"}`}>
+                        {s.n}
+                      </span>
+                      <span className="font-heading text-xl sm:text-2xl md:text-4xl lg:text-5xl uppercase tracking-tight">
+                        {s.title}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-6">
+                      <span className={`hidden md:block font-bold text-xs uppercase tracking-widest transition-opacity ${isOpen ? "opacity-0" : "opacity-30 group-hover:opacity-80"}`}>
+                        {s.tags}
+                      </span>
+                      <motion.span
+                        animate={{ rotate: isOpen ? 45 : 0 }}
+                        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                        className="font-heading text-2xl leading-none"
+                      >
+                        +
+                      </motion.span>
+                    </div>
+                  </button>
+
+                  {/* Expanded panel */}
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <div className="bg-abcs-black text-white px-4 md:px-12 py-10 flex flex-col md:flex-row gap-10 md:gap-16">
+                          {/* Left: price + desc */}
+                          <div className="md:w-1/2 flex flex-col gap-5">
+                            <div>
+                              <span className="font-bold text-[10px] uppercase tracking-widest text-white/30 block mb-2">Tarif</span>
+                              <span className="font-heading text-3xl md:text-5xl text-abcs-red uppercase leading-none">
+                                {s.price}
+                              </span>
+                            </div>
+                            <p className="font-bold text-base text-white/65 leading-relaxed">
+                              {s.desc}
+                            </p>
+                            <button
+                              onClick={openModal}
+                              className="inline-flex items-center gap-3 bg-white text-abcs-black px-6 py-3.5 font-bold text-xs uppercase tracking-widest hover:bg-abcs-red hover:text-white transition-colors duration-300 group w-fit mt-2"
+                            >
+                              <span>Démarrer ce projet</span>
+                              <span className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
+                            </button>
+                          </div>
+                          {/* Right: includes */}
+                          <div className="md:w-1/2">
+                            <span className="font-bold text-[10px] uppercase tracking-widest text-white/30 block mb-5">Ce qui est inclus</span>
+                            <ul className="flex flex-col gap-3">
+                              {s.includes.map((item, j) => (
+                                <li key={j} className="flex items-start gap-3">
+                                  <span className="w-1 h-1 rounded-full bg-abcs-red mt-2 shrink-0" />
+                                  <span className="font-bold text-sm text-white/65 leading-relaxed">{item}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-                <div className="flex items-center gap-6">
-                  <span className="hidden md:block font-bold text-xs uppercase tracking-widest opacity-40 group-hover:opacity-100 transition-opacity">
-                    {s.tags}
-                  </span>
-                  <span className="service-arrow font-heading text-2xl leading-none transition-transform duration-200">↗</span>
-                </div>
-              </button>
-            ))}
+              );
+            })}
           </div>
 
           <FadeUp delay={0.4} className="mt-12">

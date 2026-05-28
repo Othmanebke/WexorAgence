@@ -2,9 +2,17 @@
 
 import Link from "next/link";
 import { useLang } from "@/components/LanguageContext";
+import { useContactModal } from "@/components/ContactModalProvider";
 
 export default function Footer() {
   const { t } = useLang();
+  const { openModal } = useContactModal();
+
+  const navLinks = [
+    { label: "Portfolio", href: "/#portfolio" },
+    { label: "Services",  href: "/#services"  },
+    { label: "À propos",  href: "/#about"      },
+  ];
 
   return (
     <footer className="w-full bg-abcs-black text-white">
@@ -18,23 +26,18 @@ export default function Footer() {
             <p className="font-bold text-xl md:text-2xl leading-snug max-w-xs opacity-80">
               {t("footer_vision")}
             </p>
-            <Link
-              href="/contact"
+            <button
+              onClick={openModal}
               className="inline-flex items-center gap-3 border border-white/30 px-6 py-3 font-bold text-xs uppercase tracking-widest hover:border-abcs-red hover:text-abcs-red transition-colors duration-300 group w-fit"
             >
               <span>{t("footer_cta")}</span>
               <span className="text-base leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
-            </Link>
+            </button>
           </div>
 
-          {/* Nav links large */}
+          {/* Nav links */}
           <div className="md:col-span-4 flex flex-col gap-2">
-            {[
-              { label: "Portfolio", href: "/portfolio" },
-              { label: t("nav_services"), href: "/tarifs" },
-              { label: t("nav_about"), href: "/about" },
-              { label: "Contact", href: "/contact" },
-            ].map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -43,6 +46,12 @@ export default function Footer() {
                 {link.label}
               </Link>
             ))}
+            <button
+              onClick={openModal}
+              className="font-heading text-5xl md:text-6xl uppercase leading-tight hover:text-abcs-red transition-colors duration-200 text-left"
+            >
+              Contact
+            </button>
           </div>
 
           {/* Contact info */}
@@ -61,8 +70,8 @@ export default function Footer() {
               <div className="flex gap-6">
                 {[
                   { label: "Instagram", href: "https://www.instagram.com/o.ldev/" },
-                  { label: "LinkedIn", href: "https://www.linkedin.com/in/othmane-bouakline/" },
-                  { label: "TikTok", href: "https://www.tiktok.com/@o.ldev" },
+                  { label: "LinkedIn",  href: "https://www.linkedin.com/in/othmane-bouakline/" },
+                  { label: "TikTok",    href: "https://www.tiktok.com/@o.ldev" },
                 ].map((s) => (
                   <a
                     key={s.label}
@@ -77,7 +86,7 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Availability badge */}
+            {/* Availability */}
             <div className="flex items-center gap-2 md:justify-end">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span className="font-bold text-xs uppercase tracking-widest text-emerald-400">
@@ -103,9 +112,12 @@ export default function Footer() {
         <p className="font-bold text-[10px] uppercase tracking-widest opacity-30">
           © {new Date().getFullYear()} O&apos;ldev — {t("footer_rights")}
         </p>
-        <p className="font-bold text-[10px] uppercase tracking-widest opacity-30">
-          By {t("footer_by")}
-        </p>
+        <Link
+          href="/legal"
+          className="font-bold text-[10px] uppercase tracking-widest opacity-30 hover:opacity-70 transition-opacity"
+        >
+          Mentions légales
+        </Link>
       </div>
     </footer>
   );

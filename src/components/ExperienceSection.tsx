@@ -10,11 +10,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 const EXPERIENCES = [
   {
-    year: "2025",
+    year: "2024",
     title: "Developer ServiceNow",
     company: "Inetum",
-    period: "Sept 2025 — Présent",
-    type: "CDI · Présentiel & Remote",
+    period: "2024 — 2026 · 2 ans",
+    type: "Alternance · ITSM",
     current: true,
     desc: "Développement et personnalisation de la plateforme ServiceNow : workflows, portails, intégrations API et automatisations ITSM.",
     highlights: [
@@ -26,11 +26,11 @@ const EXPERIENCES = [
     stack: ["ServiceNow", "JavaScript", "REST API", "ITSM", "Glide"],
   },
   {
-    year: "2023",
+    year: "2022",
     title: "Consultant ITSM & UX Designer",
     company: "Fujitsu France",
-    period: "2023 — 2025 · 2 ans",
-    type: "CDI · Grand compte",
+    period: "2022 — 2024 · 2 ans",
+    type: "Alternance · Grand compte",
     current: false,
     desc: "Pilotage de projets ITSM, conception d'interfaces et amélioration des processus IT en environnement grand compte.",
     highlights: [
@@ -42,10 +42,10 @@ const EXPERIENCES = [
     stack: ["Figma", "ITSM", "UX Design", "ITIL", "ServiceNow"],
   },
   {
-    year: "2021",
+    year: "2020",
     title: "Développeur Full Stack",
     company: "AJC Ingénieur",
-    period: "2021 — 2023 · 1 an 5 mois",
+    period: "2020 — 2022 · 2 ans",
     type: "Alternance · Full Stack",
     current: false,
     desc: "Conception et développement d'applications web full stack (React / Node.js), intégrations API et déploiement cloud.",

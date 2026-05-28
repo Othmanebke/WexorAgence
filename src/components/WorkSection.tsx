@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import gsap from "gsap";
@@ -124,49 +124,53 @@ export default function WorkSection() {
   const { openModal } = useContactModal();
   const N = PROJECTS.length;
 
-  // Desktop cube GSAP scrub
+  // Desktop cube GSAP scrub — only on md+
   useGSAP(
     () => {
       const cube = cubeInnerRef.current;
       const section = sectionRef.current;
       if (!cube || !section) return;
 
-      let lastScene = -1;
+      const mm = gsap.matchMedia();
 
-      gsap.fromTo(
-        cube,
-        { rotateY: 0 },
-        {
-          rotateY: -(N - 1) * 90,
-          ease: "none",
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 2,
-            onUpdate: (self) => {
-              // Direct DOM updates (no React re-render)
-              const pct = Math.round(self.progress * 100);
-              if (hudPctRef.current) {
-                hudPctRef.current.textContent =
-                  String(pct).padStart(3, "0") + "%";
-              }
-              if (hudBarRef.current) {
-                hudBarRef.current.style.width = `${self.progress * 100}%`;
-              }
+      mm.add("(min-width: 768px)", () => {
+        let lastScene = -1;
 
-              const s = Math.min(Math.floor(self.progress * N), N - 1);
-              if (s !== lastScene) {
-                lastScene = s;
-                setScene(s);
-                if (counterRef.current) {
-                  counterRef.current.textContent = `${String(s + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
+        gsap.fromTo(
+          cube,
+          { rotateY: 0 },
+          {
+            rotateY: -(N - 1) * 90,
+            ease: "none",
+            scrollTrigger: {
+              trigger: section,
+              start: "top top",
+              end: "bottom bottom",
+              scrub: 2,
+              invalidateOnRefresh: true,
+              onUpdate: (self) => {
+                const pct = Math.round(self.progress * 100);
+                if (hudPctRef.current) {
+                  hudPctRef.current.textContent =
+                    String(pct).padStart(3, "0") + "%";
                 }
-              }
+                if (hudBarRef.current) {
+                  hudBarRef.current.style.width = `${self.progress * 100}%`;
+                }
+
+                const s = Math.min(Math.floor(self.progress * N), N - 1);
+                if (s !== lastScene) {
+                  lastScene = s;
+                  setScene(s);
+                  if (counterRef.current) {
+                    counterRef.current.textContent = `${String(s + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
+                  }
+                }
+              },
             },
-          },
-        }
-      );
+          }
+        );
+      }); // mm.add
     },
     { scope: sectionRef }
   );

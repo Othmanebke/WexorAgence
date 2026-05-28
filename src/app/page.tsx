@@ -211,7 +211,7 @@ export default function Home() {
   });
 
   return (
-    <main className="flex flex-col min-h-screen bg-[#f0f0ee] overflow-hidden">
+    <main className="flex flex-col min-h-screen bg-[#f0f0ee] overflow-x-hidden">
 
       {/* ─── HERO ─── */}
       <section id="hero" className="w-full min-h-screen relative overflow-hidden">

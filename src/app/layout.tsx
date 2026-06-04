@@ -6,7 +6,6 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
 import Preloader from "@/components/Preloader";
-import Chatbot from "@/components/Chatbot";
 import { LangProvider } from "@/components/LanguageContext";
 import FooterStrip from "@/components/FooterStrip";
 import ContactModalProvider from "@/components/ContactModalProvider";
@@ -72,7 +71,6 @@ export default function RootLayout({
               <FooterStrip />
 
               <Footer />
-              <Chatbot />
             </LenisProvider>
           </ContactModalProvider>
         </LangProvider>

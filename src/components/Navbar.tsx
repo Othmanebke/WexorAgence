@@ -7,6 +7,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useLang, Lang } from "@/components/LanguageContext";
 import { useContactModal } from "@/components/ContactModalProvider";
+import ChatWindow from "@/components/Chatbot";
 import avatarPhoto from "@/img/cravate-orange.png";
 
 const langLabels: Record<Lang, string> = {
@@ -18,15 +19,16 @@ const langLabels: Record<Lang, string> = {
 export default function Navbar() {
   const [langOpen, setLangOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
   const pathname = usePathname();
   const { lang, setLang, t } = useLang();
   const { openModal } = useContactModal();
 
   const links = [
-    { label: "Home", href: "/" },
-    { label: t("nav_portfolio"), href: "/#portfolio" },
-    { label: t("nav_services"), href: "/#services" },
-    { label: t("nav_about"), href: "/#about" },
+    { label: "Home",                  href: "/"           },
+    { label: t("nav_portfolio"),      href: "/#portfolio" },
+    { label: t("nav_services"),       href: "/#services"  },
+    { label: t("nav_about"),          href: "/#about"     },
   ];
 
   const otherLangs = (["fr", "en", "ma"] as Lang[]).filter((l) => l !== lang);
@@ -38,19 +40,41 @@ export default function Navbar() {
       transition={{ delay: 0.9, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50"
     >
+      {/* Chat window — pops above the avatar */}
+      <ChatWindow isOpen={chatOpen} onClose={() => setChatOpen(false)} />
+
       {/* Main pill */}
       <div className="relative flex items-center bg-[#1a1a1a]/95 backdrop-blur-xl rounded-full px-2 py-2 gap-1 shadow-[0_8px_40px_rgba(0,0,0,0.35)] border border-white/5">
 
-        {/* Avatar */}
-        <div className="w-9 h-9 rounded-full bg-[#111] flex-shrink-0 overflow-hidden mr-1">
-          <Image
-            src={avatarPhoto}
-            alt="Othmane"
-            width={36}
-            height={36}
-            className="w-full h-full object-cover object-top scale-150 translate-y-1"
+        {/* Avatar — chat trigger */}
+        <button
+          onClick={() => setChatOpen((v) => !v)}
+          aria-label="Ouvrir le chat"
+          className="relative w-9 h-9 rounded-full bg-[#111] flex-shrink-0 overflow-visible mr-1 group"
+        >
+          {/* Avatar image */}
+          <div className="w-full h-full rounded-full overflow-hidden">
+            <Image
+              src={avatarPhoto}
+              alt="Othmane"
+              width={36}
+              height={36}
+              className="w-full h-full object-cover object-top scale-150 translate-y-1"
+            />
+          </div>
+          {/* Pulse ring — green when closed, red when open */}
+          <span
+            className={`absolute -inset-0.5 rounded-full border transition-colors duration-300 ${
+              chatOpen
+                ? "border-abcs-red/70"
+                : "border-emerald-400/50 animate-pulse"
+            }`}
           />
-        </div>
+          {/* Tooltip */}
+          <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 whitespace-nowrap font-bold text-[9px] uppercase tracking-widest bg-[#1a1a1a] text-white/60 px-2.5 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+            {chatOpen ? "Fermer" : "Chat"}
+          </span>
+        </button>
 
         {/* Nav links — desktop */}
         <nav className="hidden md:flex items-center">
@@ -61,9 +85,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 className={`px-4 py-2 font-bold text-[11px] uppercase tracking-[0.1em] rounded-full transition-all duration-200 whitespace-nowrap ${
-                  active
-                    ? "text-white bg-white/10"
-                    : "text-white/50 hover:text-white"
+                  active ? "text-white bg-white/10" : "text-white/50 hover:text-white"
                 }`}
               >
                 {link.label}

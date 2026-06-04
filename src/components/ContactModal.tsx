@@ -1,23 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SERVICES, SERVICE_GROUPS, getBudgets } from "@/lib/services";
+import type { ContactFormData } from "@/components/ContactModalProvider";
 
 const inputClass =
   "w-full bg-transparent border-b-2 border-black/20 focus:border-abcs-red py-3 font-bold text-base placeholder:opacity-30 placeholder:font-bold outline-none transition-colors duration-200";
 
+const EMPTY_FORM = { name: "", email: "", phone: "", type: "", budget: "", message: "" };
+
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  initialData?: ContactFormData;
 }
 
-export default function ContactModal({ isOpen, onClose }: Props) {
-  const [form, setForm] = useState({
-    name: "", email: "", phone: "", type: "", budget: "", message: "",
-  });
+export default function ContactModal({ isOpen, onClose, initialData }: Props) {
+  const [form, setForm] = useState(EMPTY_FORM);
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Pre-fill form whenever the modal opens (with or without initialData)
+  useEffect(() => {
+    if (isOpen) {
+      setForm({
+        name:    initialData?.name    ?? "",
+        email:   initialData?.email   ?? "",
+        phone:   initialData?.phone   ?? "",
+        type:    initialData?.type    ?? "",
+        budget:  initialData?.budget  ?? "",
+        message: initialData?.message ?? "",
+      });
+      setSent(false);
+    }
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
   const [error, setError] = useState("");
 
   const budgetOptions = form.type ? getBudgets(form.type) : [];

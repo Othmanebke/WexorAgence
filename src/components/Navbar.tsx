@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useLang, Lang } from "@/components/LanguageContext";
 import { useContactModal } from "@/components/ContactModalProvider";
@@ -20,7 +20,22 @@ export default function Navbar() {
   const [langOpen, setLangOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [showHint, setShowHint] = useState(false);
   const pathname = usePathname();
+
+  // Show hint once — after 2.5s, only if never dismissed
+  useEffect(() => {
+    const dismissed = localStorage.getItem("chat-hint-dismissed");
+    if (dismissed) return;
+    const timer = setTimeout(() => setShowHint(true), 2500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const dismissHint = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowHint(false);
+    localStorage.setItem("chat-hint-dismissed", "1");
+  };
   const { lang, setLang, t } = useLang();
   const { openModal } = useContactModal();
 
@@ -47,34 +62,75 @@ export default function Navbar() {
       <div className="relative flex items-center bg-[#1a1a1a]/95 backdrop-blur-xl rounded-full px-2 py-2 gap-1 shadow-[0_8px_40px_rgba(0,0,0,0.35)] border border-white/5">
 
         {/* Avatar — chat trigger */}
-        <button
-          onClick={() => setChatOpen((v) => !v)}
-          aria-label="Ouvrir le chat"
-          className="relative w-9 h-9 rounded-full bg-[#111] flex-shrink-0 overflow-visible mr-1 group"
-        >
-          {/* Avatar image */}
-          <div className="w-full h-full rounded-full overflow-hidden">
-            <Image
-              src={avatarPhoto}
-              alt="Othmane"
-              width={36}
-              height={36}
-              className="w-full h-full object-cover object-top scale-150 translate-y-1"
+        <div className="relative flex-shrink-0 mr-1">
+
+          {/* ── One-time hint popup ───────────────────────────────── */}
+          <AnimatePresence>
+            {showHint && !chatOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 6, scale: 0.92 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 6, scale: 0.92 }}
+                transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute bottom-full left-0 mb-3 z-10 pointer-events-auto"
+              >
+                <div className="relative bg-abcs-red rounded-xl rounded-bl-sm px-3.5 py-2.5 flex items-center gap-2.5 shadow-lg whitespace-nowrap">
+                  {/* dot */}
+                  <span className="w-1.5 h-1.5 rounded-full bg-white/80 animate-pulse flex-shrink-0" />
+                  <span className="font-bold text-[11px] text-white uppercase tracking-wide">
+                    Discutez avec mon IA
+                  </span>
+                  {/* dismiss */}
+                  <button
+                    onClick={dismissHint}
+                    className="w-4 h-4 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 text-white text-[10px] font-bold transition-colors leading-none flex-shrink-0"
+                    aria-label="Fermer"
+                  >
+                    ✕
+                  </button>
+                  {/* Arrow pointing down-left */}
+                  <div className="absolute -bottom-1.5 left-3 w-3 h-3 bg-abcs-red rotate-45 rounded-sm" />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Avatar button */}
+          <button
+            onClick={() => {
+              setChatOpen((v) => !v);
+              if (showHint) {
+                setShowHint(false);
+                localStorage.setItem("chat-hint-dismissed", "1");
+              }
+            }}
+            aria-label="Ouvrir le chat"
+            className="relative w-9 h-9 rounded-full bg-[#111] overflow-visible group block"
+          >
+            {/* Image */}
+            <div className="w-full h-full rounded-full overflow-hidden">
+              <Image
+                src={avatarPhoto}
+                alt="Othmane"
+                width={36}
+                height={36}
+                className="w-full h-full object-cover object-top scale-150 translate-y-1"
+              />
+            </div>
+
+            {/* Pulse ring — changes color when chat open */}
+            <span
+              className={`absolute -inset-0.5 rounded-full border-2 transition-colors duration-300 ${
+                chatOpen ? "border-abcs-red/80" : "border-transparent"
+              }`}
             />
-          </div>
-          {/* Pulse ring — green when closed, red when open */}
-          <span
-            className={`absolute -inset-0.5 rounded-full border transition-colors duration-300 ${
-              chatOpen
-                ? "border-abcs-red/70"
-                : "border-emerald-400/50 animate-pulse"
-            }`}
-          />
-          {/* Tooltip */}
-          <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 whitespace-nowrap font-bold text-[9px] uppercase tracking-widest bg-[#1a1a1a] text-white/60 px-2.5 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-            {chatOpen ? "Fermer" : "Chat"}
-          </span>
-        </button>
+
+            {/* Green online dot — bottom right */}
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#1a1a1a] z-10">
+              <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-75" />
+            </span>
+          </button>
+        </div>
 
         {/* Nav links — desktop */}
         <nav className="hidden md:flex items-center">

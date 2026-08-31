@@ -92,8 +92,9 @@ export default function ChatWindow({ isOpen, onClose }: Props) {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [history, isTyping]);
 
-  // Reset when reopened
-  useEffect(() => {
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
     if (isOpen && done) {
       setDone(false);
       setCurrentStepId("start");
@@ -101,7 +102,8 @@ export default function ChatWindow({ isOpen, onClose }: Props) {
       setAnswers({});
       setInputValue("");
     }
-  }, [isOpen]);
+  }
+
 
   const handleOptionClick = (opt: { label: string; value: string; nextStep?: string }) => {
     setAnswers((prev) => ({ ...prev, [currentStepId]: opt.value }));

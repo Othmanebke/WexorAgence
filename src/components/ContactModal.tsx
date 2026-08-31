@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SERVICES, SERVICE_GROUPS, getBudgets } from "@/lib/services";
 import type { ContactFormData } from "@/components/ContactModalProvider";
@@ -18,24 +18,24 @@ interface Props {
 
 export default function ContactModal({ isOpen, onClose, initialData }: Props) {
   const [form, setForm] = useState(EMPTY_FORM);
+  const [prevInitialData, setPrevInitialData] = useState(initialData);
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  // Pre-fill form whenever the modal opens (with or without initialData)
-  useEffect(() => {
-    if (isOpen) {
-      setForm({
-        name:    initialData?.name    ?? "",
-        email:   initialData?.email   ?? "",
-        phone:   initialData?.phone   ?? "",
-        type:    initialData?.type    ?? "",
-        budget:  initialData?.budget  ?? "",
-        message: initialData?.message ?? "",
-      });
-      setSent(false);
-    }
-  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
   const [error, setError] = useState("");
+
+  if (initialData !== prevInitialData) {
+    setPrevInitialData(initialData);
+    setForm({
+      name: initialData?.name ?? "",
+      email: initialData?.email ?? "",
+      phone: initialData?.phone ?? "",
+      type: initialData?.type ?? "",
+      budget: initialData?.budget ?? "",
+      message: initialData?.message ?? "",
+    });
+    setSent(false);
+  }
+
 
   const budgetOptions = form.type ? getBudgets(form.type) : [];
 

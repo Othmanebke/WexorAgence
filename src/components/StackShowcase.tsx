@@ -263,7 +263,7 @@ export default function StackShowcase() {
             className="flex flex-col md:flex-row h-auto md:h-full w-full"
             style={{ width: isMobile ? "100%" : `${categories.length * 100}vw` }}
           >
-            {categories.map((cat, i) => {
+            {categories.map((cat) => {
               const isDark = cat.color === "#111111" || cat.color === "#FF3B00";
               const textColor = cat.color === "#f0f0ee" ? "text-[#111]" : "text-white";
               const borderColor = cat.color === "#f0f0ee" ? "border-black/10" : "border-white/10";
@@ -320,7 +320,7 @@ export default function StackShowcase() {
 
                     {/* Right: skill bars */}
                     <div className="w-full md:w-5/12 flex flex-col gap-4 md:gap-5 mt-8 md:mt-0">
-                      {cat.techs.map((tech, j) => (
+                      {cat.techs.map((tech) => (
                         <div key={tech.name} className="flex flex-col gap-2">
                           <div className={`flex items-center justify-between font-bold text-xs uppercase tracking-widest ${textColor}`}>
                             <span className="opacity-70">{tech.name}</span>

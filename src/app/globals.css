@@ -106,3 +106,12 @@ body::before {
   transform: translateX(6px) translateY(-6px);
   color: #fff;
 }
+
+.hero-heading {
+  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+

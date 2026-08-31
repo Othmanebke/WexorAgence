@@ -26,12 +26,12 @@ export default function Preloader() {
 
   return (
     <>
-      {/* Grand Personnage 3D — calé exactement au même niveau que le Hero sur Mobile et Desktop */}
+      {/* Grand Personnage 3D — placé en arrière-plan (z-[9997]) pour que la barre soit toujours devant */}
       <AnimatePresence>
         {isLoading && (
           <motion.div
             key="preloader-hero-character"
-            className="fixed inset-0 pointer-events-none z-[9999]"
+            className="fixed inset-0 pointer-events-none z-[9997]"
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3, delay: 0.45 }}
           >
@@ -47,7 +47,7 @@ export default function Preloader() {
               />
             </div>
 
-            {/* Mobile character — exact même cadrage que dans le Hero mobile */}
+            {/* Mobile character — exact même niveau que dans le Hero mobile */}
             <div className="md:hidden absolute inset-0">
               <Image
                 src={heroPhoto}
@@ -62,61 +62,63 @@ export default function Preloader() {
         )}
       </AnimatePresence>
 
-      {/* Overlay noir avec barre & compteur au-dessus du personnage — slide vers le haut à la fin */}
+      {/* Overlay sombre avec compteur & barre de chargement TOUT EN HAUT au premier plan (z-[9999]) */}
       <AnimatePresence>
         {isLoading && (
           <motion.div
             key="preloader-overlay"
-            className="fixed inset-0 z-[9998] bg-[#0C0C0C]/85 backdrop-blur-xs text-white overflow-hidden flex flex-col justify-between p-6 sm:p-10 md:p-16 select-none"
+            className="fixed inset-0 z-[9999] bg-[#0C0C0C]/80 backdrop-blur-[2px] text-white overflow-hidden flex flex-col justify-between p-6 sm:p-10 md:p-14 select-none"
             exit={{ y: "-100%" }}
             transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
           >
-            {/* Header top */}
-            <div className="relative z-10 flex items-center justify-between w-full">
-              <div className="flex items-center gap-2.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#FF3B00] animate-pulse" />
-                <span className="font-heading font-black text-xs sm:text-sm uppercase tracking-widest text-white/90">
-                  Othmane Bouakline
-                </span>
-              </div>
-              <span className="font-bold text-[10px] sm:text-xs uppercase tracking-[0.25em] text-[#FF3B00]">
-                Chargement
-              </span>
-            </div>
-
-            {/* Compteur & Barre de chargement placés AU-DESSUS de l'avatar */}
-            <div className="relative z-10 flex flex-col gap-3 w-full max-w-xl mx-auto -mt-20 sm:-mt-10">
-              <div className="flex items-end justify-between">
-                <div className="flex items-baseline gap-2">
-                  <span
-                    className="font-heading font-black text-[#FF3B00] leading-none tracking-tighter tabular-nums"
-                    style={{ fontSize: "clamp(3.2rem, 12vw, 7.5rem)" }}
-                  >
-                    {Math.floor(progress).toString().padStart(3, "0")}
-                  </span>
-                  <span
-                    className="font-heading font-black text-white/30 leading-none tracking-tighter"
-                    style={{ fontSize: "clamp(1.8rem, 5vw, 4rem)" }}
-                  >
-                    %
+            {/* Header top + Compteur + Barre de progression TOUT EN HAUT */}
+            <div className="relative z-30 flex flex-col gap-3.5 w-full max-w-2xl mx-auto">
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#FF3B00] animate-pulse" />
+                  <span className="font-heading font-black text-xs sm:text-sm uppercase tracking-widest text-white">
+                    Othmane Bouakline
                   </span>
                 </div>
-                <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-white/50 pb-2">
-                  Développeur Web Full Stack
+                <span className="font-bold text-[10px] sm:text-xs uppercase tracking-[0.25em] text-[#FF3B00]">
+                  Chargement
                 </span>
               </div>
 
-              {/* Barre de progression */}
-              <div className="w-full h-[4px] bg-white/10 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-[#FF3B00] transition-all duration-75 ease-out shadow-[0_0_15px_#FF3B00]"
-                  style={{ width: `${progress}%` }}
-                />
+              {/* Compteur & Barre tout en haut — 100% visible, net et lumineux */}
+              <div className="flex flex-col gap-2 pt-1">
+                <div className="flex items-end justify-between">
+                  <div className="flex items-baseline gap-1.5">
+                    <span
+                      className="font-heading font-black text-[#FF3B00] leading-none tracking-tighter tabular-nums drop-shadow-[0_0_25px_rgba(255,59,0,0.6)]"
+                      style={{ fontSize: "clamp(2.8rem, 10vw, 5.5rem)" }}
+                    >
+                      {Math.floor(progress).toString().padStart(3, "0")}
+                    </span>
+                    <span
+                      className="font-heading font-black text-white/40 leading-none tracking-tighter"
+                      style={{ fontSize: "clamp(1.5rem, 4.5vw, 3rem)" }}
+                    >
+                      %
+                    </span>
+                  </div>
+                  <span className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-white/70 pb-1">
+                    Développeur Web Full Stack
+                  </span>
+                </div>
+
+                {/* Barre de chargement en haut */}
+                <div className="w-full h-[5px] bg-white/20 rounded-full overflow-hidden shadow-inner">
+                  <div
+                    className="h-full bg-[#FF3B00] transition-all duration-75 ease-out shadow-[0_0_20px_#FF3B00]"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
               </div>
             </div>
 
-            {/* Bottom spacer / label */}
-            <div className="relative z-10 flex items-center justify-between text-[10px] uppercase tracking-widest text-white/30">
+            {/* Bottom tag */}
+            <div className="relative z-30 flex items-center justify-between text-[10px] uppercase tracking-widest text-white/40">
               <span>Portfolio 2026</span>
               <span>Initialisation...</span>
             </div>

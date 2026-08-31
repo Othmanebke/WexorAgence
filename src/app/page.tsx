@@ -13,48 +13,35 @@ import WorkSection         from "@/components/WorkSection";
 import TechnologiesSection from "@/components/TechnologiesSection";
 import ExperienceSection   from "@/components/ExperienceSection";
 
-// ─── Red divider bar ─────────────────────────────────────────────────────────
-function Divider({ label, number }: { label: string; number: string }) {
-  return (
-    <div className="w-full bg-abcs-red flex items-center justify-between px-8 py-4">
-      <span className="font-bold text-white text-xs uppercase tracking-[0.2em]">{label}</span>
-      <span className="font-heading text-white text-2xl">{number}</span>
-    </div>
-  );
-}
-
 export default function Home() {
   return (
     <main className="flex flex-col min-h-screen bg-[#f0f0ee]" style={{ overflowX: "clip" }}>
 
-      {/* 01 — Hero (Fond clair) */}
+      {/* 01 — Hero */}
       <HeroSection />
 
-      {/* 02 — Galerie défilante en double rangée avec parallaxe réactive au défilement */}
+      {/* 02 — Galerie défilante en double rangée (Carte superposée) */}
       <MarqueeSection />
 
-      {/* 03 — À propos animé (Design moderne avec objets 3D & infos réelles) */}
+      {/* 03 — À propos animé (Carte superposée 3D & infos réelles) */}
       <AboutSection />
 
-      {/* 04 — Services (Design moderne avec prestations & prix réels) */}
+      {/* 04 — Services (Carte blanche superposée avec tarifs réels) */}
       <ServicesSection />
 
-      {/* 05 — Portfolio */}
-      <Divider label="Mes travaux" number="02" />
+      {/* 05 — Portfolio (Carte 3D sombre superposée) */}
       <WorkSection />
 
-      {/* 06 — Stack technique (marquee) */}
-      <Divider label="Stack technique" number="03" />
+      {/* 06 — Stack technique (Carte sombre superposée) */}
       <TechnologiesSection />
 
-      {/* 07 — Expériences (horizontal scroll) */}
+      {/* 07 — Expériences (Carte superposée défilement horizontal) */}
       <ExperienceSection />
 
-      {/* 08 — Diplômes */}
-      <Divider label="Formation académique" number="04" />
+      {/* 08 — Diplômes (Carte superposée) */}
       <DiplomesSection />
 
-      {/* CTA final */}
+      {/* 09 — CTA final (Carte superposée) */}
       <CTASection />
 
     </main>

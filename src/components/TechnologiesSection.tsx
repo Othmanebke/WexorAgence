@@ -106,8 +106,9 @@ export default function TechnologiesSection() {
     <section
       ref={sectionRef}
       id="technologies"
-      className="relative w-full bg-abcs-black text-white overflow-hidden py-20 md:py-28"
+      className="relative z-20 -mt-10 sm:-mt-14 md:-mt-20 w-full bg-abcs-black text-white overflow-hidden py-20 md:py-28 rounded-t-[36px] sm:rounded-t-[50px] md:rounded-t-[64px] shadow-[0_-30px_70px_rgba(0,0,0,0.85)]"
     >
+
       {/* Subtle grid background */}
       <div
         className="absolute inset-0 opacity-[0.03] pointer-events-none"

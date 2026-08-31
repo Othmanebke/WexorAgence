@@ -58,8 +58,9 @@ export const MarqueeSection: React.FC = () => {
   return (
     <section
       ref={sectionRef}
-      className="bg-[#0C0C0C] pt-24 sm:pt-32 md:pt-40 pb-10 overflow-hidden select-none"
+      className="relative z-10 -mt-8 sm:-mt-12 md:-mt-16 bg-[#0C0C0C] pt-20 sm:pt-28 md:pt-36 pb-12 overflow-hidden select-none rounded-t-[36px] sm:rounded-t-[48px] md:rounded-t-[64px] shadow-[0_-25px_60px_rgba(0,0,0,0.7)]"
     >
+
       <div className="flex flex-col gap-3">
         {/* Row 1 - Défilement vers la droite */}
         <div

@@ -10,8 +10,9 @@ export const AboutSection: React.FC = () => {
   return (
     <section
       id="about"
-      className="relative min-h-screen w-full flex flex-col justify-center items-center px-5 sm:px-8 md:px-10 py-24 sm:py-32 bg-[#0C0C0C] text-white overflow-hidden select-none"
+      className="relative z-10 -mt-8 sm:-mt-12 md:-mt-16 min-h-screen w-full flex flex-col justify-center items-center px-5 sm:px-8 md:px-10 py-24 sm:py-32 bg-[#0C0C0C] text-white overflow-hidden select-none rounded-t-[36px] sm:rounded-t-[48px] md:rounded-t-[64px] shadow-[0_-25px_60px_rgba(0,0,0,0.8)]"
     >
+
       {/* 4 Objets 3D décoratifs dans les 4 coins */}
       <div className="absolute top-[2%] sm:top-[4%] left-[1%] sm:left-[2%] md:left-[4%] z-0 pointer-events-none opacity-40 sm:opacity-90">
         <FadeIn delay={0.1} x={-80} y={0} duration={0.9}>

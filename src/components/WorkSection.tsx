@@ -132,17 +132,24 @@ function sceneFromProgress(progress: number): number {
 
 function deriveFaceImages(sceneIdx: number): (number | null)[] {
   const images: (number | null)[] = [null, null, null, null];
+  if (sceneIdx === 0) {
+    // Scene 0: Overview / Intro face is purely black/dark
+    images[0] = null;
+    images[1] = 0; // Preload Project 1 onto face 1
+    return images;
+  }
   for (let offset = -2; offset <= 2; offset++) {
     const s = sceneIdx + offset;
-    if (s < 0 || s >= SCENE_COUNT) continue;
+    if (s <= 0 || s >= SCENE_COUNT) continue;
     const fi = ((s % 4) + 4) % 4;
-    const pi = s === 0 ? 0 : s - 1;
+    const pi = s - 1;
     if (pi >= 0 && pi < PROJECTS.length) {
       images[fi] = pi;
     }
   }
   return images;
 }
+
 
 // ─── Background particles canvas ──────────────────────────────────────────────
 function BackgroundCanvas() {
@@ -288,8 +295,8 @@ export default function WorkSection() {
   const isRight = activeScene > 0 && activeScene % 2 === 0;
 
   return (
-    <section ref={sectionRef} id="portfolio" style={{ height: `${SCENE_COUNT * 100}vh`, background: '#111111', position: 'relative' }}>
-      <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
+    <section ref={sectionRef} id="portfolio" style={{ height: `${SCENE_COUNT * 100}vh`, background: '#111111', position: 'relative' }} className="relative z-20 -mt-10 sm:-mt-14 md:-mt-20 rounded-t-[36px] sm:rounded-t-[50px] md:rounded-t-[64px] shadow-[0_-30px_70px_rgba(0,0,0,0.9)]">
+      <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }} className="rounded-t-[36px] sm:rounded-t-[50px] md:rounded-t-[64px]">
 
         {/* Background */}
         <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
@@ -350,11 +357,11 @@ export default function WorkSection() {
                   backfaceVisibility: 'hidden',
                   WebkitBackfaceVisibility: 'hidden',
                   transform: FACE_TRANSFORMS[fi],
-                  background: '#161616',
+                  background: 'linear-gradient(145deg, #181818 0%, #0c0c0c 100%)',
                   boxShadow: '0 25px 60px -15px rgba(0,0,0,0.8), 0 0 30px rgba(0,0,0,0.5)',
                 }}
               >
-                {faceImages[fi] !== null && (
+                {faceImages[fi] !== null ? (
                   <div className="relative w-full h-full">
                     <Image
                       src={PROJECTS[faceImages[fi]!].image}
@@ -366,10 +373,17 @@ export default function WorkSection() {
                     />
                     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 40%)' }} />
                   </div>
+                ) : (
+                  <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#0e0e0e]">
+                    <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center">
+                      <span className="w-2 h-2 rounded-full bg-[#FF3B00] animate-pulse shadow-[0_0_10px_#FF3B00]" />
+                    </div>
+                  </div>
                 )}
               </div>
             ))}
           </div>
+
 
           {/* Mobile card below carousel */}
           <div className="md:hidden" style={{ marginTop: '1rem', width: 'min(90vw, 420px)', flexShrink: 0, pointerEvents: 'auto' }}>

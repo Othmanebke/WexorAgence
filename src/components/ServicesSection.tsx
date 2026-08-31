@@ -61,8 +61,9 @@ export const ServicesSection: React.FC = () => {
   return (
     <section
       id="services"
-      className="relative bg-[#FFFFFF] text-[#111111] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-12 py-20 sm:py-24 md:py-32 z-10 shadow-[0_-20px_50px_rgba(0,0,0,0.15)]"
+      className="relative z-10 -mt-8 sm:-mt-12 md:-mt-16 bg-[#FFFFFF] text-[#111111] rounded-t-[36px] sm:rounded-t-[48px] md:rounded-t-[64px] px-5 sm:px-8 md:px-12 py-20 sm:py-24 md:py-32 shadow-[0_-30px_70px_rgba(0,0,0,0.35)]"
     >
+
       <div className="max-w-6xl mx-auto">
         {/* En-tête */}
         <FadeIn delay={0} y={40}>

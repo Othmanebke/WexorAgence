@@ -110,13 +110,14 @@ export default function ExperienceSection() {
   });
 
   return (
-    <div id="experiences">
+    <div id="experiences" className="relative z-20 -mt-10 sm:-mt-14 md:-mt-20 rounded-t-[36px] sm:rounded-t-[50px] md:rounded-t-[64px] shadow-[0_-30px_70px_rgba(0,0,0,0.4)] overflow-hidden bg-[#f0f0ee]">
       {/* ── DESKTOP ──────────────────────────────────────────────────────── */}
       <section
         ref={sectionRef}
         className="hidden md:block relative bg-[#f0f0ee]"
         style={{ height: "100vh" }}
       >
+
         {/* Progress bar */}
         <div className="absolute top-0 left-0 right-0 h-0.5 bg-black/10 z-30 pointer-events-none">
           <div

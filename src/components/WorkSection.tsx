@@ -308,9 +308,9 @@ export default function WorkSection() {
           <motion.div aria-hidden style={{ position: 'absolute', bottom: '-25%', right: '-18%', width: '70vw', height: '70vw', background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.006) 45%, transparent 70%)' }} animate={{ x: [0, -35, 20, 0], y: [0, -25, 35, 0] }} transition={{ duration: 35, repeat: Infinity, ease: 'easeInOut' }} />
         </div>
 
-        {/* En-tête centré en haut avec AnimatedText */}
-        <div className="absolute top-5 sm:top-7 left-0 right-0 z-20 flex flex-col items-center justify-center text-center pointer-events-none px-4">
-          <span className="font-bold text-[10px] sm:text-xs uppercase tracking-[0.25em] text-[#FF3B00] mb-1">
+        {/* En-tête centré en haut avec AnimatedText (Harmonisé avec les autres sections) */}
+        <div className="absolute top-8 sm:top-10 md:top-12 left-0 right-0 z-20 flex flex-col items-center justify-center text-center pointer-events-none px-4">
+          <span className="font-bold text-xs sm:text-sm uppercase tracking-[0.25em] text-[#FF3B00] mb-3">
             02 · Réalisations & Projets récents
           </span>
           <AnimatedText
@@ -318,13 +318,12 @@ export default function WorkSection() {
             text="Mes travaux"
             activeColor="#FFFFFF"
             className="font-black uppercase leading-none tracking-tight text-center select-none"
-            style={{ fontSize: 'clamp(2.2rem, 5.5vw, 60px)' }}
+            style={{ fontSize: 'clamp(2.8rem, 9vw, 110px)' }}
           />
         </div>
 
-
         {/* HUD top-right */}
-        <div className="absolute top-7 right-8 z-20 text-right">
+        <div className="absolute top-8 sm:top-10 right-8 z-20 text-right">
           <div ref={hudPctRef} style={{ fontFamily: FM, fontSize: '0.58rem', letterSpacing: '0.18em', color: 'rgba(255,255,255,0.3)' }}>000%</div>
           <div style={{ width: '6rem', height: '1px', background: 'rgba(255,255,255,0.08)', marginTop: '0.4rem', marginLeft: 'auto', position: 'relative', overflow: 'hidden' }}>
             <div ref={hudFillRef} style={{ position: 'absolute', inset: '0 auto 0 0', width: '0%', background: '#FF3B00' }} />
@@ -339,10 +338,11 @@ export default function WorkSection() {
           ))}
         </div>
 
-        {/* 3D 100% Homogeneous 16:9 Rotating Carousel */}
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', perspective: '1200px', pointerEvents: 'none', zIndex: 2 }}>
+        {/* 3D 100% Homogeneous 16:9 Rotating Carousel avec espace pour le titre */}
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingTop: 'clamp(4rem, 10vh, 7rem)', perspective: '1200px', pointerEvents: 'none', zIndex: 2 }}>
           <div
             ref={cubeRef}
+
             style={{
               '--cw': 'min(76vw, 760px)',
               '--ch': 'calc(var(--cw) * 9 / 16)',

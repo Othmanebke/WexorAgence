@@ -129,34 +129,37 @@ export default function ExperienceSection() {
           />
         </div>
 
-        {/* HUD labels */}
-        <div className="absolute top-7 left-10 z-30 pointer-events-none flex flex-col gap-1">
-          <span className="font-bold text-[10px] uppercase tracking-[0.2em] text-abcs-red">
+        {/* En-tête centré en haut avec AnimatedText (Harmonisé) */}
+        <div className="absolute top-8 sm:top-10 md:top-12 left-0 right-0 z-30 flex flex-col items-center justify-center text-center pointer-events-none px-4">
+          <span className="font-bold text-xs sm:text-sm uppercase tracking-[0.25em] text-[#FF3B00] mb-3">
             05 · Parcours professionnel
           </span>
           <AnimatedText
             as="h2"
             text="Expériences"
             activeColor="#111111"
-            justify="start"
-            className="font-heading text-3xl lg:text-4xl uppercase leading-none tracking-tight select-none"
+            className="font-black uppercase leading-none tracking-tight text-center select-none"
+            style={{ fontSize: 'clamp(2.8rem, 9vw, 110px)' }}
           />
-          <div className="flex gap-2 mt-2">
+          <div className="flex gap-2 mt-4">
             {EXPERIENCES.map((_, i) => (
               <div
                 key={i}
-                className={`w-5 h-0.5 transition-all duration-500 ${
+                className={`w-6 h-1 rounded-full transition-all duration-500 ${
                   i <= activeCard ? "bg-abcs-red" : "bg-black/15"
                 }`}
               />
             ))}
           </div>
         </div>
-        <div className="absolute top-7 right-10 z-30 pointer-events-none opacity-40">
+
+        {/* Right indicator */}
+        <div className="absolute top-8 sm:top-10 right-10 z-30 pointer-events-none opacity-40">
           <span className="font-bold text-[10px] uppercase tracking-widest">
             Défiler horizontalement →
           </span>
         </div>
+
 
 
         {/* Horizontal track — GSAP animates x */}
@@ -251,18 +254,19 @@ export default function ExperienceSection() {
 
       {/* ── MOBILE ─────────────────────────────────────────────────────── */}
       <div className="md:hidden py-16 px-6 bg-[#f0f0ee]">
-        <div className="mb-10">
-          <p className="font-bold text-[10px] uppercase tracking-[0.25em] text-abcs-red mb-2">
+        <div className="flex flex-col items-center text-center mb-12">
+          <span className="font-bold text-xs sm:text-sm uppercase tracking-[0.25em] text-[#FF3B00] mb-3">
             05 · Parcours professionnel
-          </p>
+          </span>
           <AnimatedText
             as="h2"
             text="Expériences"
             activeColor="#111111"
-            justify="start"
-            className="font-heading text-5xl uppercase leading-none tracking-tight select-none"
+            className="font-black uppercase leading-none tracking-tight text-center select-none"
+            style={{ fontSize: 'clamp(2.8rem, 10vw, 80px)' }}
           />
         </div>
+
 
         <div className="flex flex-col border-t border-black/15">
           {EXPERIENCES.map((exp, i) => (

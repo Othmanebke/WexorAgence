@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import heroPhoto from "@/img/Gemini_Generated_Image_zdg0rbzdg0rbzdg0.png";
-import avatarPhoto from "@/img/cravate-orange.png";
 
 export default function Preloader() {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,21 +26,21 @@ export default function Preloader() {
 
   return (
     <>
-      {/* Desktop Avatar — fond aligné avec le hero */}
+      {/* Grand Personnage 3D — exact même position sur mobile & desktop calé sur le Hero */}
       <AnimatePresence>
         {isLoading && (
           <motion.div
-            key="preloader-avatar-desktop"
-            className="fixed inset-0 pointer-events-none z-[9999] hidden md:block"
+            key="preloader-hero-character"
+            className="fixed inset-0 pointer-events-none z-[9999]"
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, delay: 0.55 }}
+            transition={{ duration: 0.3, delay: 0.45 }}
           >
-            <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[94%] max-w-[1500px]">
+            <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[96%] max-w-[1500px]">
               <Image
                 src={heroPhoto}
-                alt="Othmane"
+                alt="Othmane Bouakline"
                 fill
-                className="object-contain object-bottom"
+                className="object-contain object-bottom scale-[1.12] sm:scale-100"
                 priority
                 unoptimized
               />
@@ -50,12 +49,12 @@ export default function Preloader() {
         )}
       </AnimatePresence>
 
-      {/* Overlay noir — slide vers le haut avec avatar mobile & stats */}
+      {/* Overlay noir avec compteur et barre — slide vers le haut à la fin */}
       <AnimatePresence>
         {isLoading && (
           <motion.div
             key="preloader-overlay"
-            className="fixed inset-0 z-[9998] bg-[#0C0C0C] text-white overflow-hidden flex flex-col justify-between p-6 sm:p-10 md:p-16 select-none"
+            className="fixed inset-0 z-[9998] bg-[#0C0C0C]/90 backdrop-blur-xs text-white overflow-hidden flex flex-col justify-between p-6 sm:p-10 md:p-16 select-none"
             exit={{ y: "-100%" }}
             transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
           >
@@ -69,12 +68,10 @@ export default function Preloader() {
               }}
             />
 
-            {/* Header / Brand */}
+            {/* Header top */}
             <div className="relative z-10 flex items-center justify-between w-full">
-              <div className="flex items-center gap-3">
-                <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/20 shadow-md">
-                  <Image src={avatarPhoto} alt="Othmane" fill className="object-cover object-top scale-125" priority />
-                </div>
+              <div className="flex items-center gap-2.5">
+                <span className="w-2 h-2 rounded-full bg-[#FF3B00] animate-pulse" />
                 <span className="font-heading font-black text-sm uppercase tracking-widest text-white/90">
                   Othmane Bouakline
                 </span>
@@ -84,52 +81,25 @@ export default function Preloader() {
               </span>
             </div>
 
-            {/* Mobile Centered Avatar Visual */}
-            <div className="relative z-10 md:hidden flex flex-col items-center justify-center my-auto">
-              <motion.div
-                initial={{ scale: 0.85, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full p-1 bg-gradient-to-tr from-[#FF3B00] via-[#FF6600] to-white/30 shadow-[0_0_40px_rgba(255,59,0,0.4)]"
-              >
-                <div className="relative w-full h-full rounded-full overflow-hidden bg-[#161616]">
-                  <Image
-                    src={avatarPhoto}
-                    alt="Othmane Bouakline"
-                    fill
-                    className="object-cover object-top scale-110"
-                    priority
-                    unoptimized
-                  />
-                </div>
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#FF3B00] text-white px-3 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest whitespace-nowrap shadow-md">
-                  Portfolio
-                </div>
-              </motion.div>
-              <p className="font-bold text-xs uppercase tracking-[0.2em] text-white/50 mt-5">
-                Développeur Web · Full Stack
-              </p>
-            </div>
-
-            {/* Bas : Compteur + Barre de progression */}
+            {/* Bas : Compteur géant + barre de progression */}
             <div className="relative z-10 flex flex-col gap-4 w-full">
               <div className="flex items-end justify-between">
                 <div className="flex items-baseline gap-2">
                   <span
                     className="font-heading font-black text-[#FF3B00] leading-none tracking-tighter tabular-nums"
-                    style={{ fontSize: "clamp(3.5rem, 10vw, 8rem)" }}
+                    style={{ fontSize: "clamp(3.5rem, 11vw, 8.5rem)" }}
                   >
                     {Math.floor(progress).toString().padStart(3, "0")}
                   </span>
                   <span
                     className="font-heading font-black text-white/30 leading-none tracking-tighter"
-                    style={{ fontSize: "clamp(1.8rem, 5vw, 4rem)" }}
+                    style={{ fontSize: "clamp(1.8rem, 5vw, 4.5rem)" }}
                   >
                     %
                   </span>
                 </div>
-                <span className="font-mono text-xs uppercase tracking-widest text-white/30 pb-2 hidden sm:inline-block">
-                  Initialisation de l&apos;expérience
+                <span className="font-mono text-[11px] uppercase tracking-widest text-white/40 pb-2 hidden sm:inline-block">
+                  Développeur Web · Full Stack
                 </span>
               </div>
 

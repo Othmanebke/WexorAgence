@@ -16,13 +16,13 @@ export type Service = {
 
 export const SERVICES: Record<ServiceKey, Service> = {
   branding_canva: {
-    label: "Flyer & Logo Canva Express",
+    label: "Flyer, Logo & Design Graphique (Canva)",
     price: "Dès 50€",
-    budgets: ["50–100€", "100–200€"],
+    budgets: ["50–100€", "100–200€", "+ de 200€"],
     category: "Design & Print",
   },
   branding_adobe: {
-    label: "Identité Visuelle Pack Adobe CC",
+    label: "Identité Visuelle & Logo (Adobe CC)",
     price: "Dès 100€",
     budgets: ["100–250€", "250–500€", "+ de 500€"],
     category: "Design & Print",
@@ -30,23 +30,23 @@ export const SERVICES: Record<ServiceKey, Service> = {
   vitrine: {
     label: "Site Vitrine & Landing Page",
     price: "Dès 300€",
-    budgets: ["300€", "300–500€", "500–800€"],
+    budgets: ["300€", "300–500€", "500–800€", "+ de 800€"],
     category: "Web",
   },
   webapp: {
     label: "Site & Application Web Sur-Mesure",
     price: "Dès 800€",
-    budgets: ["800–1 200€", "1 200–2 000€", "+ de 2 000€"],
+    budgets: ["800–1 200€", "1 200–2 000€", "2 000–3 500€", "+ de 3 500€"],
     category: "Web",
   },
   wordpress: {
-    label: "Site WordPress Administrable",
+    label: "Site WordPress Clé en Main",
     price: "Dès 1 200€",
     budgets: ["1 200–1 800€", "1 800–2 500€", "+ de 2 500€"],
     category: "Web",
   },
   refonte: {
-    label: "Refonte & Modernisation de Site",
+    label: "Refonte & Modernisation Web",
     price: "Sur devis",
     budgets: ["< 800€", "800–1 500€", "+ de 1 500€"],
     category: "Web",
@@ -66,6 +66,9 @@ export const SERVICE_GROUPS: { label: string; keys: ServiceKey[] }[] = [
 ];
 
 export function getBudgets(serviceLabel: string): string[] {
-  const entry = Object.values(SERVICES).find((s) => s.label === serviceLabel);
-  return entry?.budgets ?? ["< 500€", "500–1 500€", "+ de 1 500€"];
+  // Direct match or partial match
+  const entry =
+    Object.values(SERVICES).find((s) => s.label === serviceLabel) ||
+    Object.values(SERVICES).find((s) => serviceLabel.includes(s.label) || s.label.includes(serviceLabel));
+  return entry?.budgets ?? ["300€", "500–1 000€", "+ de 1 000€"];
 }

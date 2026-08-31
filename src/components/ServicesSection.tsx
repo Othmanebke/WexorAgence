@@ -10,6 +10,8 @@ const SERVICES = [
   {
     number: '01',
     name: 'Flyer, Logo & Design Graphique',
+    serviceLabel: 'Flyer, Logo & Design Graphique (Canva)',
+    defaultBudget: '50–100€',
     price: 'Dès 50€ (Canva) · Dès 100€ (Adobe)',
     description:
       'Création visuelle rapide et professionnelle pour votre communication : flyers publicitaires, bannières, cartes de visite et logos percutants livrés prêts à imprimer ou diffuser.',
@@ -18,6 +20,8 @@ const SERVICES = [
   {
     number: '02',
     name: 'Site Vitrine & Landing Page',
+    serviceLabel: 'Site Vitrine & Landing Page',
+    defaultBudget: '300€',
     price: 'Dès 300€',
     description:
       'La solution idéale pour les indépendants, artisans et commerçants. Une présence web moderne, ultra-rapide, responsive et optimisée pour capter des appels et devis clients.',
@@ -26,6 +30,8 @@ const SERVICES = [
   {
     number: '03',
     name: 'Site & Application Web Sur-Mesure',
+    serviceLabel: 'Site & Application Web Sur-Mesure',
+    defaultBudget: '800–1 200€',
     price: 'Dès 800€',
     description:
       'Plateforme web moderne développée sur-mesure (Next.js / React) : design exclusif, temps de chargement éclair, expérience utilisateur soignée et référencement naturel technique poussé.',
@@ -34,6 +40,8 @@ const SERVICES = [
   {
     number: '04',
     name: 'Site WordPress Clé en Main',
+    serviceLabel: 'Site WordPress Clé en Main',
+    defaultBudget: '1 200–1 800€',
     price: 'Dès 1 200€',
     description:
       'Site complet et 100% administrable en toute autonomie : blog, catalogue de services ou boutique e-commerce avec tableau de bord simple pour modifier vos contenus sans coder.',
@@ -42,6 +50,8 @@ const SERVICES = [
   {
     number: '05',
     name: 'Refonte & Modernisation Web',
+    serviceLabel: 'Refonte & Modernisation Web',
+    defaultBudget: '< 800€',
     price: 'Sur devis (Code ou WordPress)',
     description:
       'Audit technique et transformation graphique de votre site actuel : passage au responsive moderne, amélioration des scores de vitesse (Google Core Web Vitals) et sécurisation.',
@@ -50,12 +60,15 @@ const SERVICES = [
   {
     number: '06',
     name: 'Intégration Chatbot IA & Automatisation',
+    serviceLabel: 'Intégration Chatbot IA & Automatisation',
+    defaultBudget: '< 1 000€',
     price: 'Sur devis',
     description:
       'Intégration d’un agent conversationnel intelligent connecté à vos données pour répondre à vos prospects 24/7, et automatisation de vos tâches répétitives (Zapier, Make, API).',
     tags: ['Chatbot IA', 'OpenAI API', 'Support 24/7', 'Automatisation Workflows'],
   },
 ];
+
 
 export const ServicesSection: React.FC = () => {
   const { openModal } = useContactModal();
@@ -98,9 +111,10 @@ export const ServicesSection: React.FC = () => {
               } group transition-all duration-300 hover:bg-[#111111]/[0.02] cursor-pointer`}
             >
               <div
-                onClick={() => openModal({ type: service.name })}
+                onClick={() => openModal({ type: service.serviceLabel, budget: service.defaultBudget })}
                 className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-10"
               >
+
                 {/* Numéro géant + Prix */}
                 <div className="flex items-center justify-between md:flex-col md:items-start gap-3 md:w-[220px] shrink-0">
                   <span

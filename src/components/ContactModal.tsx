@@ -25,19 +25,23 @@ export default function ContactModal({ isOpen, onClose, initialData }: Props) {
 
   if (initialData !== prevInitialData) {
     setPrevInitialData(initialData);
+    const selectedType = initialData?.type ?? "";
+    const budgets = selectedType ? getBudgets(selectedType) : [];
+    const defaultBudget = initialData?.budget || (budgets.length > 0 ? budgets[0] : "");
+
     setForm({
       name: initialData?.name ?? "",
       email: initialData?.email ?? "",
       phone: initialData?.phone ?? "",
-      type: initialData?.type ?? "",
-      budget: initialData?.budget ?? "",
+      type: selectedType,
+      budget: defaultBudget,
       message: initialData?.message ?? "",
     });
     setSent(false);
   }
 
-
   const budgetOptions = form.type ? getBudgets(form.type) : [];
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -154,9 +158,14 @@ export default function ContactModal({ isOpen, onClose, initialData }: Props) {
                         required
                         name="type"
                         value={form.type}
-                        onChange={(e) => setForm({ ...form, type: e.target.value, budget: "" })}
+                        onChange={(e) => {
+                          const newType = e.target.value;
+                          const newBudgets = newType ? getBudgets(newType) : [];
+                          setForm({ ...form, type: newType, budget: newBudgets[0] || "" });
+                        }}
                         className={`${inputClass} appearance-none`}
                       >
+
                         <option value="">Choisir...</option>
                         {SERVICE_GROUPS.map((g) => (
                           <optgroup key={g.label} label={g.label}>

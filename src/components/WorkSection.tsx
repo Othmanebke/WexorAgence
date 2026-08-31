@@ -105,63 +105,38 @@ const PROJECTS = [
 
 type Project = (typeof PROJECTS)[number];
 
-// ─── Cube geometry ─────────────────────────────────────────────────────────────
-const SCENE_COUNT = PROJECTS.length + 1; // scene 0 = intro
+const SCENE_COUNT = PROJECTS.length + 1; // scene 0 = overview/intro
 
-function faceAtStop(i: number): number {
-  if (i < 6) return i;
-  return 1 + ((i - 2) % 4);
-}
-
-const FACE_TRANSFORMS: string[] = [
-  'rotateX(-90deg) translateZ(calc(var(--ch) / 2))',
-  'translateZ(calc(var(--cw) / 2))',
+// ─── 4-face continuous prism with 100% identical uniform 16:9 dimensions ───────
+const FACE_TRANSFORMS = [
+  'rotateY(0deg) translateZ(calc(var(--cw) / 2))',
   'rotateY(90deg) translateZ(calc(var(--cw) / 2))',
   'rotateY(180deg) translateZ(calc(var(--cw) / 2))',
-  'rotateY(-90deg) translateZ(calc(var(--cw) / 2))',
-  'rotateX(90deg) translateZ(calc(var(--ch) / 2))',
+  'rotateY(270deg) translateZ(calc(var(--cw) / 2))',
 ];
 
-function buildStops(n: number): { rx: number; ry: number }[] {
-  const base = [
-    { rx: 90, ry: 0 },
-    { rx: 0, ry: 0 },
-    { rx: 0, ry: -90 },
-    { rx: 0, ry: -180 },
-    { rx: 0, ry: -270 },
-    { rx: -90, ry: -360 },
-  ];
-  const out = base.slice(0, Math.min(n, 6));
-  for (let i = 6; i < n; i++) {
-    out.push({ rx: 0, ry: -360 - (i - 6) * 90 });
-  }
-  return out;
-}
-
-const STOPS = buildStops(SCENE_COUNT);
 const easeIO = (t: number) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
 
 function getCubeTransform(progress: number): { rx: number; ry: number } {
   const t = progress * (SCENE_COUNT - 1);
   const i = Math.min(Math.floor(t), SCENE_COUNT - 2);
   const f = easeIO(t - i);
-  const a = STOPS[i];
-  const b = STOPS[i + 1];
-  return { rx: a.rx + (b.rx - a.rx) * f, ry: a.ry + (b.ry - a.ry) * f };
+  const aRy = -i * 90;
+  const bRy = -(i + 1) * 90;
+  return { rx: -2, ry: aRy + (bRy - aRy) * f };
 }
 
 function sceneFromProgress(progress: number): number {
   return Math.min(SCENE_COUNT - 1, Math.floor(progress * SCENE_COUNT));
 }
 
-const SWAP_RADIUS = 3;
-function deriveFaceImages(stopIdx: number): (number | null)[] {
-  const images: (number | null)[] = Array(6).fill(null);
-  for (let offset = -SWAP_RADIUS; offset <= SWAP_RADIUS; offset++) {
-    const si = stopIdx + offset;
-    if (si < 0 || si >= SCENE_COUNT) continue;
-    const fi = faceAtStop(si);
-    const pi = si - 1;
+function deriveFaceImages(sceneIdx: number): (number | null)[] {
+  const images: (number | null)[] = [null, null, null, null];
+  for (let offset = -2; offset <= 2; offset++) {
+    const s = sceneIdx + offset;
+    if (s < 0 || s >= SCENE_COUNT) continue;
+    const fi = ((s % 4) + 4) % 4;
+    const pi = s === 0 ? 0 : s - 1;
     if (pi >= 0 && pi < PROJECTS.length) {
       images[fi] = pi;
     }
@@ -195,7 +170,7 @@ function BackgroundCanvas() {
       const aMin = aMax * 0.15;
       return { x: Math.random() * (w || 1920), y: Math.random() * (h || 1080), vx: (Math.random() - 0.5) * 0.18, vy: (Math.random() - 0.5) * 0.14 - 0.02, r: isStar ? 0.7 + Math.random() * 0.8 : 0.3 + Math.random() * 0.5, a: aMin + Math.random() * (aMax - aMin), aMin, aMax, aDir: Math.random() < 0.5 ? 1 : -1, aSpd: 0.0002 + Math.random() * 0.0004 };
     };
-    const dots: Dot[] = Array.from({ length: 140 }, make);
+    const dots: Dot[] = Array.from({ length: 120 }, make);
     const tick = () => {
       raf = requestAnimationFrame(tick);
       if (document.hidden) return;
@@ -224,34 +199,34 @@ function ProjectCard({ project, align, onContact }: { project: Project; align: '
   const F = 'var(--font-inter), system-ui, sans-serif';
   const FH = 'var(--font-archivo), system-ui, sans-serif';
   return (
-    <div style={{ padding: '1.75rem 1.5rem', background: 'rgba(10,10,10,0.95)', borderTop: '1px solid rgba(255,255,255,0.07)', borderBottom: '1px solid rgba(255,255,255,0.07)', borderLeft: right ? 'none' : '1px solid rgba(255,255,255,0.07)', borderRight: right ? '1px solid rgba(255,255,255,0.07)' : 'none' }}>
+    <div style={{ padding: '1.75rem 1.5rem', background: 'rgba(10,10,10,0.95)', borderTop: '1px solid rgba(255,255,255,0.07)', borderBottom: '1px solid rgba(255,255,255,0.07)', borderLeft: right ? 'none' : '1px solid rgba(255,255,255,0.07)', borderRight: right ? '1px solid rgba(255,255,255,0.07)' : 'none', backdropFilter: 'blur(16px)', borderRadius: '12px' }}>
       {/* Red accent line */}
       <div style={{ width: '1.75rem', height: '2px', background: '#FF3B00', marginBottom: '1.1rem', marginLeft: right ? 'auto' : 0 }} />
       {/* Category · year */}
-      <p style={{ fontFamily: F, fontSize: '0.5rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)', marginBottom: '0.75rem', textAlign: right ? 'right' : 'left' }}>
+      <p style={{ fontFamily: F, fontSize: '0.55rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '0.75rem', textAlign: right ? 'right' : 'left' }}>
         {project.category}&nbsp;·&nbsp;{project.year}
       </p>
       {/* Name */}
-      <h3 style={{ fontFamily: FH, fontWeight: 900, fontSize: 'clamp(1.5rem, 2.5vw, 2.2rem)', letterSpacing: '-0.03em', lineHeight: 0.9, color: 'rgba(255,255,255,0.92)', marginBottom: '0.9rem', textTransform: 'uppercase', textAlign: right ? 'right' : 'left' }}>
+      <h3 style={{ fontFamily: FH, fontWeight: 900, fontSize: 'clamp(1.4rem, 2.3vw, 2.1rem)', letterSpacing: '-0.03em', lineHeight: 0.95, color: 'rgba(255,255,255,0.95)', marginBottom: '0.9rem', textTransform: 'uppercase', textAlign: right ? 'right' : 'left' }}>
         {project.name}
       </h3>
       {/* Tagline */}
-      <p style={{ fontFamily: F, fontSize: '0.72rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.32)', marginBottom: '1rem', textAlign: right ? 'right' : 'left' }}>
+      <p style={{ fontFamily: F, fontSize: '0.75rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.45)', marginBottom: '1.1rem', textAlign: right ? 'right' : 'left' }}>
         {project.tagline}
       </p>
       {/* Stack pills */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '1.2rem', justifyContent: right ? 'flex-end' : 'flex-start' }}>
         {project.stack.map((t) => (
-          <span key={t} style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.28)', fontFamily: F, fontSize: '0.48rem', letterSpacing: '0.15em', textTransform: 'uppercase', padding: '0.18rem 0.5rem' }}>{t}</span>
+          <span key={t} style={{ border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.5)', fontFamily: F, fontSize: '0.52rem', letterSpacing: '0.12em', textTransform: 'uppercase', padding: '0.2rem 0.55rem', borderRadius: '4px' }}>{t}</span>
         ))}
       </div>
       {/* CTA */}
       <div style={{ display: 'flex', justifyContent: right ? 'flex-end' : 'flex-start' }}>
         <button
           onClick={onContact}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', border: '1px solid rgba(255,59,0,0.4)', color: 'rgba(255,59,0,0.7)', fontFamily: F, fontSize: '0.5rem', letterSpacing: '0.2em', textTransform: 'uppercase', padding: '0.5rem 0.9rem', background: 'transparent', cursor: 'pointer', transition: 'all 0.2s' }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', border: '1px solid rgba(255,59,0,0.5)', color: '#FF3B00', fontFamily: F, fontSize: '0.55rem', fontWeight: 'bold', letterSpacing: '0.2em', textTransform: 'uppercase', padding: '0.55rem 1rem', background: 'rgba(255,59,0,0.06)', cursor: 'pointer', transition: 'all 0.25s', borderRadius: '6px' }}
           onMouseEnter={(e) => { const el = e.currentTarget; el.style.background = '#FF3B00'; el.style.color = '#fff'; el.style.borderColor = '#FF3B00'; }}
-          onMouseLeave={(e) => { const el = e.currentTarget; el.style.background = 'transparent'; el.style.color = 'rgba(255,59,0,0.7)'; el.style.borderColor = 'rgba(255,59,0,0.4)'; }}
+          onMouseLeave={(e) => { const el = e.currentTarget; el.style.background = 'rgba(255,59,0,0.06)'; el.style.color = '#FF3B00'; el.style.borderColor = 'rgba(255,59,0,0.5)'; }}
         >
           Démarrer ce projet ↗
         </button>
@@ -260,7 +235,7 @@ function ProjectCard({ project, align, onContact }: { project: Project; align: '
   );
 }
 
-// ─── Main ──────────────────────────────────────────────────────────────────────
+// ─── Main Component ────────────────────────────────────────────────────────────
 export default function WorkSection() {
   const { openModal } = useContactModal();
   const sectionRef = useRef<HTMLElement>(null);
@@ -325,18 +300,18 @@ export default function WorkSection() {
 
         {/* Top-left label */}
         <div className="absolute top-7 left-8 z-20 flex items-center gap-3">
-          <span style={{ fontFamily: F, fontSize: '0.52rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.18)' }}>02 / Mes travaux</span>
+          <span style={{ fontFamily: F, fontSize: '0.52rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)' }}>02 / Mes travaux</span>
           <div style={{ width: '2rem', height: '1px', background: 'rgba(255,255,255,0.1)' }} />
-          <span style={{ fontFamily: F, fontSize: '0.52rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.1)' }}>{PROJECTS.length} projets</span>
+          <span style={{ fontFamily: F, fontSize: '0.52rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.2)' }}>{PROJECTS.length} projets</span>
         </div>
 
         {/* HUD top-right */}
         <div className="absolute top-7 right-8 z-20 text-right">
-          <div ref={hudPctRef} style={{ fontFamily: FM, fontSize: '0.58rem', letterSpacing: '0.18em', color: 'rgba(255,255,255,0.22)' }}>000%</div>
+          <div ref={hudPctRef} style={{ fontFamily: FM, fontSize: '0.58rem', letterSpacing: '0.18em', color: 'rgba(255,255,255,0.3)' }}>000%</div>
           <div style={{ width: '6rem', height: '1px', background: 'rgba(255,255,255,0.08)', marginTop: '0.4rem', marginLeft: 'auto', position: 'relative', overflow: 'hidden' }}>
             <div ref={hudFillRef} style={{ position: 'absolute', inset: '0 auto 0 0', width: '0%', background: '#FF3B00' }} />
           </div>
-          <div ref={hudSceneRef} style={{ fontFamily: F, fontSize: '0.45rem', letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.18)', marginTop: '0.3rem' }}>OVERVIEW</div>
+          <div ref={hudSceneRef} style={{ fontFamily: F, fontSize: '0.45rem', letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginTop: '0.3rem' }}>OVERVIEW</div>
         </div>
 
         {/* Nav dots left */}
@@ -346,26 +321,58 @@ export default function WorkSection() {
           ))}
         </div>
 
-        {/* 3D cube */}
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', perspective: '1100px', pointerEvents: 'none', zIndex: 2 }}>
-          <div ref={cubeRef} style={{ '--cw': 'min(72vw, 700px)', '--ch': 'calc(var(--cw) * 9 / 16)', width: 'var(--cw)', height: 'var(--ch)', position: 'relative', transformStyle: 'preserve-3d', transform: 'rotateX(90deg) rotateY(0deg)', flexShrink: 0 } as React.CSSProperties}>
-            {([0, 1, 2, 3, 4, 5] as const).map((fi) => {
-              const isCap = fi === 0 || fi === 5;
-              return (
-                <div key={fi} style={{ position: 'absolute', overflow: 'hidden', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: FACE_TRANSFORMS[fi], background: `repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 48px), repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 48px), #111`, ...(isCap ? { left: 0, right: 0, top: 'calc(50% - var(--cw) / 2)', width: 'var(--cw)', height: 'var(--cw)' } : { inset: 0 }) }}>
-                  {faceImages[fi] !== null && (
-                    <>
-                      <Image src={PROJECTS[faceImages[fi]!].image} alt={PROJECTS[faceImages[fi]!].name} fill className="object-cover object-top" sizes="(max-width: 768px) 90vw, 700px" />
-                      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.25)' }} />
-                    </>
-                  )}
-                </div>
-              );
-            })}
+        {/* 3D 100% Homogeneous 16:9 Rotating Carousel */}
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', perspective: '1200px', pointerEvents: 'none', zIndex: 2 }}>
+          <div
+            ref={cubeRef}
+            style={{
+              '--cw': 'min(76vw, 760px)',
+              '--ch': 'calc(var(--cw) * 9 / 16)',
+              width: 'var(--cw)',
+              height: 'var(--ch)',
+              position: 'relative',
+              transformStyle: 'preserve-3d',
+              transform: 'rotateX(-2deg) rotateY(0deg)',
+              flexShrink: 0,
+            } as React.CSSProperties}
+          >
+            {([0, 1, 2, 3] as const).map((fi) => (
+              <div
+                key={fi}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  overflow: 'hidden',
+                  borderRadius: '16px',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  backfaceVisibility: 'hidden',
+                  WebkitBackfaceVisibility: 'hidden',
+                  transform: FACE_TRANSFORMS[fi],
+                  background: '#161616',
+                  boxShadow: '0 25px 60px -15px rgba(0,0,0,0.8), 0 0 30px rgba(0,0,0,0.5)',
+                }}
+              >
+                {faceImages[fi] !== null && (
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={PROJECTS[faceImages[fi]!].image}
+                      alt={PROJECTS[faceImages[fi]!].name}
+                      fill
+                      className="object-cover object-top"
+                      sizes="(max-width: 768px) 90vw, 760px"
+                      priority
+                    />
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 40%)' }} />
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
 
-          {/* Mobile card below cube */}
-          <div className="md:hidden" style={{ marginTop: '0.75rem', width: 'min(72vw, 700px)', maxWidth: 'calc(100% - 2rem)', flexShrink: 0, pointerEvents: 'auto' }}>
+          {/* Mobile card below carousel */}
+          <div className="md:hidden" style={{ marginTop: '1rem', width: 'min(90vw, 420px)', flexShrink: 0, pointerEvents: 'auto' }}>
             <AnimatePresence mode="wait">
               {activeScene > 0 && project && (
                 <motion.div key={`mob-${activeScene}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} transition={{ duration: 0.32 }}>
@@ -381,15 +388,15 @@ export default function WorkSection() {
           {activeScene === 0 && (
             <motion.div key="intro" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -14 }} transition={{ duration: 0.45 }} className="hidden md:flex absolute inset-0 items-center justify-center pointer-events-none" style={{ zIndex: 10 }}>
               <div style={{ textAlign: 'center', maxWidth: '32rem', padding: '0 1.5rem' }}>
-                <p style={{ fontFamily: F, fontSize: '0.52rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.2)', marginBottom: '1.5rem' }}>
+                <p style={{ fontFamily: F, fontSize: '0.55rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: '1.5rem' }}>
                   Mes travaux&nbsp;·&nbsp;{PROJECTS.length} projets
                 </p>
-                <h2 style={{ fontFamily: FH, fontWeight: 900, fontSize: 'clamp(3.5rem, 9vw, 7.5rem)', letterSpacing: '-0.04em', lineHeight: 0.88, color: 'rgba(255,255,255,0.92)', marginBottom: '0.15em', textTransform: 'uppercase' }}>
+                <h2 style={{ fontFamily: FH, fontWeight: 900, fontSize: 'clamp(3.5rem, 8vw, 7rem)', letterSpacing: '-0.04em', lineHeight: 0.88, color: 'rgba(255,255,255,0.95)', marginBottom: '0.15em', textTransform: 'uppercase' }}>
                   Mes{' '}
-                  <span style={{ fontFamily: FS, fontWeight: 400, color: 'rgba(255,255,255,0.2)', textTransform: 'none', fontSize: '0.9em' }}>travaux</span>
+                  <span style={{ fontFamily: FS, fontWeight: 400, color: 'rgba(255,255,255,0.25)', textTransform: 'none', fontSize: '0.9em' }}>travaux</span>
                 </h2>
-                <p style={{ fontFamily: F, fontSize: '0.65rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.15)', marginTop: '2rem' }}>
-                  Défiler pour explorer
+                <p style={{ fontFamily: F, fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginTop: '2rem' }}>
+                  Défiler pour explorer ↓
                 </p>
               </div>
             </motion.div>
@@ -397,20 +404,20 @@ export default function WorkSection() {
         </AnimatePresence>
 
         {/* Mobile intro */}
-        <div className="md:hidden absolute left-1/2 z-10 pointer-events-none" style={{ top: activeScene === 0 ? '50%' : '3.5rem', transform: `translateX(-50%) translateY(${activeScene === 0 ? '-50%' : '0'})`, transition: 'top 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1)', textAlign: 'center', maxWidth: 'calc(100vw - 4rem)', width: 'max-content' }}>
+        <div className="md:hidden absolute left-1/2 z-10 pointer-events-none" style={{ top: activeScene === 0 ? '50%' : '3.5rem', transform: `translateX(-50%) translateY(${activeScene === 0 ? '-50%' : '0'})`, transition: 'top 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1)', textAlign: 'center', maxWidth: 'calc(100vw - 3rem)', width: 'max-content' }}>
           <AnimatePresence mode="wait">
             {activeScene === 0 ? (
               <motion.div key="mob-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}>
-                <p style={{ fontFamily: F, fontSize: '0.52rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.2)', marginBottom: '1.25rem' }}>Mes travaux · {PROJECTS.length} projets</p>
-                <h2 style={{ fontFamily: FH, fontWeight: 900, fontSize: 'clamp(3rem, 9vw, 5.5rem)', letterSpacing: '-0.04em', lineHeight: 0.88, color: 'rgba(255,255,255,0.92)', textTransform: 'uppercase' }}>
-                  Mes <span style={{ fontFamily: FS, fontWeight: 400, color: 'rgba(255,255,255,0.2)', textTransform: 'none' }}>travaux</span>
+                <p style={{ fontFamily: F, fontSize: '0.52rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: '1.25rem' }}>Mes travaux · {PROJECTS.length} projets</p>
+                <h2 style={{ fontFamily: FH, fontWeight: 900, fontSize: 'clamp(2.8rem, 9vw, 5rem)', letterSpacing: '-0.04em', lineHeight: 0.88, color: 'rgba(255,255,255,0.95)', textTransform: 'uppercase' }}>
+                  Mes <span style={{ fontFamily: FS, fontWeight: 400, color: 'rgba(255,255,255,0.3)', textTransform: 'none' }}>travaux</span>
                 </h2>
-                <p style={{ fontFamily: F, fontSize: '0.6rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.15)', marginTop: '1.75rem' }}>Défiler pour explorer</p>
+                <p style={{ fontFamily: F, fontSize: '0.6rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginTop: '1.75rem' }}>Défiler pour explorer ↓</p>
               </motion.div>
             ) : (
               <motion.div key="mob-compact" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-                <p style={{ fontFamily: F, fontSize: '0.42rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.18)', marginBottom: '0.3rem' }}>02 / Travaux</p>
-                <h2 style={{ fontFamily: FH, fontWeight: 900, fontSize: 'clamp(2rem, 8vw, 3rem)', letterSpacing: '-0.04em', lineHeight: 1, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
+                <p style={{ fontFamily: F, fontSize: '0.42rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: '0.3rem' }}>02 / Travaux</p>
+                <h2 style={{ fontFamily: FH, fontWeight: 900, fontSize: 'clamp(1.8rem, 7vw, 2.6rem)', letterSpacing: '-0.04em', lineHeight: 1, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
                   Mes <span style={{ fontFamily: FS, fontWeight: 400 }}>travaux</span>
                 </h2>
               </motion.div>
@@ -419,7 +426,7 @@ export default function WorkSection() {
         </div>
 
         {/* Desktop left card slot */}
-        <div className="absolute hidden md:block z-10" style={{ left: 'clamp(4rem, 7vw, 7rem)', top: '50%', transform: 'translateY(-50%)', width: 'min(21rem, 28%)' }}>
+        <div className="absolute hidden md:block z-10" style={{ left: 'clamp(3rem, 6vw, 6rem)', top: '50%', transform: 'translateY(-50%)', width: 'min(22rem, 30%)' }}>
           <AnimatePresence mode="wait">
             {!isRight && activeScene > 0 && project && (
               <motion.div key={`left-${activeScene}`} initial={{ opacity: 0, x: -14 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -14 }} transition={{ duration: 0.38 }}>
@@ -430,7 +437,7 @@ export default function WorkSection() {
         </div>
 
         {/* Desktop right card slot */}
-        <div className="absolute hidden md:block z-10" style={{ right: 'clamp(4rem, 7vw, 7rem)', top: '50%', transform: 'translateY(-50%)', width: 'min(21rem, 28%)' }}>
+        <div className="absolute hidden md:block z-10" style={{ right: 'clamp(3rem, 6vw, 6rem)', top: '50%', transform: 'translateY(-50%)', width: 'min(22rem, 30%)' }}>
           <AnimatePresence mode="wait">
             {isRight && activeScene > 0 && project && (
               <motion.div key={`right-${activeScene}`} initial={{ opacity: 0, x: 14 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 14 }} transition={{ duration: 0.38 }}>
@@ -442,15 +449,15 @@ export default function WorkSection() {
 
         {/* Counter bottom-right */}
         <div className="absolute bottom-7 right-8 z-20" style={{ pointerEvents: 'none', textAlign: 'right' }}>
-          <span style={{ fontFamily: FM, fontSize: '0.52rem', letterSpacing: '0.18em', color: 'rgba(255,255,255,0.18)' }}>
+          <span style={{ fontFamily: FM, fontSize: '0.55rem', letterSpacing: '0.18em', color: 'rgba(255,255,255,0.25)' }}>
             {String(activeScene).padStart(2, '0')}&nbsp;/&nbsp;{String(PROJECTS.length).padStart(2, '0')}
           </span>
         </div>
 
         {/* Caption bottom-center */}
         <div className="absolute bottom-7 left-1/2 z-20" style={{ transform: 'translateX(-50%)', textAlign: 'center', pointerEvents: 'none' }}>
-          <div ref={captionNumRef} style={{ fontFamily: FM, fontSize: '0.45rem', letterSpacing: '0.3em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.2)', marginBottom: '0.2rem' }}>00</div>
-          <div ref={captionLabelRef} style={{ fontFamily: FH, fontWeight: 900, fontSize: 'clamp(1.2rem, 3vw, 2.2rem)', letterSpacing: '-0.02em', lineHeight: 1, textTransform: 'uppercase', color: 'rgba(255,255,255,0.06)' }}>OVERVIEW</div>
+          <div ref={captionNumRef} style={{ fontFamily: FM, fontSize: '0.45rem', letterSpacing: '0.3em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: '0.2rem' }}>00</div>
+          <div ref={captionLabelRef} style={{ fontFamily: FH, fontWeight: 900, fontSize: 'clamp(1.2rem, 3vw, 2.2rem)', letterSpacing: '-0.02em', lineHeight: 1, textTransform: 'uppercase', color: 'rgba(255,255,255,0.08)' }}>OVERVIEW</div>
         </div>
       </div>
     </section>

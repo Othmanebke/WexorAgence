@@ -1,6 +1,7 @@
 "use client";
 
-import { LineReveal, FadeUp } from "@/components/ui/Reveal";
+import { FadeUp } from "@/components/ui/Reveal";
+import { AnimatedText } from "@/components/AnimatedText";
 import { useContactModal } from "@/components/ContactModalProvider";
 import { useLang } from "@/components/LanguageContext";
 
@@ -11,16 +12,23 @@ export default function CTASection() {
   return (
     <section className="relative z-20 -mt-10 sm:-mt-14 md:-mt-20 w-full bg-abcs-black text-white py-24 md:py-32 px-6 md:px-8 flex flex-col items-center text-center rounded-t-[36px] sm:rounded-t-[50px] md:rounded-t-[64px] shadow-[0_-30px_70px_rgba(0,0,0,0.9)] border-t border-white/10">
 
-      <LineReveal className="mb-4 md:mb-6">
-        <h2 className="font-heading text-4xl sm:text-5xl md:text-8xl lg:text-[10rem] uppercase leading-[0.85] tracking-tighter">
-          {t("cta_line1")}
-        </h2>
-      </LineReveal>
-      <LineReveal delay={0.1} className="mb-8 md:mb-6">
-        <h2 className="font-heading text-4xl sm:text-5xl md:text-8xl lg:text-[10rem] uppercase leading-[0.85] tracking-tighter text-abcs-red">
-          {t("cta_line2")}
-        </h2>
-      </LineReveal>
+      <div className="mb-4 md:mb-6">
+        <AnimatedText
+          as="h2"
+          text={t("cta_line1")}
+          activeColor="#FFFFFF"
+          className="font-heading text-4xl sm:text-5xl md:text-8xl lg:text-[9rem] uppercase leading-[0.85] tracking-tighter select-none"
+        />
+      </div>
+      <div className="mb-8 md:mb-6">
+        <AnimatedText
+          as="h2"
+          text={t("cta_line2")}
+          activeColor="#FF3B00"
+          className="font-heading text-4xl sm:text-5xl md:text-8xl lg:text-[9rem] uppercase leading-[0.85] tracking-tighter select-none"
+        />
+      </div>
+
       <FadeUp delay={0.4} className="mt-12">
         <button
           onClick={openModal}

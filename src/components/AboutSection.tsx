@@ -61,13 +61,15 @@ export const AboutSection: React.FC = () => {
           <p className="font-bold text-xs sm:text-sm uppercase tracking-[0.3em] text-[#FF3B00] mb-3">
             Othmane Bouakline · Développeur Web Full Stack
           </p>
-          <h2
-            className="hero-heading font-black uppercase leading-none tracking-tight text-center select-none"
+          <AnimatedText
+            as="h2"
+            text="Qui je suis"
+            activeColor="#BBCCD7"
+            className="font-black uppercase leading-none tracking-tight text-center select-none"
             style={{ fontSize: 'clamp(3rem, 11vw, 150px)' }}
-          >
-            Qui je suis
-          </h2>
+          />
         </FadeIn>
+
 
         <div className="h-8 sm:h-12 md:h-14" />
 

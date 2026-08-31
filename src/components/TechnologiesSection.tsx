@@ -2,6 +2,8 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { AnimatedText } from "@/components/AnimatedText";
+
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
@@ -131,16 +133,16 @@ export default function TechnologiesSection() {
             03 · Stack technique
           </motion.p>
           <div className="overflow-hidden">
-            <motion.h2
-              initial={{ y: "105%" }}
-              animate={inView ? { y: 0 } : {}}
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-              className="font-heading uppercase leading-[0.88] tracking-tight text-white"
-              style={{ fontSize: "clamp(3.5rem, 8vw, 8rem)" }}
-            >
-              Stack.
-            </motion.h2>
+            <AnimatedText
+              as="h2"
+              text="Stack technique"
+              activeColor="#FFFFFF"
+              justify="start"
+              className="font-heading uppercase leading-[0.88] tracking-tight text-white select-none"
+              style={{ fontSize: "clamp(3rem, 7vw, 7.5rem)" }}
+            />
           </div>
+
         </div>
 
         <motion.p

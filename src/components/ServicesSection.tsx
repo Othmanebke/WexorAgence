@@ -2,7 +2,9 @@
 
 import React from 'react';
 import { FadeIn } from './FadeIn';
+import { AnimatedText } from './AnimatedText';
 import { useContactModal } from '@/components/ContactModalProvider';
+
 
 const SERVICES = [
   {
@@ -70,12 +72,14 @@ export const ServicesSection: React.FC = () => {
             <span className="font-bold text-xs sm:text-sm uppercase tracking-[0.25em] text-[#FF3B00] mb-3">
               Tarifs transparents & Prestations adaptées
             </span>
-            <h2
+            <AnimatedText
+              as="h2"
+              text="Mes Services"
+              activeColor="#111111"
               className="text-[#111111] font-black uppercase text-center leading-none tracking-tight select-none"
               style={{ fontSize: 'clamp(2.8rem, 10vw, 130px)' }}
-            >
-              Mes Services
-            </h2>
+            />
+
             <p className="font-medium text-sm sm:text-base text-[#111111]/60 max-w-xl mt-4">
               Des offres claires du produit d&apos;appel au projet sur-mesure, conçues pour booster la visibilité et la rentabilité de votre activité.
             </p>

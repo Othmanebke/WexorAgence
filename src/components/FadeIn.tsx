@@ -19,9 +19,9 @@ interface FadeInProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
 export const FadeIn: React.FC<FadeInProps> = ({
   children,
   delay = 0,
-  duration = 0.7,
+  duration = 0.8,
   x = 0,
-  y = 30,
+  y = 40,
   as = 'div',
   className = '',
   style = {},
@@ -33,11 +33,11 @@ export const FadeIn: React.FC<FadeInProps> = ({
     <Component
       initial={{ opacity: 0, x, y }}
       whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once: true, margin: '50px', amount: 0 }}
+      viewport={{ once: true, margin: '-40px', amount: 0.1 }}
       transition={{
         duration,
         delay,
-        ease: [0.25, 0.1, 0.25, 1],
+        ease: [0.22, 1, 0.36, 1],
       }}
       className={className}
       style={style}
@@ -47,3 +47,4 @@ export const FadeIn: React.FC<FadeInProps> = ({
     </Component>
   );
 };
+export default FadeIn;

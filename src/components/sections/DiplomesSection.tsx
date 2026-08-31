@@ -4,7 +4,9 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { LineReveal } from "@/components/ui/Reveal";
+import { AnimatedText } from "@/components/AnimatedText";
+
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -77,11 +79,16 @@ export default function DiplomesSection() {
     >
 
       <div className="w-full max-w-7xl mx-auto">
-        <LineReveal className="mb-12 md:mb-16">
-          <h2 className="font-heading text-6xl md:text-9xl uppercase leading-none tracking-tight">
-            Diplômes
-          </h2>
-        </LineReveal>
+        <div className="mb-12 md:mb-16">
+          <AnimatedText
+            as="h2"
+            text="Diplômes"
+            activeColor="#FFFFFF"
+            justify="start"
+            className="font-heading text-6xl md:text-9xl uppercase leading-none tracking-tight select-none"
+          />
+        </div>
+
 
         <div className="flex flex-col border-t border-white/10">
           {DIPLOMES.map((d, i) => (

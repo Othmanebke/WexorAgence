@@ -1,13 +1,12 @@
 "use client";
 
-import { useLang } from "@/components/LanguageContext";
-
 // Sections
-import HeroSection       from "@/components/sections/HeroSection";
-import AboutSection      from "@/components/sections/AboutSection";
-import ServicesSection   from "@/components/sections/ServicesSection";
-import DiplomesSection   from "@/components/sections/DiplomesSection";
-import CTASection        from "@/components/sections/CTASection";
+import HeroSection         from "@/components/sections/HeroSection";
+import { MarqueeSection }  from "@/components/MarqueeSection";
+import { AboutSection }    from "@/components/AboutSection";
+import { ServicesSection } from "@/components/ServicesSection";
+import DiplomesSection     from "@/components/sections/DiplomesSection";
+import CTASection          from "@/components/sections/CTASection";
 
 // Feature components
 import WorkSection         from "@/components/WorkSection";
@@ -25,35 +24,34 @@ function Divider({ label, number }: { label: string; number: string }) {
 }
 
 export default function Home() {
-  const { t } = useLang();
-
   return (
-    <main className="flex flex-col min-h-screen bg-[#f0f0ee]" style={{ overflowX: "clip" }}>
+    <main className="flex flex-col min-h-screen bg-[#0C0C0C]" style={{ overflowX: "clip" }}>
 
       {/* 01 — Hero + ticker */}
       <HeroSection />
 
-      {/* 02 — Qui je suis */}
-      <Divider label="Qui je suis" number="01" />
+      {/* 02 — Galerie défilante Marquee */}
+      <MarqueeSection />
+
+      {/* 03 — À propos animé avec objets 3D */}
       <AboutSection />
 
-      {/* 03 — Portfolio (all 10 projects, scroll-driven) */}
+      {/* 04 — Services interactifs */}
+      <ServicesSection />
+
+      {/* 05 — Portfolio */}
       <Divider label="Mes travaux" number="02" />
       <WorkSection />
 
-      {/* 04 — Services (accordion) */}
-      <Divider label={t("services_label")} number="03" />
-      <ServicesSection />
-
-      {/* 05 — Stack technique (marquee) */}
-      <Divider label="Stack technique" number="04" />
+      {/* 06 — Stack technique (marquee) */}
+      <Divider label="Stack technique" number="03" />
       <TechnologiesSection />
 
-      {/* 06 — Expériences (horizontal scroll) */}
+      {/* 07 — Expériences (horizontal scroll) */}
       <ExperienceSection />
 
-      {/* 07 — Diplômes */}
-      <Divider label="Formation académique" number="05" />
+      {/* 08 — Diplômes */}
+      <Divider label="Formation académique" number="04" />
       <DiplomesSection />
 
       {/* CTA final */}

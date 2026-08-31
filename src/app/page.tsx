@@ -2,7 +2,6 @@
 
 // Sections
 import HeroSection         from "@/components/sections/HeroSection";
-import { MarqueeSection }  from "@/components/MarqueeSection";
 import { AboutSection }    from "@/components/AboutSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import DiplomesSection     from "@/components/sections/DiplomesSection";
@@ -25,32 +24,29 @@ function Divider({ label, number }: { label: string; number: string }) {
 
 export default function Home() {
   return (
-    <main className="flex flex-col min-h-screen bg-[#0C0C0C]" style={{ overflowX: "clip" }}>
+    <main className="flex flex-col min-h-screen bg-[#f0f0ee]" style={{ overflowX: "clip" }}>
 
-      {/* 01 — Hero + ticker */}
+      {/* 01 — Hero (Fond clair signature) */}
       <HeroSection />
 
-      {/* 02 — Galerie défilante Marquee */}
-      <MarqueeSection />
-
-      {/* 03 — À propos animé avec objets 3D */}
+      {/* 02 — À propos animé (Design moderne avec objets 3D & infos réelles) */}
       <AboutSection />
 
-      {/* 04 — Services interactifs */}
+      {/* 03 — Services (Design moderne avec prestations & prix réels) */}
       <ServicesSection />
 
-      {/* 05 — Portfolio */}
+      {/* 04 — Portfolio */}
       <Divider label="Mes travaux" number="02" />
       <WorkSection />
 
-      {/* 06 — Stack technique (marquee) */}
+      {/* 05 — Stack technique (marquee) */}
       <Divider label="Stack technique" number="03" />
       <TechnologiesSection />
 
-      {/* 07 — Expériences (horizontal scroll) */}
+      {/* 06 — Expériences (horizontal scroll) */}
       <ExperienceSection />
 
-      {/* 08 — Diplômes */}
+      {/* 07 — Diplômes */}
       <Divider label="Formation académique" number="04" />
       <DiplomesSection />
 

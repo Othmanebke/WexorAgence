@@ -7,51 +7,51 @@ import { useContactModal } from '@/components/ContactModalProvider';
 const SERVICES = [
   {
     number: '01',
-    name: 'Site Web Sur-Mesure',
-    price: 'Dès 750€',
+    name: 'Flyer, Logo & Design Graphique',
+    price: 'Dès 50€ (Canva) · Dès 100€ (Adobe)',
     description:
-      'Site vitrine, landing page ou site corporate développé sur-mesure. Design exclusif, ultra-performant, optimisé pour le référencement naturel (SEO) et la conversion.',
-    tags: ['React', 'Next.js', 'WordPress', 'SEO'],
+      'Création visuelle rapide et professionnelle pour votre communication : flyers publicitaires, bannières, cartes de visite et logos percutants livrés prêts à imprimer ou diffuser.',
+    tags: ['Canva Pro', 'Adobe Illustrator', 'Photoshop', 'Print & Digital'],
   },
   {
     number: '02',
-    name: 'Application Web & SaaS',
-    price: 'Dès 2 500€',
+    name: 'Site Vitrine & Landing Page',
+    price: 'Dès 300€',
     description:
-      'Développement de plateformes web complexes, tableaux de bord interactifs et solutions SaaS. Architecture full stack évolutive, authentification et base de données sécurisée.',
-    tags: ['Next.js', 'Node.js', 'PostgreSQL', 'API REST'],
+      'La solution idéale pour les indépendants, artisans et commerçants. Une présence web moderne, ultra-rapide, responsive et optimisée pour capter des appels et devis clients.',
+    tags: ['One-Page', 'React / HTML5', 'Responsive', 'Formulaire & SEO'],
   },
   {
     number: '03',
-    name: 'Boutique E-commerce',
-    price: 'Dès 1 200€',
+    name: 'Site & Application Web Sur-Mesure',
+    price: 'Dès 800€',
     description:
-      'Création de boutiques en ligne complètes et engageantes. Gestion des produits, paiements sécurisés Stripe / PayPal et parcours client fluide sans friction.',
-    tags: ['WooCommerce', 'Next Commerce', 'Stripe'],
+      'Plateforme web moderne développée sur-mesure (Next.js / React) : design exclusif, temps de chargement éclair, expérience utilisateur soignée et référencement naturel technique poussé.',
+    tags: ['Next.js', 'React', 'Tailwind CSS', 'Multi-Pages', 'SEO Avancé'],
   },
   {
     number: '04',
-    name: 'Refonte & Optimisation',
-    price: 'Dès 500€',
+    name: 'Site WordPress Clé en Main',
+    price: 'Dès 1 200€',
     description:
-      'Modernisation graphique de votre site existant, amélioration drastique de la vitesse de chargement (Core Web Vitals) et mise en conformité technique.',
-    tags: ['Audit UX/UI', 'Performance', 'Mobile First'],
+      'Site complet et 100% administrable en toute autonomie : blog, catalogue de services ou boutique e-commerce avec tableau de bord simple pour modifier vos contenus sans coder.',
+    tags: ['WordPress', 'WooCommerce', 'Espace Admin', 'Autonomie Totale'],
   },
   {
     number: '05',
-    name: 'Branding & Identité Visuelle',
-    price: 'Dès 350€',
+    name: 'Refonte & Modernisation Web',
+    price: 'Sur devis (Code ou WordPress)',
     description:
-      'Conception d’une image de marque percutante et mémorable : création de logo, charte graphique globale, supports de communication et templates réseaux sociaux.',
-    tags: ['Logo', 'Charte graphique', 'Adobe CC', 'Figma'],
+      'Audit technique et transformation graphique de votre site actuel : passage au responsive moderne, amélioration des scores de vitesse (Google Core Web Vitals) et sécurisation.',
+    tags: ['Audit UX/UI', 'Refonte WordPress / Code', 'Vitesse & Sécurité'],
   },
   {
     number: '06',
-    name: 'Automatisation & IA',
-    price: 'Dès 800€',
+    name: 'Intégration Chatbot IA & Automatisation',
+    price: 'Sur devis',
     description:
-      'Intégration d’agents IA sur-mesure, chatbots intelligents connectés à vos données et automatisation de vos workflows métier pour gagner un temps précieux.',
-    tags: ['OpenAI', 'Chatbots', 'Make / Zapier', 'Workflows'],
+      'Intégration d’un agent conversationnel intelligent connecté à vos données pour répondre à vos prospects 24/7, et automatisation de vos tâches répétitives (Zapier, Make, API).',
+    tags: ['Chatbot IA', 'OpenAI API', 'Support 24/7', 'Automatisation Workflows'],
   },
 ];
 
@@ -63,13 +63,12 @@ export const ServicesSection: React.FC = () => {
       id="services"
       className="relative z-10 -mt-8 sm:-mt-12 md:-mt-16 bg-[#FFFFFF] text-[#111111] rounded-t-[36px] sm:rounded-t-[48px] md:rounded-t-[64px] px-5 sm:px-8 md:px-12 py-20 sm:py-24 md:py-32 shadow-[0_-30px_70px_rgba(0,0,0,0.35)]"
     >
-
       <div className="max-w-6xl mx-auto">
         {/* En-tête */}
         <FadeIn delay={0} y={40}>
           <div className="flex flex-col items-center text-center mb-16 sm:mb-20 md:mb-24">
             <span className="font-bold text-xs sm:text-sm uppercase tracking-[0.25em] text-[#FF3B00] mb-3">
-              Ce que je réalise pour vous
+              Tarifs transparents & Prestations adaptées
             </span>
             <h2
               className="text-[#111111] font-black uppercase text-center leading-none tracking-tight select-none"
@@ -77,6 +76,9 @@ export const ServicesSection: React.FC = () => {
             >
               Mes Services
             </h2>
+            <p className="font-medium text-sm sm:text-base text-[#111111]/60 max-w-xl mt-4">
+              Des offres claires du produit d&apos;appel au projet sur-mesure, conçues pour booster la visibilité et la rentabilité de votre activité.
+            </p>
           </div>
         </FadeIn>
 
@@ -95,8 +97,8 @@ export const ServicesSection: React.FC = () => {
                 onClick={() => openModal({ type: service.name })}
                 className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-10"
               >
-                {/* Numéro géant + Prix sur mobile */}
-                <div className="flex items-center justify-between md:flex-col md:items-start gap-3 md:w-[180px] shrink-0">
+                {/* Numéro géant + Prix */}
+                <div className="flex items-center justify-between md:flex-col md:items-start gap-3 md:w-[220px] shrink-0">
                   <span
                     className="font-black text-[#111111] leading-none select-none transition-all duration-300 group-hover:text-[#FF3B00] group-hover:translate-x-2"
                     style={{ fontSize: 'clamp(2.8rem, 8vw, 110px)' }}
@@ -113,7 +115,7 @@ export const ServicesSection: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <h3
                       className="font-bold uppercase text-[#111111] tracking-tight group-hover:text-[#FF3B00] transition-colors"
-                      style={{ fontSize: 'clamp(1.2rem, 2.4vw, 2.2rem)' }}
+                      style={{ fontSize: 'clamp(1.15rem, 2.2vw, 1.9rem)' }}
                     >
                       {service.name}
                     </h3>
@@ -133,7 +135,7 @@ export const ServicesSection: React.FC = () => {
                     {service.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-[11px] font-bold uppercase tracking-wider text-[#111111]/50 bg-[#111111]/5 px-2.5 py-1 rounded"
+                        className="text-[11px] font-bold uppercase tracking-wider text-[#111111]/55 bg-[#111111]/5 px-2.5 py-1 rounded"
                       >
                         {tag}
                       </span>
@@ -151,7 +153,7 @@ export const ServicesSection: React.FC = () => {
             onClick={() => openModal()}
             className="inline-flex items-center gap-3 bg-[#111111] text-white px-8 py-4 sm:px-10 sm:py-4.5 rounded-full font-bold text-xs sm:text-sm uppercase tracking-widest hover:bg-[#FF3B00] transition-all duration-300 shadow-lg hover:shadow-[0_10px_25px_rgba(255,59,0,0.4)] group"
           >
-            <span>Demander un devis gratuit</span>
+            <span>Demander un devis personnalisé</span>
             <span className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform text-base">↗</span>
           </button>
         </FadeIn>

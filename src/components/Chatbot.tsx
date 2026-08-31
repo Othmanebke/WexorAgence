@@ -20,54 +20,53 @@ type Step = {
 const CHAT_LOGIC: Record<string, Step> = {
   start: {
     id: "start",
-    question: "Salut ! Je suis Othmane 👋 Prêt à transformer ton idée en réalité ? On part sur quoi ?",
+    question: "Salut ! Je suis Othmane 👋 Prêt à concrétiser ton projet ? Quel est ton besoin principal ?",
     type: "options",
     options: [
-      { label: "Créer un site web",   value: "web",      nextStep: "web_type"    },
-      { label: "Refonte web",         value: "refonte",  nextStep: "budget_refonte" },
-      { label: "Branding & Print",    value: "branding", nextStep: "branding_type" },
-      { label: "Social Media",        value: "social",   nextStep: "social_type"  },
+      { label: "Créer un site web",          value: "web",      nextStep: "web_type" },
+      { label: "Design & Logo (dès 50€)",    value: "branding", nextStep: "branding_type" },
+      { label: "Refonte de site web",        value: "refonte",  nextStep: "refonte_type" },
+      { label: "Chatbot IA & Automatisation", value: "ia",       nextStep: "budget_ia" },
     ],
   },
   web_type: {
     id: "web_type",
-    question: "Top ! Quel type de site on construit ?",
+    question: "Super ! Quel type de site correspond à ton objectif ?",
     type: "options",
     options: [
-      { label: "Landing Page — 300€",           value: "landing",   nextStep: "budget_web_landing"   },
-      { label: "Site Vitrine — dès 750€",        value: "vitrine",   nextStep: "budget_web_vitrine"   },
-      { label: "WordPress — dès 1 200€",         value: "wordpress", nextStep: "budget_web_wordpress" },
-      { label: "App Web / SaaS — dès 2 500€",    value: "webapp",    nextStep: "budget_web_app"       },
+      { label: "Site Vitrine / One-Page — dès 300€",  value: "vitrine",   nextStep: "budget_web_vitrine" },
+      { label: "Site / App Web Sur-Mesure — dès 800€", value: "webapp",    nextStep: "budget_web_app" },
+      { label: "Site WordPress Administrable — dès 1 200€", value: "wordpress", nextStep: "budget_web_wordpress" },
     ],
   },
-  budget_web_landing:   { id: "budget_web_landing",   question: "Landing Page à 300€ — ta fourchette ?",         type: "options", options: SERVICES.landing.budgets.map(b => ({ label: b, value: b, nextStep: "ask_name" })) },
-  budget_web_vitrine:   { id: "budget_web_vitrine",   question: "Site Vitrine dès 750€ — ton budget ?",          type: "options", options: SERVICES.vitrine.budgets.map(b => ({ label: b, value: b, nextStep: "ask_name" })) },
-  budget_web_wordpress: { id: "budget_web_wordpress", question: "WordPress dès 1 200€ — ton budget ?",           type: "options", options: SERVICES.wordpress.budgets.map(b => ({ label: b, value: b, nextStep: "ask_name" })) },
-  budget_web_app:       { id: "budget_web_app",       question: "App Web / SaaS dès 2 500€ — ton budget ?",     type: "options", options: SERVICES.webapp.budgets.map(b => ({ label: b, value: b, nextStep: "ask_name" })) },
-  budget_refonte:       { id: "budget_refonte",       question: "Refonte — sur devis. Quelle fourchette ?",     type: "options", options: SERVICES.refonte.budgets.map(b => ({ label: b, value: b, nextStep: "ask_name" })) },
+  refonte_type: {
+    id: "refonte_type",
+    question: "Pour ta refonte, ton site actuel est plutôt sur WordPress ou codé sur-mesure ?",
+    type: "options",
+    options: [
+      { label: "Site sur WordPress",       value: "refonte_wp",   nextStep: "budget_refonte" },
+      { label: "Site codé / Autre CMS",    value: "refonte_code", nextStep: "budget_refonte" },
+    ],
+  },
+  budget_web_vitrine:   { id: "budget_web_vitrine",   question: "Site Vitrine dès 300€ — quelle est ta fourchette de budget ?", type: "options", options: SERVICES.vitrine.budgets.map(b => ({ label: b, value: b, nextStep: "ask_name" })) },
+  budget_web_app:       { id: "budget_web_app",       question: "Site & App sur-mesure dès 800€ — ton budget estimé ?",         type: "options", options: SERVICES.webapp.budgets.map(b => ({ label: b, value: b, nextStep: "ask_name" })) },
+  budget_web_wordpress: { id: "budget_web_wordpress", question: "WordPress dès 1 200€ — quelle fourchette de budget ?",        type: "options", options: SERVICES.wordpress.budgets.map(b => ({ label: b, value: b, nextStep: "ask_name" })) },
+  budget_refonte:       { id: "budget_refonte",       question: "Refonte sur devis — quel budget souhaites-tu allouer ?",        type: "options", options: SERVICES.refonte.budgets.map(b => ({ label: b, value: b, nextStep: "ask_name" })) },
+  budget_ia:            { id: "budget_ia",            question: "Chatbot IA & Automatisation — ton budget envisagé ?",           type: "options", options: SERVICES.chatbot_ia.budgets.map(b => ({ label: b, value: b, nextStep: "ask_name" })) },
   branding_type: {
     id: "branding_type",
-    question: "Identité visuelle — quel niveau de production ?",
+    question: "Design graphique — quel format souhaites-tu ?",
     type: "options",
     options: [
-      { label: "Pack Canva Pro — 150–350€",  value: "branding_canva", nextStep: "ask_name" },
-      { label: "Pack Adobe CC — 600–1 200€", value: "branding_adobe", nextStep: "ask_name" },
+      { label: "Flyer & Logo Canva Express — dès 50€",  value: "branding_canva", nextStep: "ask_name" },
+      { label: "Pack Identité Visuelle Adobe CC — dès 100€", value: "branding_adobe", nextStep: "ask_name" },
     ],
   },
-  social_type: {
-    id: "social_type",
-    question: "Présence sociale irrésistible. Quel plan ?",
-    type: "options",
-    options: [
-      { label: "Starter — 150€/mois",  value: "social_starter", nextStep: "ask_name" },
-      { label: "Growth — 450€/mois",   value: "social_growth",  nextStep: "ask_name" },
-      { label: "Pro — 1 500€/mois",    value: "social_pro",     nextStep: "ask_name" },
-    ],
-  },
-  ask_name:  { id: "ask_name",  question: "C'est quoi ton nom ou celui de ta marque ?",         type: "input", inputType: "text",  nextStep: "ask_email" },
-  ask_email: { id: "ask_email", question: "Enchanté [NAME] ! Ton mail pour ma réponse ?",        type: "input", inputType: "email", nextStep: "ask_phone" },
-  ask_phone: { id: "ask_phone", question: "Un numéro pour qu'on puisse en parler si besoin ?",   type: "input", inputType: "tel",   nextStep: "finish"    },
+  ask_name:  { id: "ask_name",  question: "C'est quoi ton prénom ou le nom de ton entreprise ?", type: "input", inputType: "text",  nextStep: "ask_email" },
+  ask_email: { id: "ask_email", question: "Enchanté [NAME] ! Ton adresse email pour ma réponse ?", type: "input", inputType: "email", nextStep: "ask_phone" },
+  ask_phone: { id: "ask_phone", question: "Un numéro pour qu'on puisse en discuter si besoin ?", type: "input", inputType: "tel",   nextStep: "finish"    },
 };
+
 
 interface Props {
   isOpen: boolean;
@@ -156,10 +155,12 @@ export default function ChatWindow({ isOpen, onClose }: Props) {
     const serviceKey = (
       finalAnswers.web_type ||
       finalAnswers.branding_type ||
-      finalAnswers.social_type
+      (finalAnswers.start === "refonte" ? "refonte" : undefined) ||
+      (finalAnswers.start === "ia" ? "chatbot_ia" : undefined)
     ) as keyof typeof SERVICES | undefined;
     const serviceLabel = serviceKey && SERVICES[serviceKey] ? SERVICES[serviceKey].label : "";
     const budget = Object.entries(finalAnswers).find(([k]) => k.startsWith("budget_"))?.[1] || "";
+
 
     setTimeout(() => {
       // Ferme le chat, ouvre la modal avec les données collectées

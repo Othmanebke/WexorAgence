@@ -7,6 +7,8 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useContactModal } from '@/components/ContactModalProvider';
 import { AnimatedText } from '@/components/AnimatedText';
+import avatarPhoto from '@/img/cravate-orange.png';
+
 
 
 gsap.registerPlugin(ScrollTrigger);
@@ -383,17 +385,41 @@ export default function WorkSection() {
                     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 40%)' }} />
                   </div>
                 ) : (
-                  <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#0e0e0e]">
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center">
-                        <span className="w-2 h-2 rounded-full bg-[#FF3B00] animate-pulse shadow-[0_0_10px_#FF3B00]" />
+                  <div className="relative w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#1c1c1c] via-[#121212] to-[#0a0a0a] overflow-hidden p-6 select-none">
+                    {/* Glowing radial light */}
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,59,0,0.18)_0%,transparent_70%)] pointer-events-none" />
+
+                    {/* Avatar circle with glow */}
+                    <div className="relative z-10 flex flex-col items-center gap-3">
+                      <div className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full p-1 bg-gradient-to-b from-[#FF3B00] via-[#FF3B00]/40 to-transparent shadow-[0_0_35px_rgba(255,59,0,0.35)]">
+                        <div className="w-full h-full rounded-full overflow-hidden bg-[#111] relative">
+                          <Image
+                            src={avatarPhoto}
+                            alt="Othmane"
+                            fill
+                            className="object-cover object-top scale-125 translate-y-1"
+                            priority
+                          />
+                        </div>
+                        <span className="absolute bottom-1 right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#111] shadow-[0_0_8px_#34d399]" />
                       </div>
-                      <span className="font-mono text-[11px] uppercase tracking-widest text-white/30">
-                        Défiler pour explorer ↓
-                      </span>
+
+                      <div className="flex flex-col items-center text-center">
+                        <span className="font-heading font-black text-white text-base sm:text-xl uppercase tracking-wider">
+                          Othmane Bouakline
+                        </span>
+                        <span className="font-bold text-[10px] sm:text-xs uppercase tracking-[0.25em] text-[#FF3B00] mt-0.5">
+                          Développeur Full Stack
+                        </span>
+                        <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-white/40 mt-3 sm:mt-4 flex items-center gap-1.5 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full">
+                          <span>Défiler pour explorer</span>
+                          <span className="animate-bounce text-[#FF3B00]">↓</span>
+                        </span>
+                      </div>
                     </div>
                   </div>
                 )}
+
               </div>
             ))}
           </div>

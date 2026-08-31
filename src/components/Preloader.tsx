@@ -26,7 +26,7 @@ export default function Preloader() {
 
   return (
     <>
-      {/* Grand Personnage 3D — exact même position sur mobile & desktop calé sur le Hero */}
+      {/* Grand Personnage 3D — calé exactement au même niveau que le Hero sur Mobile et Desktop */}
       <AnimatePresence>
         {isLoading && (
           <motion.div
@@ -35,12 +35,25 @@ export default function Preloader() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3, delay: 0.45 }}
           >
-            <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[96%] max-w-[1500px]">
+            {/* Desktop character */}
+            <div className="hidden md:block absolute inset-y-0 left-1/2 -translate-x-1/2 w-[94%] max-w-[1500px]">
               <Image
                 src={heroPhoto}
                 alt="Othmane Bouakline"
                 fill
-                className="object-contain object-bottom scale-[1.12] sm:scale-100"
+                className="object-contain object-bottom"
+                priority
+                unoptimized
+              />
+            </div>
+
+            {/* Mobile character — exact même cadrage que dans le Hero mobile */}
+            <div className="md:hidden absolute inset-0">
+              <Image
+                src={heroPhoto}
+                alt="Othmane Bouakline"
+                fill
+                className="object-cover object-top"
                 priority
                 unoptimized
               />
@@ -49,67 +62,63 @@ export default function Preloader() {
         )}
       </AnimatePresence>
 
-      {/* Overlay noir avec compteur et barre — slide vers le haut à la fin */}
+      {/* Overlay noir avec barre & compteur au-dessus du personnage — slide vers le haut à la fin */}
       <AnimatePresence>
         {isLoading && (
           <motion.div
             key="preloader-overlay"
-            className="fixed inset-0 z-[9998] bg-[#0C0C0C]/90 backdrop-blur-xs text-white overflow-hidden flex flex-col justify-between p-6 sm:p-10 md:p-16 select-none"
+            className="fixed inset-0 z-[9998] bg-[#0C0C0C]/85 backdrop-blur-xs text-white overflow-hidden flex flex-col justify-between p-6 sm:p-10 md:p-16 select-none"
             exit={{ y: "-100%" }}
             transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
           >
-            {/* Grain */}
-            <div
-              className="absolute inset-0 opacity-[0.04] pointer-events-none"
-              style={{
-                backgroundImage:
-                  "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")",
-                backgroundSize: "128px",
-              }}
-            />
-
             {/* Header top */}
             <div className="relative z-10 flex items-center justify-between w-full">
               <div className="flex items-center gap-2.5">
-                <span className="w-2 h-2 rounded-full bg-[#FF3B00] animate-pulse" />
-                <span className="font-heading font-black text-sm uppercase tracking-widest text-white/90">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#FF3B00] animate-pulse" />
+                <span className="font-heading font-black text-xs sm:text-sm uppercase tracking-widest text-white/90">
                   Othmane Bouakline
                 </span>
               </div>
-              <span className="font-bold text-[10px] uppercase tracking-[0.25em] text-[#FF3B00]">
+              <span className="font-bold text-[10px] sm:text-xs uppercase tracking-[0.25em] text-[#FF3B00]">
                 Chargement
               </span>
             </div>
 
-            {/* Bas : Compteur géant + barre de progression */}
-            <div className="relative z-10 flex flex-col gap-4 w-full">
+            {/* Compteur & Barre de chargement placés AU-DESSUS de l'avatar */}
+            <div className="relative z-10 flex flex-col gap-3 w-full max-w-xl mx-auto -mt-20 sm:-mt-10">
               <div className="flex items-end justify-between">
                 <div className="flex items-baseline gap-2">
                   <span
                     className="font-heading font-black text-[#FF3B00] leading-none tracking-tighter tabular-nums"
-                    style={{ fontSize: "clamp(3.5rem, 11vw, 8.5rem)" }}
+                    style={{ fontSize: "clamp(3.2rem, 12vw, 7.5rem)" }}
                   >
                     {Math.floor(progress).toString().padStart(3, "0")}
                   </span>
                   <span
                     className="font-heading font-black text-white/30 leading-none tracking-tighter"
-                    style={{ fontSize: "clamp(1.8rem, 5vw, 4.5rem)" }}
+                    style={{ fontSize: "clamp(1.8rem, 5vw, 4rem)" }}
                   >
                     %
                   </span>
                 </div>
-                <span className="font-mono text-[11px] uppercase tracking-widest text-white/40 pb-2 hidden sm:inline-block">
-                  Développeur Web · Full Stack
+                <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-white/50 pb-2">
+                  Développeur Web Full Stack
                 </span>
               </div>
 
               {/* Barre de progression */}
-              <div className="w-full h-[3px] bg-white/10 rounded-full overflow-hidden">
+              <div className="w-full h-[4px] bg-white/10 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-[#FF3B00] transition-all duration-75 ease-out shadow-[0_0_12px_#FF3B00]"
+                  className="h-full bg-[#FF3B00] transition-all duration-75 ease-out shadow-[0_0_15px_#FF3B00]"
                   style={{ width: `${progress}%` }}
                 />
               </div>
+            </div>
+
+            {/* Bottom spacer / label */}
+            <div className="relative z-10 flex items-center justify-between text-[10px] uppercase tracking-widest text-white/30">
+              <span>Portfolio 2026</span>
+              <span>Initialisation...</span>
             </div>
           </motion.div>
         )}

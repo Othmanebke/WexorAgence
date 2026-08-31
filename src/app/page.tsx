@@ -2,6 +2,7 @@
 
 // Sections
 import HeroSection         from "@/components/sections/HeroSection";
+import { MarqueeSection }  from "@/components/MarqueeSection";
 import { AboutSection }    from "@/components/AboutSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import DiplomesSection     from "@/components/sections/DiplomesSection";
@@ -26,27 +27,30 @@ export default function Home() {
   return (
     <main className="flex flex-col min-h-screen bg-[#f0f0ee]" style={{ overflowX: "clip" }}>
 
-      {/* 01 — Hero (Fond clair signature) */}
+      {/* 01 — Hero (Fond clair) */}
       <HeroSection />
 
-      {/* 02 — À propos animé (Design moderne avec objets 3D & infos réelles) */}
+      {/* 02 — Galerie défilante en double rangée avec parallaxe réactive au défilement */}
+      <MarqueeSection />
+
+      {/* 03 — À propos animé (Design moderne avec objets 3D & infos réelles) */}
       <AboutSection />
 
-      {/* 03 — Services (Design moderne avec prestations & prix réels) */}
+      {/* 04 — Services (Design moderne avec prestations & prix réels) */}
       <ServicesSection />
 
-      {/* 04 — Portfolio */}
+      {/* 05 — Portfolio */}
       <Divider label="Mes travaux" number="02" />
       <WorkSection />
 
-      {/* 05 — Stack technique (marquee) */}
+      {/* 06 — Stack technique (marquee) */}
       <Divider label="Stack technique" number="03" />
       <TechnologiesSection />
 
-      {/* 06 — Expériences (horizontal scroll) */}
+      {/* 07 — Expériences (horizontal scroll) */}
       <ExperienceSection />
 
-      {/* 07 — Diplômes */}
+      {/* 08 — Diplômes */}
       <Divider label="Formation académique" number="04" />
       <DiplomesSection />
 

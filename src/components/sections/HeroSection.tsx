@@ -1,12 +1,11 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import { useLang } from "@/components/LanguageContext";
 import { useContactModal } from "@/components/ContactModalProvider";
+
 import heroPhoto from "@/img/Gemini_Generated_Image_zdg0rbzdg0rbzdg0.png";
 
 // ─── Text Scramble Hook ──────────────────────────────────────────────────────
@@ -41,10 +40,7 @@ function useTextScramble(target: string, trigger: boolean, duration = 1200) {
   return display;
 }
 
-const TECHS = ["HTML", "CSS", "JAVASCRIPT", "REACT", "NEXT.JS", "NODE.JS", "WORDPRESS", "FRAMER", "CANVA", "ADOBE", "FIGMA", "TYPESCRIPT"];
-
 export default function HeroSection() {
-  const marqueeRef = useRef<HTMLDivElement>(null);
   const [heroReady, setHeroReady] = useState(false);
   const { t } = useLang();
   const { openModal } = useContactModal();
@@ -57,19 +53,9 @@ export default function HeroSection() {
   const scrambledFirst = useTextScramble("OTHMANE", heroReady, 1400);
   const scrambledLast = useTextScramble("BOUAKLINE", heroReady, 1700);
 
-  useGSAP(() => {
-    if (marqueeRef.current) {
-      const inner = marqueeRef.current.querySelector(".marquee-inner");
-      if (inner) {
-        gsap.to(inner, { xPercent: -50, repeat: -1, duration: 18, ease: "none" });
-      }
-    }
-  });
-
   return (
-    <>
-      {/* ── HERO ─────────────────────────────────────────────────────── */}
-      <section id="hero" className="w-full min-h-screen relative overflow-hidden">
+    <section id="hero" className="w-full min-h-screen relative overflow-hidden">
+
 
         {/* Desktop — left: first name */}
         <div className="hidden md:flex absolute inset-y-0 left-0 w-[55%] flex-col justify-end px-8 xl:px-12 pb-[30%] z-[1]">
@@ -198,22 +184,6 @@ export default function HeroSection() {
           </div>
         </div>
       </section>
-
-      {/* ── TECH TICKER ─────────────────────────────────────────────── */}
-      <div ref={marqueeRef} className="w-full overflow-hidden border-t border-b border-black/10 py-4 bg-[#f0f0ee]">
-        <div className="marquee-inner flex whitespace-nowrap gap-0 w-max">
-          {[...Array(2)].map((_, repeat) => (
-            <span key={repeat} className="flex items-center">
-              {TECHS.map((tech, i) => (
-                <span key={i} className="flex items-center">
-                  <span className="font-heading text-abcs-black/20 text-sm uppercase tracking-[0.3em] px-6">{tech}</span>
-                  <span className="text-abcs-red font-bold text-sm">·</span>
-                </span>
-              ))}
-            </span>
-          ))}
-        </div>
-      </div>
-    </>
   );
 }
+

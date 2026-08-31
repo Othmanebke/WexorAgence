@@ -9,6 +9,8 @@ import Preloader from "@/components/Preloader";
 import { LangProvider } from "@/components/LanguageContext";
 import FooterStrip from "@/components/FooterStrip";
 import ContactModalProvider from "@/components/ContactModalProvider";
+import CookieBanner from "@/components/CookieBanner";
+
 
 const inter = Inter({
   variable: "--font-inter",
@@ -64,7 +66,9 @@ export default function RootLayout({
           <ContactModalProvider>
             <CustomCursor />
             <Preloader />
+            <CookieBanner />
             <LenisProvider>
+
               <Navbar />
               <div className="flex-1 flex flex-col">{children}</div>
 

@@ -54,7 +54,8 @@ export default function HeroSection() {
   const scrambledLast = useTextScramble("BOUAKLINE", heroReady, 1700);
 
   return (
-    <section id="hero" className="w-full min-h-screen relative overflow-hidden">
+    <section id="top" className="w-full min-h-screen relative overflow-hidden">
+
 
 
         {/* Desktop — left: first name */}

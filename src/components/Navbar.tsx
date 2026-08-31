@@ -38,13 +38,27 @@ export default function Navbar() {
   };
   const { lang, setLang, t } = useLang();
   const { openModal } = useContactModal();
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+
+    if (href.startsWith("/#")) {
+      const id = href.replace("/#", "");
+      const el = document.getElementById(id);
+      if (el) {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: "smooth" });
+        setMenuOpen(false);
+      }
+    }
+  };
 
   const links = [
-    { label: "Home",                  href: "/"           },
-    { label: t("nav_portfolio"),      href: "/#portfolio" },
-    { label: t("nav_services"),       href: "/#services"  },
-    { label: t("nav_about"),          href: "/#about"     },
+    { label: "Accueil",               href: "/#top"         },
+    { label: t("nav_about"),          href: "/#about"       },
+    { label: t("nav_services"),       href: "/#services"    },
+    { label: t("nav_portfolio"),      href: "/#portfolio"   },
+    { label: "Expériences",           href: "/#experiences" },
   ];
+
 
   const otherLangs = (["fr", "en", "ma"] as Lang[]).filter((l) => l !== lang);
 
@@ -140,12 +154,14 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className={`px-4 py-2 font-bold text-[11px] uppercase tracking-[0.1em] rounded-full transition-all duration-200 whitespace-nowrap ${
                   active ? "text-white bg-white/10" : "text-white/50 hover:text-white"
                 }`}
               >
                 {link.label}
               </Link>
+
             );
           })}
         </nav>
@@ -214,11 +230,12 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                onClick={() => setMenuOpen(false)}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className="font-bold text-sm uppercase tracking-[0.1em] py-3 px-4 rounded-2xl transition-all text-white/50 hover:text-white hover:bg-white/5"
               >
                 {link.label}
               </Link>
+
             ))}
             <button
               onClick={() => { openModal(); setMenuOpen(false); }}

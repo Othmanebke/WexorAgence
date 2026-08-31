@@ -1,21 +1,57 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
 import { useLang } from "@/components/LanguageContext";
 import { useContactModal } from "@/components/ContactModalProvider";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 export default function Footer() {
   const { t } = useLang();
   const { openModal } = useContactModal();
+  const marqueeRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    const el = marqueeRef.current;
+    if (!el) return;
+    // Coulisse de gauche à droite (direction positive)
+    gsap.fromTo(
+      el,
+      { xPercent: -50 },
+      {
+        xPercent: 0,
+        ease: "none",
+        duration: 25,
+        repeat: -1,
+      }
+    );
+  }, { scope: marqueeRef });
 
   const navLinks = [
-    { label: "Portfolio", href: "/#portfolio" },
-    { label: "Services",  href: "/#services"  },
-    { label: "À propos",  href: "/#about"      },
+    { label: "Accueil",      href: "/#top" },
+    { label: "À propos",     href: "/#about" },
+    { label: "Services",     href: "/#services" },
+    { label: "Portfolio",    href: "/#portfolio" },
+    { label: "Expériences",  href: "/#experiences" },
   ];
 
+  const marqueeItems = [
+    "O'LDEV",
+    "·",
+    "FREELANCE WEB",
+    "·",
+    "REACT & NEXT.JS",
+    "·",
+    "DESIGN & CONVERSION",
+    "·",
+    "OTHMANE BOUAKLINE",
+    "·",
+  ];
+  const doubledMarquee = [...marqueeItems, ...marqueeItems, ...marqueeItems, ...marqueeItems];
+
   return (
-    <footer className="w-full bg-abcs-black text-white">
+    <footer className="w-full bg-abcs-black text-white overflow-hidden">
 
       {/* ─── TOP: Vision + Nav + Contact ─── */}
       <div className="w-full px-6 md:px-8 pt-24 pb-16 border-b border-white/10">
@@ -27,7 +63,7 @@ export default function Footer() {
               {t("footer_vision")}
             </p>
             <button
-              onClick={openModal}
+              onClick={() => openModal()}
               className="inline-flex items-center gap-3 border border-white/30 px-6 py-3 font-bold text-xs uppercase tracking-widest hover:border-abcs-red hover:text-abcs-red transition-colors duration-300 group w-fit"
             >
               <span>{t("footer_cta")}</span>
@@ -39,16 +75,16 @@ export default function Footer() {
           <div className="md:col-span-4 flex flex-col gap-2">
             {navLinks.map((link) => (
               <Link
-                key={link.href}
+                key={link.label}
                 href={link.href}
-                className="font-heading text-5xl md:text-6xl uppercase leading-tight hover:text-abcs-red transition-colors duration-200"
+                className="font-heading text-4xl md:text-5xl uppercase leading-tight hover:text-abcs-red transition-colors duration-200"
               >
                 {link.label}
               </Link>
             ))}
             <button
-              onClick={openModal}
-              className="font-heading text-5xl md:text-6xl uppercase leading-tight hover:text-abcs-red transition-colors duration-200 text-left"
+              onClick={() => openModal()}
+              className="font-heading text-4xl md:text-5xl uppercase leading-tight hover:text-abcs-red transition-colors duration-200 text-left"
             >
               Contact
             </button>
@@ -97,27 +133,52 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ─── Giant logo ─── */}
-      <div className="w-full overflow-hidden px-4 py-8">
-        <h2
-          className="font-heading text-abcs-red/20 uppercase leading-[0.8] tracking-tighter select-none text-center"
-          style={{ fontSize: "clamp(4rem, 20vw, 26rem)" }}
+      {/* ─── Grand logo en plusieurs qui coulisse de gauche à droite ─── */}
+      <div className="w-full overflow-hidden py-10 sm:py-14 select-none relative">
+        <div
+          ref={marqueeRef}
+          className="flex items-center whitespace-nowrap will-change-transform gap-8"
         >
-          O&apos;LDEV
-        </h2>
+          {doubledMarquee.map((item, idx) => (
+            <span
+              key={idx}
+              className={`font-heading uppercase leading-none tracking-tighter shrink-0 ${
+                item === "O'LDEV"
+                  ? "text-abcs-red/40 hover:text-abcs-red transition-colors duration-300 cursor-default"
+                  : item === "·"
+                  ? "text-white/20 text-3xl sm:text-5xl"
+                  : "text-white/20"
+              }`}
+              style={{ fontSize: "clamp(3.5rem, 12vw, 14rem)" }}
+            >
+              {item}
+            </span>
+          ))}
+        </div>
       </div>
 
-      {/* ─── Bottom legal ─── */}
+      {/* ─── Bottom legal & Cookies ─── */}
       <div className="w-full px-6 md:px-8 py-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
         <p className="font-bold text-[10px] uppercase tracking-widest opacity-30">
-          © {new Date().getFullYear()} O&apos;ldev — {t("footer_rights")}
+          © {new Date().getFullYear()} O&apos;ldev — Tous droits réservés · Développeur Web Full Stack
         </p>
-        <Link
-          href="/legal"
-          className="font-bold text-[10px] uppercase tracking-widest opacity-30 hover:opacity-70 transition-opacity"
-        >
-          Mentions légales
-        </Link>
+        <div className="flex items-center gap-6">
+          <Link
+            href="/legal"
+            className="font-bold text-[10px] uppercase tracking-widest opacity-30 hover:opacity-100 hover:text-abcs-red transition-all"
+          >
+            Mentions légales & RGPD
+          </Link>
+          <button
+            onClick={() => {
+              localStorage.removeItem("cookie-consent");
+              window.location.reload();
+            }}
+            className="font-bold text-[10px] uppercase tracking-widest opacity-30 hover:opacity-100 hover:text-abcs-red transition-all"
+          >
+            Gestion des cookies
+          </button>
+        </div>
       </div>
     </footer>
   );

@@ -238,10 +238,12 @@ export async function POST(req: NextRequest) {
   try {
     const { name, email, phone, type, budget, message } = await req.json();
 
-    if (!name || !email || !type || !budget || !message) {
-      return NextResponse.json({ error: "Champs manquants" }, { status: 400 });
+    if (!name || !email || !type) {
+      return NextResponse.json({ error: "Veuillez remplir votre nom, email et type de projet." }, { status: 400 });
     }
 
+    const finalBudget = budget || "Non précisé";
+    const finalMessage = message || "Demande de devis / contact direct via le formulaire.";
     const from = `${SENDER_NAME} <${process.env.GMAIL_USER}>`;
 
     // 1. Notification to Othmane
@@ -250,7 +252,7 @@ export async function POST(req: NextRequest) {
       to: OWNER_EMAIL,
       replyTo: email,
       subject: `🚀 Nouveau projet — ${type} · ${name}`,
-      html: notificationHtml(name, email, phone, type, budget, message),
+      html: notificationHtml(name, email, phone, type, finalBudget, finalMessage),
     });
 
     // 2. Confirmation to client
@@ -258,8 +260,9 @@ export async function POST(req: NextRequest) {
       from,
       to: email,
       subject: `Bien reçu ${name.split(" ")[0]} ! Je te reviens sous 48h 👋`,
-      html: confirmationHtml(name, type, budget),
+      html: confirmationHtml(name, type, finalBudget),
     });
+
 
     return NextResponse.json({ ok: true });
   } catch (err) {

@@ -2,7 +2,9 @@
 
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { AnimatedText } from "@/components/AnimatedText";
 import gsap from "gsap";
+
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
@@ -128,11 +130,18 @@ export default function ExperienceSection() {
         </div>
 
         {/* HUD labels */}
-        <div className="absolute top-7 left-10 z-30 pointer-events-none">
-          <span className="font-bold text-[10px] uppercase tracking-[0.2em] text-abcs-black/30">
-            05 · Expériences
+        <div className="absolute top-7 left-10 z-30 pointer-events-none flex flex-col gap-1">
+          <span className="font-bold text-[10px] uppercase tracking-[0.2em] text-abcs-red">
+            05 · Parcours professionnel
           </span>
-          <div className="flex gap-2 mt-2.5">
+          <AnimatedText
+            as="h2"
+            text="Expériences"
+            activeColor="#111111"
+            justify="start"
+            className="font-heading text-3xl lg:text-4xl uppercase leading-none tracking-tight select-none"
+          />
+          <div className="flex gap-2 mt-2">
             {EXPERIENCES.map((_, i) => (
               <div
                 key={i}
@@ -143,11 +152,12 @@ export default function ExperienceSection() {
             ))}
           </div>
         </div>
-        <div className="absolute top-7 right-10 z-30 pointer-events-none opacity-30">
-          <span className="font-bold text-[9px] uppercase tracking-widest">
-            Défiler →
+        <div className="absolute top-7 right-10 z-30 pointer-events-none opacity-40">
+          <span className="font-bold text-[10px] uppercase tracking-widest">
+            Défiler horizontalement →
           </span>
         </div>
+
 
         {/* Horizontal track — GSAP animates x */}
         <div
@@ -241,17 +251,19 @@ export default function ExperienceSection() {
 
       {/* ── MOBILE ─────────────────────────────────────────────────────── */}
       <div className="md:hidden py-16 px-6 bg-[#f0f0ee]">
-        <div className="mb-12 overflow-hidden">
-          <motion.h2
-            initial={{ y: "102%" }}
-            whileInView={{ y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="font-heading text-6xl uppercase leading-none tracking-tight"
-          >
-            Expériences.
-          </motion.h2>
+        <div className="mb-10">
+          <p className="font-bold text-[10px] uppercase tracking-[0.25em] text-abcs-red mb-2">
+            05 · Parcours professionnel
+          </p>
+          <AnimatedText
+            as="h2"
+            text="Expériences"
+            activeColor="#111111"
+            justify="start"
+            className="font-heading text-5xl uppercase leading-none tracking-tight select-none"
+          />
         </div>
+
         <div className="flex flex-col border-t border-black/15">
           {EXPERIENCES.map((exp, i) => (
             <motion.div

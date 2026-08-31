@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useContactModal } from '@/components/ContactModalProvider';
+import { AnimatedText } from '@/components/AnimatedText';
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -257,10 +259,9 @@ export default function WorkSection() {
   const activeSceneRef = useRef(0);
   const [faceImages, setFaceImages] = useState<(number | null)[]>(() => deriveFaceImages(0));
 
-  const F = 'var(--font-inter), system-ui, sans-serif';
-  const FH = 'var(--font-archivo), system-ui, sans-serif';
-  const FM = 'ui-monospace, "JetBrains Mono", monospace';
-  const FS = 'var(--font-caveat), cursive';
+  const F = 'var(--font-inter), sans-serif';
+  const FH = 'var(--font-archivo), sans-serif';
+  const FM = 'monospace';
 
   useEffect(() => {
     if (!sectionRef.current || !cubeRef.current) return;
@@ -305,12 +306,20 @@ export default function WorkSection() {
           <motion.div aria-hidden style={{ position: 'absolute', bottom: '-25%', right: '-18%', width: '70vw', height: '70vw', background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.006) 45%, transparent 70%)' }} animate={{ x: [0, -35, 20, 0], y: [0, -25, 35, 0] }} transition={{ duration: 35, repeat: Infinity, ease: 'easeInOut' }} />
         </div>
 
-        {/* Top-left label */}
-        <div className="absolute top-7 left-8 z-20 flex items-center gap-3">
-          <span style={{ fontFamily: F, fontSize: '0.52rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)' }}>02 / Mes travaux</span>
-          <div style={{ width: '2rem', height: '1px', background: 'rgba(255,255,255,0.1)' }} />
-          <span style={{ fontFamily: F, fontSize: '0.52rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.2)' }}>{PROJECTS.length} projets</span>
+        {/* En-tête centré en haut avec AnimatedText */}
+        <div className="absolute top-5 sm:top-7 left-0 right-0 z-20 flex flex-col items-center justify-center text-center pointer-events-none px-4">
+          <span className="font-bold text-[10px] sm:text-xs uppercase tracking-[0.25em] text-[#FF3B00] mb-1">
+            02 · Réalisations & Projets récents
+          </span>
+          <AnimatedText
+            as="h2"
+            text="Mes travaux"
+            activeColor="#FFFFFF"
+            className="font-black uppercase leading-none tracking-tight text-center select-none"
+            style={{ fontSize: 'clamp(2.2rem, 5.5vw, 60px)' }}
+          />
         </div>
+
 
         {/* HUD top-right */}
         <div className="absolute top-7 right-8 z-20 text-right">
@@ -375,15 +384,19 @@ export default function WorkSection() {
                   </div>
                 ) : (
                   <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#0e0e0e]">
-                    <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center">
-                      <span className="w-2 h-2 rounded-full bg-[#FF3B00] animate-pulse shadow-[0_0_10px_#FF3B00]" />
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center">
+                        <span className="w-2 h-2 rounded-full bg-[#FF3B00] animate-pulse shadow-[0_0_10px_#FF3B00]" />
+                      </div>
+                      <span className="font-mono text-[11px] uppercase tracking-widest text-white/30">
+                        Défiler pour explorer ↓
+                      </span>
                     </div>
                   </div>
                 )}
               </div>
             ))}
           </div>
-
 
           {/* Mobile card below carousel */}
           <div className="md:hidden" style={{ marginTop: '1rem', width: 'min(90vw, 420px)', flexShrink: 0, pointerEvents: 'auto' }}>
@@ -397,49 +410,8 @@ export default function WorkSection() {
           </div>
         </div>
 
-        {/* Intro card desktop */}
-        <AnimatePresence>
-          {activeScene === 0 && (
-            <motion.div key="intro" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -14 }} transition={{ duration: 0.45 }} className="hidden md:flex absolute inset-0 items-center justify-center pointer-events-none" style={{ zIndex: 10 }}>
-              <div style={{ textAlign: 'center', maxWidth: '32rem', padding: '0 1.5rem' }}>
-                <p style={{ fontFamily: F, fontSize: '0.55rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: '1.5rem' }}>
-                  Mes travaux&nbsp;·&nbsp;{PROJECTS.length} projets
-                </p>
-                <h2 style={{ fontFamily: FH, fontWeight: 900, fontSize: 'clamp(3.5rem, 8vw, 7rem)', letterSpacing: '-0.04em', lineHeight: 0.88, color: 'rgba(255,255,255,0.95)', marginBottom: '0.15em', textTransform: 'uppercase' }}>
-                  Mes{' '}
-                  <span style={{ fontFamily: FS, fontWeight: 400, color: 'rgba(255,255,255,0.25)', textTransform: 'none', fontSize: '0.9em' }}>travaux</span>
-                </h2>
-                <p style={{ fontFamily: F, fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginTop: '2rem' }}>
-                  Défiler pour explorer ↓
-                </p>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Mobile intro */}
-        <div className="md:hidden absolute left-1/2 z-10 pointer-events-none" style={{ top: activeScene === 0 ? '50%' : '3.5rem', transform: `translateX(-50%) translateY(${activeScene === 0 ? '-50%' : '0'})`, transition: 'top 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1)', textAlign: 'center', maxWidth: 'calc(100vw - 3rem)', width: 'max-content' }}>
-          <AnimatePresence mode="wait">
-            {activeScene === 0 ? (
-              <motion.div key="mob-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}>
-                <p style={{ fontFamily: F, fontSize: '0.52rem', letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: '1.25rem' }}>Mes travaux · {PROJECTS.length} projets</p>
-                <h2 style={{ fontFamily: FH, fontWeight: 900, fontSize: 'clamp(2.8rem, 9vw, 5rem)', letterSpacing: '-0.04em', lineHeight: 0.88, color: 'rgba(255,255,255,0.95)', textTransform: 'uppercase' }}>
-                  Mes <span style={{ fontFamily: FS, fontWeight: 400, color: 'rgba(255,255,255,0.3)', textTransform: 'none' }}>travaux</span>
-                </h2>
-                <p style={{ fontFamily: F, fontSize: '0.6rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginTop: '1.75rem' }}>Défiler pour explorer ↓</p>
-              </motion.div>
-            ) : (
-              <motion.div key="mob-compact" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-                <p style={{ fontFamily: F, fontSize: '0.42rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: '0.3rem' }}>02 / Travaux</p>
-                <h2 style={{ fontFamily: FH, fontWeight: 900, fontSize: 'clamp(1.8rem, 7vw, 2.6rem)', letterSpacing: '-0.04em', lineHeight: 1, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
-                  Mes <span style={{ fontFamily: FS, fontWeight: 400 }}>travaux</span>
-                </h2>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
         {/* Desktop left card slot */}
+
         <div className="absolute hidden md:block z-10" style={{ left: 'clamp(3rem, 6vw, 6rem)', top: '50%', transform: 'translateY(-50%)', width: 'min(22rem, 30%)' }}>
           <AnimatePresence mode="wait">
             {!isRight && activeScene > 0 && project && (

@@ -1,6 +1,7 @@
 import Preloader from "@/components/Preloader";
 import StackEffect from "@/components/fx/StackEffect";
 import HeroSection from "@/components/sections/HeroSection";
+import WorkSection from "@/components/WorkSection";
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
       <StackEffect />
       <main className="flex min-h-screen flex-col bg-abcs-bg" style={{ overflowX: "clip" }}>
         <HeroSection />
+        <WorkSection />
       </main>
     </>
   );

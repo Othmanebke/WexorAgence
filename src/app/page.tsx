@@ -3,6 +3,8 @@ import StackEffect from "@/components/fx/StackEffect";
 import HeroSection from "@/components/sections/HeroSection";
 import WorkSection from "@/components/WorkSection";
 import { ServicesSection } from "@/components/ServicesSection";
+import TechnologiesSection from "@/components/TechnologiesSection";
+import { AboutSection } from "@/components/AboutSection";
 
 export default function Home() {
   return (
@@ -13,6 +15,8 @@ export default function Home() {
         <HeroSection />
         <WorkSection />
         <ServicesSection />
+        <TechnologiesSection />
+        <AboutSection />
       </main>
     </>
   );

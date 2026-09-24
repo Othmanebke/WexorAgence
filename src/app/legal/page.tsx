@@ -1,12 +1,20 @@
 import PageHeader from "@/components/PageHeader";
+import type { Metadata } from "next";
 import Footer from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: "Mentions légales",
+  description: "Mentions légales et politique de confidentialité du site O'ldev (Othmane Bouakline, développeur web freelance).",
+  alternates: { canonical: "/legal" },
+  openGraph: { type: "website", locale: "fr_FR", siteName: "O'ldev", url: "/legal", title: "Mentions légales | O'ldev" },
+};
 
 export default function LegalPage() {
   const sections = [
     {
       n: "01", t: "ÉDITEUR DU SITE",
       content: [
-        ["Nom du site", "Wexor"],
+        ["Nom du site", "O'ldev"],
         ["Responsable de la publication", "Othmane Bouakline"],
         ["Statut", "Auto-entrepreneur"],
         ["Email", "othmane.bouakline.pro@gmail.com"],
@@ -52,7 +60,7 @@ export default function LegalPage() {
           <div className="border-4 border-abcs-black border-b-0 p-8">
             <div className="font-script text-abcs-red text-5xl mb-2 -rotate-2">03</div>
             <h2 className="font-heading text-4xl uppercase mb-4">PROPRIÉTÉ INTELLECTUELLE</h2>
-            <p className="font-bold opacity-80">L&apos;ensemble des contenus (textes, images, logos, graphismes, code source) est la propriété exclusive de Wexor. Toute reproduction, distribution ou utilisation sans autorisation écrite préalable est interdite.</p>
+            <p className="font-bold opacity-80">L&apos;ensemble des contenus (textes, images, logos, graphismes, code source) est la propriété exclusive d&apos;O&apos;ldev (Othmane Bouakline). Toute reproduction, distribution ou utilisation sans autorisation écrite préalable est interdite.</p>
           </div>
 
           <div className="border-4 border-abcs-black border-b-0 p-8">
@@ -76,7 +84,7 @@ export default function LegalPage() {
           <div className="border-4 border-abcs-black border-b-0 p-8">
             <div className="font-script text-abcs-red text-5xl mb-2 -rotate-2">06</div>
             <h2 className="font-heading text-4xl uppercase mb-4">LIMITATION DE RESPONSABILITÉ</h2>
-            <p className="font-bold opacity-80">Wexor s&apos;efforce d&apos;assurer l&apos;exactitude des informations publiées. Concernant les liens externes, Wexor n&apos;est pas responsable du contenu des sites tiers.</p>
+            <p className="font-bold opacity-80">O&apos;ldev s&apos;efforce d&apos;assurer l&apos;exactitude des informations publiées. Concernant les liens externes, O&apos;ldev n&apos;est pas responsable du contenu des sites tiers.</p>
           </div>
 
           <div className="border-4 border-abcs-black p-8">

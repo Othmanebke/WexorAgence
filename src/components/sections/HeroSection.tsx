@@ -115,10 +115,10 @@ export default function HeroSection() {
 
       {/* Name — behind the photo */}
       <h1
-        aria-label="Othmane Bouakline"
         className="relative z-[4] order-2 flex flex-wrap justify-between gap-x-6 font-heading font-normal uppercase leading-[0.82] tracking-[-0.04em]"
         style={{ margin: "clamp(40px,8vh,96px) 0 0", fontSize: "clamp(3.2rem,10.5vw,11rem)" }}
       >
+        <span className="sr-only">Othmane Bouakline, développeur web freelance</span>
         {NAME.map((word) => (
           <span key={word} aria-hidden className="split-mask">
             {word.split("").map((ch, i) => (

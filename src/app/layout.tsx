@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Archivo_Black, Caveat } from "next/font/google";
 import "./globals.css";
 import LenisProvider from "@/components/LenisProvider";
@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 import CustomCursor from "@/components/CustomCursor";
 import ContactModalProvider from "@/components/ContactModalProvider";
 import CookieBanner from "@/components/CookieBanner";
-
+import { OWNER, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/site";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,26 +27,55 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
-  title: "O'ldev — Othmane · Développeur Web Freelance",
-  description:
-    "O'ldev, le portfolio de Othmane — développeur web freelance spécialisé en React, Next.js, WordPress et création de sites sur-mesure, apps web et e-commerce.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_TITLE,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  authors: [{ name: OWNER, url: SITE_URL }],
+  creator: OWNER,
   keywords: [
     "développeur web freelance",
-    "création site web",
-    "React",
-    "Next.js",
-    "WordPress",
-    "e-commerce",
-    "portfolio",
+    "création site internet",
+    "site vitrine",
+    "site sur-mesure",
+    "développeur Next.js",
+    "développeur React",
+    "site WordPress",
+    "WooCommerce",
+    "refonte site web",
+    "Othmane Bouakline",
     "O'ldev",
-    "Othmane",
   ],
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "O'ldev — Othmane · Développeur Web Freelance",
-    description:
-      "Sites sur-mesure, apps web, e-commerce — du code qui convertit.",
     type: "website",
+    locale: "fr_FR",
+    url: "/",
+    siteName: SITE_NAME,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
   },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+  },
+  // Google Search Console « balise HTML » : NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION sur Vercel
+  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+    : undefined,
+};
+
+export const viewport: Viewport = {
+  themeColor: "#111111",
 };
 
 export default function RootLayout({

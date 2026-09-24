@@ -4,15 +4,8 @@ import Link from "next/link";
 import SplitTitle from "@/components/fx/SplitTitle";
 import Watermark from "@/components/fx/Watermark";
 import { useContactModal } from "@/components/ContactModalProvider";
+import { EMAIL, SOCIALS } from "@/lib/site";
 
-const EMAIL = "othmane.bouakline.pro@gmail.com";
-
-const SOCIALS = [
-  { label: "LinkedIn",  href: "https://www.linkedin.com/in/othmane-bouakline/" },
-  { label: "GitHub",    href: "https://github.com/Othmanebke" },
-  { label: "Instagram", href: "https://www.instagram.com/o.ldev/" },
-  { label: "TikTok",    href: "https://www.tiktok.com/@o.ldev" },
-];
 
 /** Contact card + footer, last card of the stack (not sticky itself). */
 export default function Footer() {

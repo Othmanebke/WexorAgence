@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import SplitTitle from "@/components/fx/SplitTitle";
 
 type Props = {
@@ -8,6 +9,7 @@ type Props = {
   titleSize?: string;
   children?: React.ReactNode;
   className?: string;
+  style?: CSSProperties;
 };
 
 /** Centered section header: orange label, split H2 and intro paragraph. */
@@ -19,10 +21,11 @@ export default function SectionHeader({
   titleSize = "clamp(2.8rem,9vw,110px)",
   children,
   className = "",
+  style,
 }: Props) {
   const dark = tone === "dark";
   return (
-    <header className={`flex flex-col items-center text-center gap-3 ${className}`}>
+    <header className={`flex flex-col items-center text-center gap-3 ${className}`} style={style}>
       <span
         className={`font-bold text-[14px] uppercase tracking-[0.25em] ${
           dark ? "text-abcs-red" : "text-abcs-red-text"

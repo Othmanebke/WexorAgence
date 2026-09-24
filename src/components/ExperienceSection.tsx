@@ -64,16 +64,17 @@ const DIPLOMAS = [
 
 const PANELS = EXPERIENCES.length + 1;
 
-const panelClass = "flex w-full shrink-0 items-center md:h-full md:w-screen";
-const panelPadding = { padding: "clamp(32px,4vw,48px) clamp(24px,5vw,72px)" };
+const panelClass = "flex w-full shrink-0 items-center lg:h-full lg:w-screen";
+const panelPadding = { padding: "clamp(24px,min(4vw,4vh),48px) clamp(24px,5vw,72px) clamp(88px,11vh,110px)" };
 const gridStyle = {
   gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,380px),1fr))",
   gap: "clamp(32px,5vw,72px)",
 };
 const bigValue = "font-heading leading-[0.85] tracking-[-0.04em] text-abcs-red";
-const bigSize = { fontSize: "clamp(4rem,10vw,9rem)" };
+// Also bounded by the viewport height so panels fit on short screens (tablets in landscape)
+const bigSize = { fontSize: "clamp(3.5rem,min(10vw,13vh),9rem)" };
 const panelTitle = "m-0 font-heading font-normal uppercase leading-[0.92] tracking-[-0.02em]";
-const panelTitleSize = { fontSize: "clamp(2rem,3.6vw,3.4rem)" };
+const panelTitleSize = { fontSize: "clamp(1.8rem,min(3.6vw,5.5vh),3.4rem)" };
 
 export default function ExperienceSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -81,11 +82,11 @@ export default function ExperienceSection() {
   const barRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
-  // Horizontal scroll driven by the vertical progress through the section (≥ 768px).
+  // Horizontal scroll driven by the vertical progress through the section (≥ 1024px).
   // Sticky inner container rather than a GSAP pin: the stacked-cards effect
   // transforms the section, which would break a position: fixed pin.
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
+    const mq = window.matchMedia("(min-width: 1024px)");
     let raf = 0;
 
     const tick = () => {
@@ -124,13 +125,13 @@ export default function ExperienceSection() {
       ref={sectionRef}
       id="experiences"
       data-stack
-      className="relative z-[14] -mt-16 rounded-t-[64px] bg-white text-abcs-black shadow-[0_-30px_70px_rgba(0,0,0,0.4)] md:h-[calc(100vh+300vw)]"
+      className="relative z-[14] -mt-9 md:-mt-16 rounded-t-[36px] md:rounded-t-[64px] bg-white text-abcs-black shadow-[0_-30px_70px_rgba(0,0,0,0.4)] lg:h-[calc(100vh+300vw)]"
     >
-      <div className="relative flex flex-col overflow-hidden rounded-t-[64px] md:sticky md:top-0 md:h-screen">
+      <div className="relative flex flex-col overflow-hidden rounded-t-[36px] md:rounded-t-[64px] lg:sticky lg:top-0 lg:h-screen">
         <Watermark text="Parcours · Expériences · Diplômes · Parcours ·" stroke="rgba(17,17,17,0.07)" top="clamp(16px,3vw,40px)" />
 
         {/* Progress bar */}
-        <div aria-hidden className="absolute left-0 right-0 top-0 z-[3] hidden h-[3px] bg-abcs-black/8 md:block">
+        <div aria-hidden className="absolute left-0 right-0 top-0 z-[3] hidden h-[3px] bg-abcs-black/8 lg:block">
           <div ref={barRef} className="h-full w-0 bg-abcs-red" />
         </div>
 
@@ -138,11 +139,12 @@ export default function ExperienceSection() {
           tone="light"
           label="05 · Parcours"
           title="Expériences"
+          titleSize="clamp(2.8rem,min(9vw,11vh),110px)"
           intro="5 ans en alternance chez Inetum, Fujitsu et AJC, et un Bac+5 en poche."
           className="relative z-[2]"
           style={{ padding: "clamp(40px,5vw,64px) clamp(24px,5vw,72px) 0" }}
         >
-          <div aria-hidden className="mt-1.5 hidden items-center gap-[18px] md:flex">
+          <div aria-hidden className="mt-1.5 hidden items-center gap-[18px] lg:flex">
             <div className="flex gap-1.5">
               {Array.from({ length: PANELS }, (_, i) => (
                 <span
@@ -157,7 +159,7 @@ export default function ExperienceSection() {
           </div>
         </SectionHeader>
 
-        <div ref={trackRef} className="relative z-[1] flex min-h-0 flex-1 flex-col will-change-transform md:flex-row">
+        <div ref={trackRef} className="relative z-[1] flex min-h-0 flex-1 flex-col will-change-transform lg:flex-row">
           {EXPERIENCES.map((x) => (
             <article key={x.company} className={panelClass} style={panelPadding}>
               <div className="mx-auto grid w-full max-w-[1200px] items-center" style={gridStyle}>

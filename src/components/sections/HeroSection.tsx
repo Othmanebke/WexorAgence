@@ -13,6 +13,8 @@ import { useScrollToSection } from "@/lib/useScrollToSection";
 import heroPhoto from "@/img/hero.webp";
 
 // [icon, left, top, size (px), rotation (deg)]
+// Phones only keep the side icons (indexes below) so the name and face stay clear
+const PHONE_ICONS = new Set([2, 3, 6, 7]);
 const ICONS: [SimpleIcon, string, string, number, number][] = [
   [siReact, "6%", "16%", 68, -8], [siNextdotjs, "18%", "34%", 56, 6], [siTypescript, "4%", "58%", 60, 10], [siTailwindcss, "15%", "74%", 64, -6],
   [siWordpress, "88%", "14%", 66, 8], [siFigma, "78%", "30%", 54, -10], [siNodedotjs, "91%", "50%", 62, -4], [siJavascript, "80%", "70%", 58, 12],
@@ -84,7 +86,7 @@ export default function HeroSection() {
           <span
             key={icon.slug}
             data-hero="icon"
-            className="absolute flex items-center justify-center rounded-[18px] border border-[rgba(255,59,0,0.22)] bg-white/35"
+            className={`absolute items-center justify-center rounded-[18px] ${PHONE_ICONS.has(i) ? "flex" : "hidden md:flex"} border border-[rgba(255,59,0,0.22)] bg-white/35`}
             style={{
               ...idx(i),
               left: x,
@@ -103,7 +105,7 @@ export default function HeroSection() {
       </div>
 
       {/* Top bar */}
-      <div data-hero="fade" className="relative z-[6] flex items-center justify-between gap-4">
+      <div data-hero="fade" className="relative z-[6] order-1 flex items-center justify-between gap-4">
         <span className="font-heading text-[20px] tracking-[-0.01em]">O&apos;LDEV</span>
         <span className="inline-flex items-center gap-2 rounded-full bg-[rgba(34,160,90,0.12)] px-3.5 py-2 text-[13px] font-bold uppercase tracking-[0.14em] text-abcs-green-text">
           <span className="h-2 w-2 rounded-full bg-abcs-green" />
@@ -111,26 +113,10 @@ export default function HeroSection() {
         </span>
       </div>
 
-      {/* Photo */}
-      <div
-        className="pointer-events-none absolute bottom-0 left-1/2 z-[3] -translate-x-1/2"
-        style={{ width: "min(1400px,130%)", aspectRatio: "3 / 2" }}
-      >
-        <Image
-          data-hero="photo"
-          src={heroPhoto}
-          alt="Othmane Bouakline"
-          fill
-          fetchPriority="low"
-          sizes="(max-width: 768px) 130vw, 1400px"
-          className="object-contain object-bottom"
-        />
-      </div>
-
-      {/* Name — above the photo */}
+      {/* Name — behind the photo */}
       <h1
         aria-label="Othmane Bouakline"
-        className="relative z-[4] flex flex-wrap justify-between gap-x-6 font-heading font-normal uppercase leading-[0.82] tracking-[-0.04em]"
+        className="relative z-[4] order-2 flex flex-wrap justify-between gap-x-6 font-heading font-normal uppercase leading-[0.82] tracking-[-0.04em]"
         style={{ margin: "clamp(40px,8vh,96px) 0 0", fontSize: "clamp(3.2rem,10.5vw,11rem)" }}
       >
         {NAME.map((word) => (
@@ -144,8 +130,24 @@ export default function HeroSection() {
         ))}
       </h1>
 
+      {/* Photo — in front of the name. Phones: in the flow under the name; ≥ md: anchored at the bottom */}
+      <div
+        className="pointer-events-none relative z-[5] order-3 mx-auto -mt-[12vw] h-[62svh] max-h-[640px] md:absolute md:bottom-0 md:left-1/2 md:order-none md:mt-0 md:h-[84%] md:max-h-none md:-translate-x-1/2"
+        style={{ aspectRatio: `${heroPhoto.width} / ${heroPhoto.height}` }}
+      >
+        <Image
+          data-hero="photo"
+          src={heroPhoto}
+          alt="Othmane Bouakline"
+          fill
+          fetchPriority="low"
+          sizes="(max-width: 768px) 70vw, 45vw"
+          className="object-contain object-bottom"
+        />
+      </div>
+
       {/* Bottom blocks */}
-      <div data-hero="fade-late" className="relative z-[6] mt-auto flex flex-wrap items-end justify-between gap-7">
+      <div data-hero="fade-late" className="relative z-[6] order-4 -mt-16 flex flex-wrap items-end justify-between gap-4 sm:gap-7 md:mt-auto">
         <div className="flex max-w-[360px] flex-col gap-[18px] rounded-[20px] bg-[rgba(240,240,238,0.86)] p-5 backdrop-blur-[8px]">
           <p className="text-[13px] font-bold uppercase tracking-[0.2em] text-abcs-red-text">Développeur web freelance</p>
           <p className="text-[19px] font-semibold leading-[1.4] text-pretty">

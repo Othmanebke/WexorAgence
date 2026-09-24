@@ -121,7 +121,7 @@ export function ServicesSection() {
     <section
       id="services"
       data-stack
-      className="relative z-[11] -mt-16 overflow-hidden rounded-t-[64px] bg-white text-abcs-black shadow-[0_-30px_70px_rgba(0,0,0,0.35)]"
+      className="relative z-[11] -mt-9 md:-mt-16 overflow-hidden rounded-t-[36px] md:rounded-t-[64px] bg-white text-abcs-black shadow-[0_-30px_70px_rgba(0,0,0,0.35)]"
       style={{ padding: "clamp(64px,9vw,120px) clamp(20px,5vw,72px) clamp(96px,10vw,140px)" }}
     >
       {/* Dot grid, visible at the top and bottom */}

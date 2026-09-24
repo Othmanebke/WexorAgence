@@ -12,7 +12,7 @@ export function AboutSection() {
     <section
       id="about"
       data-stack
-      className="relative z-[13] -mt-16 overflow-hidden rounded-t-[64px] bg-abcs-deep text-white shadow-[0_-30px_70px_rgba(0,0,0,0.6)]"
+      className="relative z-[13] -mt-9 md:-mt-16 overflow-hidden rounded-t-[36px] md:rounded-t-[64px] bg-abcs-deep text-white shadow-[0_-30px_70px_rgba(0,0,0,0.6)]"
       style={{ padding: "clamp(64px,9vw,120px) clamp(20px,5vw,72px) clamp(96px,10vw,140px)" }}
     >
       <Watermark text="Othmane · O'ldev · Othmane · O'ldev · Othmane ·" stroke="rgba(255,255,255,0.08)" />

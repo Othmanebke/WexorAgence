@@ -54,13 +54,6 @@ html.has-custom-cursor * {
   color: #fff;
 }
 
-.no-scrollbar {
-  scrollbar-width: none;
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
 /* ─── Keyframes ──────────────────────────────────────────────────────────── */
 @keyframes loader-draw { to { stroke-dashoffset: 0; } }
 @keyframes loader-undraw { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -1600; } }

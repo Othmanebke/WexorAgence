@@ -22,7 +22,7 @@ export default function Footer() {
     <footer
       id="contact"
       data-stack
-      className="relative z-[15] -mt-16 overflow-hidden rounded-t-[64px] bg-abcs-black text-white shadow-[0_-30px_70px_rgba(0,0,0,0.7)]"
+      className="relative z-[15] -mt-9 md:-mt-16 overflow-hidden rounded-t-[36px] md:rounded-t-[64px] bg-abcs-black text-white shadow-[0_-30px_70px_rgba(0,0,0,0.7)]"
       style={{ padding: "clamp(72px,10vw,130px) clamp(20px,5vw,72px) 120px" }}
     >
       <Watermark text="Contact · Hello · Contact · Hello · Contact ·" stroke="rgba(255,255,255,0.08)" />

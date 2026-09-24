@@ -37,7 +37,7 @@ function ProjectCard({ project, featured }: { project: Project; featured: boolea
   return (
     <article
       className="group relative block overflow-hidden rounded-[28px] border border-white/10 bg-abcs-surface text-white shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)]"
-      style={{ flex: featured ? "2 1 560px" : "1 1 340px", minHeight: featured ? 560 : 420 }}
+      style={{ flex: featured ? "2 1 560px" : "1 1 340px", minHeight: featured ? "clamp(440px,70vw,560px)" : "clamp(360px,60vw,420px)" }}
     >
       <Image
         src={project.image}
@@ -105,7 +105,7 @@ export default function WorkSection() {
     <section
       id="portfolio"
       data-stack
-      className="relative z-10 -mt-16 overflow-hidden rounded-t-[64px] bg-abcs-black text-white shadow-[0_-30px_70px_rgba(0,0,0,0.5)]"
+      className="relative z-10 -mt-9 md:-mt-16 overflow-hidden rounded-t-[36px] md:rounded-t-[64px] bg-abcs-black text-white shadow-[0_-30px_70px_rgba(0,0,0,0.5)]"
       style={{ padding: "clamp(64px,9vw,120px) clamp(20px,5vw,72px) clamp(96px,10vw,140px)" }}
     >
       <Watermark text="Travaux · Projets · Travaux · Projets · Travaux ·" stroke="rgba(255,255,255,0.08)" />

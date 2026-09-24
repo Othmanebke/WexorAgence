@@ -88,7 +88,7 @@ export default function TechnologiesSection() {
     <section
       id="stack"
       data-stack
-      className="relative z-[12] -mt-16 w-full overflow-hidden rounded-t-[64px] bg-abcs-black text-white shadow-[0_-30px_70px_rgba(0,0,0,0.85)]"
+      className="relative z-[12] -mt-9 md:-mt-16 w-full overflow-hidden rounded-t-[36px] md:rounded-t-[64px] bg-abcs-black text-white shadow-[0_-30px_70px_rgba(0,0,0,0.85)]"
       style={{ padding: "clamp(80px,8vw,112px) 0 clamp(96px,10vw,140px)" }}
     >
       <Watermark text="Stack · Outils · Stack · Outils · Stack ·" stroke="rgba(255,255,255,0.08)" />

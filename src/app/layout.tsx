@@ -38,6 +38,9 @@ export const metadata: Metadata = {
   creator: OWNER,
   keywords: [
     "développeur web freelance",
+    "développeur web freelance Île-de-France",
+    "création site internet Seine-et-Marne",
+    "développeur web Brie-Comte-Robert",
     "création site internet",
     "site vitrine",
     "site sur-mesure",

@@ -1,5 +1,5 @@
 import { SERVICES, type ServiceKey } from "@/lib/services";
-import { EMAIL, OWNER, SITE_DESCRIPTION, SITE_NAME, SITE_URL, SOCIALS } from "@/lib/site";
+import { EMAIL, LOCATION, OWNER, SITE_DESCRIPTION, SITE_NAME, SITE_URL, SOCIALS } from "@/lib/site";
 
 const OFFERS: ServiceKey[] = ["vitrine", "webapp", "wordpress", "branding_canva", "refonte", "chatbot_ia"];
 
@@ -39,7 +39,17 @@ export function homeJsonLd() {
         logo: `${SITE_URL}/icon.png`,
         email: EMAIL,
         founder: { "@id": person },
-        areaServed: { "@type": "Country", name: "France" },
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: LOCATION.city,
+          postalCode: LOCATION.postalCode,
+          addressRegion: LOCATION.region,
+          addressCountry: LOCATION.country,
+        },
+        areaServed: [
+          { "@type": "Country", name: "France" },
+          { "@type": "AdministrativeArea", name: LOCATION.region },
+        ],
         currenciesAccepted: "EUR",
         makesOffer: OFFERS.map((key) => {
           const s = SERVICES[key];

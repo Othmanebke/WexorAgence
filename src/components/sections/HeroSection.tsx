@@ -24,7 +24,7 @@ const ICONS: [SimpleIcon, string, string, number, number][] = [
 const PROOF = [
   { v: "10+", l: "projets livrés" },
   { v: "5 ans", l: "d’expérience" },
-  { v: "24 h", l: "délai de réponse" },
+  { v: "48 h", l: "délai de réponse max" },
 ];
 
 const NAME = ["Othmane", "Bouakline"];
@@ -109,7 +109,7 @@ export default function HeroSection() {
         <span className="font-heading text-[20px] tracking-[-0.01em]">O&apos;LDEV</span>
         <span className="inline-flex items-center gap-2 rounded-full bg-[rgba(34,160,90,0.12)] px-3.5 py-2 text-[13px] font-bold uppercase tracking-[0.14em] text-abcs-green-text">
           <span className="h-2 w-2 rounded-full bg-abcs-green" />
-          Disponible · octobre
+          Disponible
         </span>
       </div>
 

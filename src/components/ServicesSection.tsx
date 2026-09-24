@@ -9,7 +9,6 @@ import { SERVICES, type ServiceKey } from "@/lib/services";
 /** "Dès 1 200€" → "1 200€" — prices always come from lib/services.ts */
 const startPrice = (key: ServiceKey) => SERVICES[key].price.replace(/^dès\s*/i, "");
 
-// TODO(Othmane) : délais, révisions, inclus / non inclus à valider.
 const PLANS: {
   key: ServiceKey; num: string; name: string; for: string; delay: string; revisions: string;
   included: string[]; excluded: string[]; featured?: boolean;
@@ -28,10 +27,9 @@ const EXTRAS: { key: ServiceKey; name: string; desc: string }[] = [
   { key: "chatbot_ia",     name: "Chatbot IA",   desc: "Agent connecté à vos données" },
 ];
 
-// TODO(Othmane) : réponses de la FAQ à valider.
 const FAQ = [
   { q: "L’hébergement est-il inclus ?", a: "Non, mais je m’en occupe : je vous conseille une offre adaptée et je fais la mise en ligne." },
-  { q: "Puis-je payer en plusieurs fois ?", a: "Oui : 40 % à la commande, 60 % à la livraison. Paiement en 3 fois possible au-delà de 800 €." },
+  { q: "Puis-je payer en plusieurs fois ?", a: "Oui : en une seule fois ou en plusieurs fois, jusqu’à 3 versements." },
   { q: "Le site m’appartient-il ?", a: "Oui, entièrement. Code, contenus et accès vous sont transmis à la livraison." },
   { q: "Et après la livraison ?", a: "Maintenance mensuelle optionnelle : mises à jour, sauvegardes et petites modifications." },
 ];
@@ -271,7 +269,7 @@ export function ServicesSection() {
             <h3 className="m-0 font-heading font-normal uppercase leading-[0.95] tracking-[-0.02em]" style={{ fontSize: "clamp(2rem,4vw,3.2rem)" }}>
               Questions fréquentes
             </h3>
-            <p className="m-0 text-[16px] leading-[1.6] text-abcs-black/70">Une autre question ? Réponse sous 24 h.</p>
+            <p className="m-0 text-[16px] leading-[1.6] text-abcs-black/70">Une autre question ? Réponse sous 48 h maximum.</p>
           </div>
           <div className="flex flex-col border-t border-abcs-black/15">
             {FAQ.map((f, i) => {

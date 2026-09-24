@@ -28,7 +28,8 @@ export function AboutSection() {
             Expert Informatique Web. J&apos;allie rigueur technique et sens du design pour faire des sites qui convertissent.
           </p>
           <p className="m-0 max-w-[560px] text-[16px] leading-[1.6] text-white/65 text-pretty">
-            Pas de templates, pas de copier-coller : un interlocuteur unique, du brief à la mise en ligne.
+            Basé à Brie-Comte-Robert, en Île-de-France, je travaille avec des clients partout en France. Pas de
+            templates, pas de copier-coller : un interlocuteur unique, du brief à la mise en ligne.
           </p>
         </SectionHeader>
 

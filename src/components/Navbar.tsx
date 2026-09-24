@@ -5,10 +5,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useContactModal } from "@/components/ContactModalProvider";
-import ChatWindow from "@/components/Chatbot";
 import { useScrollToSection } from "@/lib/useScrollToSection";
 import avatarPhoto from "@/img/avatar.webp";
+
+// Loaded on first open only — keeps it out of the initial bundle
+const ChatWindow = dynamic(() => import("@/components/Chatbot"), { ssr: false });
 
 const LINKS = [
   { label: "Projets",  id: "portfolio"   },
@@ -19,6 +22,7 @@ const LINKS = [
 
 export default function Navbar() {
   const [chatOpen, setChatOpen] = useState(false);
+  const [chatMounted, setChatMounted] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const pathname = usePathname();
   const { openModal } = useContactModal();
@@ -50,7 +54,7 @@ export default function Navbar() {
       className="fixed bottom-5 left-1/2 -translate-x-1/2 z-[100] max-w-[calc(100vw-24px)]"
     >
       {/* Chat window — pops above the avatar */}
-      <ChatWindow isOpen={chatOpen} onClose={() => setChatOpen(false)} />
+      {chatMounted && <ChatWindow isOpen={chatOpen} onClose={() => setChatOpen(false)} />}
 
       {/* Main pill */}
       <div className="relative flex items-center gap-1 p-1.5 rounded-full bg-[rgba(26,26,26,0.95)] backdrop-blur-[16px] border border-white/[0.08] shadow-[0_8px_40px_rgba(0,0,0,0.35)]">
@@ -89,6 +93,7 @@ export default function Navbar() {
           {/* Avatar button */}
           <button
             onClick={() => {
+              setChatMounted(true);
               setChatOpen((v) => !v);
               if (showHint) {
                 setShowHint(false);

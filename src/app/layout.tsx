@@ -19,9 +19,11 @@ const archivoBlack = Archivo_Black({
   subsets: ["latin"],
 });
 
+// Only used on /legal — not preloaded on every page
 const caveat = Caveat({
   variable: "--font-caveat",
   subsets: ["latin"],
+  preload: false,
 });
 
 export const metadata: Metadata = {

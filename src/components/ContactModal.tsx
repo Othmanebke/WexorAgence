@@ -18,7 +18,8 @@ interface Props {
 
 export default function ContactModal({ isOpen, onClose, initialData }: Props) {
   const [form, setForm] = useState(EMPTY_FORM);
-  const [prevInitialData, setPrevInitialData] = useState(initialData);
+  // Starts undefined so data passed on the first (lazy) mount is applied too
+  const [prevInitialData, setPrevInitialData] = useState<ContactFormData | undefined>(undefined);
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

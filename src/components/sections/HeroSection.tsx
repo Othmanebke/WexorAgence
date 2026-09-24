@@ -121,7 +121,7 @@ export default function HeroSection() {
           src={heroPhoto}
           alt="Othmane Bouakline"
           fill
-          preload
+          fetchPriority="low"
           sizes="(max-width: 768px) 130vw, 1400px"
           className="object-contain object-bottom"
         />

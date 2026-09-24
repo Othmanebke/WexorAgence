@@ -1,4 +1,5 @@
 import PageHeader from "@/components/PageHeader";
+import Footer from "@/components/Footer";
 
 export default function LegalPage() {
   const sections = [
@@ -23,6 +24,7 @@ export default function LegalPage() {
   ];
 
   return (
+    <>
     <main className="flex-1 flex flex-col items-center px-0 pb-32 bg-white">
       <PageHeader />
       <div className="w-full flex flex-col items-center px-8 pt-16">
@@ -86,5 +88,7 @@ export default function LegalPage() {
       </div>
       </div>
     </main>
+    <Footer />
+    </>
   );
 }

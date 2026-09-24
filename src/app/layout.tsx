@@ -3,9 +3,7 @@ import { Inter, Archivo_Black, Caveat } from "next/font/google";
 import "./globals.css";
 import LenisProvider from "@/components/LenisProvider";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
-import { LangProvider } from "@/components/LanguageContext";
 import ContactModalProvider from "@/components/ContactModalProvider";
 import CookieBanner from "@/components/CookieBanner";
 
@@ -60,20 +58,14 @@ export default function RootLayout({
       className={`${inter.variable} ${archivoBlack.variable} ${caveat.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-white text-black">
-        <LangProvider>
           <ContactModalProvider>
             <CustomCursor />
             <CookieBanner />
             <LenisProvider>
-
               <Navbar />
               <div className="flex-1 flex flex-col">{children}</div>
-
-
-              <Footer />
             </LenisProvider>
           </ContactModalProvider>
-        </LangProvider>
       </body>
     </html>
   );

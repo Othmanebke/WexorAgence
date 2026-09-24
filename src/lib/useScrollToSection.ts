@@ -31,8 +31,9 @@ export function useScrollToSection() {
       const el = document.getElementById(id);
       if (!el) return false;
       const top = naturalTop(el);
-      if (lenis) lenis.scrollTo(top);
-      else window.scrollTo({ top, behavior: "smooth" });
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (lenis) lenis.scrollTo(top, { immediate: reduce });
+      else window.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
       return true;
     },
     [lenis]

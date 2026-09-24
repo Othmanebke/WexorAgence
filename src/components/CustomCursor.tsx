@@ -12,7 +12,8 @@ export default function CustomCursor() {
   const raf = useRef<number>(0);
 
   useEffect(() => {
-    const mq = window.matchMedia("(pointer: fine)");
+    // Fine pointers only (no touch screens), and not under reduced motion
+    const mq = window.matchMedia("(pointer: fine) and (prefers-reduced-motion: no-preference)");
     const handler = () => setIsFinePointer(mq.matches);
     handler();
     mq.addEventListener("change", handler);
@@ -21,6 +22,7 @@ export default function CustomCursor() {
 
   useEffect(() => {
     if (!isFinePointer) return;
+    document.documentElement.classList.add("has-custom-cursor");
 
     const onMove = (e: MouseEvent) => {
       targetPos.current = { x: e.clientX, y: e.clientY };
@@ -62,6 +64,7 @@ export default function CustomCursor() {
       window.removeEventListener("mouseup", onUp);
       document.removeEventListener("mouseover", handleMouseOver);
       cancelAnimationFrame(raf.current);
+      document.documentElement.classList.remove("has-custom-cursor");
     };
   }, [isFinePointer]);
 
@@ -87,7 +90,7 @@ export default function CustomCursor() {
           className={`font-mono font-black tracking-tighter leading-none transition-all duration-150 ${
             isHovering
               ? "text-black text-xs scale-110"
-              : "text-white text-[11px]"
+              : "text-white text-[12px]"
           }`}
         >
           &lt;/&gt;

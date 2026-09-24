@@ -1,183 +1,314 @@
 "use client";
 
-import React from 'react';
-import { FadeIn } from './FadeIn';
-import { AnimatedText } from './AnimatedText';
-import { useContactModal } from '@/components/ContactModalProvider';
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import SectionHeader from "@/components/fx/SectionHeader";
+import Watermark from "@/components/fx/Watermark";
+import { useContactModal } from "@/components/ContactModalProvider";
+import { SERVICES, type ServiceKey } from "@/lib/services";
 
+/** "Dès 1 200€" → "1 200€" — prices always come from lib/services.ts */
+const startPrice = (key: ServiceKey) => SERVICES[key].price.replace(/^dès\s*/i, "");
 
-const SERVICES = [
-  {
-    number: '01',
-    name: 'Flyer, Logo & Design Graphique',
-    serviceLabel: 'Flyer, Logo & Design Graphique (Canva)',
-    defaultBudget: '50–100€',
-    price: 'Dès 50€ (Canva) · Dès 100€ (Adobe)',
-    description:
-      'Création visuelle rapide et professionnelle pour votre communication : flyers publicitaires, bannières, cartes de visite et logos percutants livrés prêts à imprimer ou diffuser.',
-    tags: ['Canva Pro', 'Adobe Illustrator', 'Photoshop', 'Print & Digital'],
-  },
-  {
-    number: '02',
-    name: 'Site Vitrine & Landing Page',
-    serviceLabel: 'Site Vitrine & Landing Page',
-    defaultBudget: '300€',
-    price: 'Dès 300€',
-    description:
-      'La solution idéale pour les indépendants, artisans et commerçants. Une présence web moderne, ultra-rapide, responsive et optimisée pour capter des appels et devis clients.',
-    tags: ['One-Page', 'React / HTML5', 'Responsive', 'Formulaire & SEO'],
-  },
-  {
-    number: '03',
-    name: 'Site & Application Web Sur-Mesure',
-    serviceLabel: 'Site & Application Web Sur-Mesure',
-    defaultBudget: '800–1 200€',
-    price: 'Dès 800€',
-    description:
-      'Plateforme web moderne développée sur-mesure (Next.js / React) : design exclusif, temps de chargement éclair, expérience utilisateur soignée et référencement naturel technique poussé.',
-    tags: ['Next.js', 'React', 'Tailwind CSS', 'Multi-Pages', 'SEO Avancé'],
-  },
-  {
-    number: '04',
-    name: 'Site WordPress Clé en Main',
-    serviceLabel: 'Site WordPress Clé en Main',
-    defaultBudget: '1 200–1 800€',
-    price: 'Dès 1 200€',
-    description:
-      'Site complet et 100% administrable en toute autonomie : blog, catalogue de services ou boutique e-commerce avec tableau de bord simple pour modifier vos contenus sans coder.',
-    tags: ['WordPress', 'WooCommerce', 'Espace Admin', 'Autonomie Totale'],
-  },
-  {
-    number: '05',
-    name: 'Refonte & Modernisation Web',
-    serviceLabel: 'Refonte & Modernisation Web',
-    defaultBudget: '< 800€',
-    price: 'Sur devis (Code ou WordPress)',
-    description:
-      'Audit technique et transformation graphique de votre site actuel : passage au responsive moderne, amélioration des scores de vitesse (Google Core Web Vitals) et sécurisation.',
-    tags: ['Audit UX/UI', 'Refonte WordPress / Code', 'Vitesse & Sécurité'],
-  },
-  {
-    number: '06',
-    name: 'Intégration Chatbot IA & Automatisation',
-    serviceLabel: 'Intégration Chatbot IA & Automatisation',
-    defaultBudget: '< 1 000€',
-    price: 'Sur devis',
-    description:
-      'Intégration d’un agent conversationnel intelligent connecté à vos données pour répondre à vos prospects 24/7, et automatisation de vos tâches répétitives (Zapier, Make, API).',
-    tags: ['Chatbot IA', 'OpenAI API', 'Support 24/7', 'Automatisation Workflows'],
-  },
+// TODO(Othmane) : délais, révisions, inclus / non inclus à valider.
+const PLANS: {
+  key: ServiceKey; num: string; name: string; for: string; delay: string; revisions: string;
+  included: string[]; excluded: string[]; featured?: boolean;
+}[] = [
+  { key: "vitrine", num: "01", name: "Site vitrine", for: "Artisans · indépendants", delay: "1–2 sem.", revisions: "2 tours",
+    included: ["One-page responsive", "Formulaire de contact", "SEO de base + Google Maps", "Mise en ligne"], excluded: ["Hébergement & domaine"] },
+  { key: "webapp", num: "02", name: "Site sur-mesure", for: "PME · startups", delay: "3–4 sem.", revisions: "3 tours", featured: true,
+    included: ["Design exclusif multi-pages", "Next.js / React, Lighthouse 90+", "SEO technique avancé", "1 mois de maintenance offert"], excluded: ["Rédaction des contenus"] },
+  { key: "wordpress", num: "03", name: "WordPress clé en main", for: "Blog · e-commerce", delay: "3–5 sem.", revisions: "3 tours",
+    included: ["Site 100 % administrable", "Boutique WooCommerce", "Formation à l’admin (1 h)", "Paiement en ligne"], excluded: ["Licences premium"] },
 ];
 
+const EXTRAS: { key: ServiceKey; name: string; desc: string }[] = [
+  { key: "branding_canva", name: "Logo & flyer", desc: "Canva ou Adobe, prêt à imprimer" },
+  { key: "refonte",        name: "Refonte",      desc: "Audit, responsive, vitesse, sécurité" },
+  { key: "chatbot_ia",     name: "Chatbot IA",   desc: "Agent connecté à vos données" },
+];
 
-export const ServicesSection: React.FC = () => {
+// TODO(Othmane) : réponses de la FAQ à valider.
+const FAQ = [
+  { q: "L’hébergement est-il inclus ?", a: "Non, mais je m’en occupe : je vous conseille une offre adaptée et je fais la mise en ligne." },
+  { q: "Puis-je payer en plusieurs fois ?", a: "Oui : 40 % à la commande, 60 % à la livraison. Paiement en 3 fois possible au-delà de 800 €." },
+  { q: "Le site m’appartient-il ?", a: "Oui, entièrement. Code, contenus et accès vous sont transmis à la livraison." },
+  { q: "Et après la livraison ?", a: "Maintenance mensuelle optionnelle : mises à jour, sauvegardes et petites modifications." },
+];
+
+/** Price rolling from 0 to its value (1.2s) once `start` is true. */
+function CountPrice({ value, start, delay }: { value: string; start: boolean; delay: number }) {
+  const [text, setText] = useState(value);
+
+  useEffect(() => {
+    if (!start || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const n = parseInt(value.replace(/\D/g, ""), 10);
+    if (!n) return;
+    const fmt = (v: number) => (v >= 1000 ? `${Math.floor(v / 1000)} ${String(v % 1000).padStart(3, "0")}€` : `${v}€`);
+    let raf = 0;
+    const timer = setTimeout(() => {
+      const t0 = performance.now();
+      const step = (now: number) => {
+        const k = Math.min(1, (now - t0) / 1200);
+        const e = 1 - Math.pow(1 - k, 3);
+        setText(k < 1 ? fmt(Math.round((n * e) / 10) * 10) : value);
+        if (k < 1) raf = requestAnimationFrame(step);
+      };
+      setText(fmt(0));
+      raf = requestAnimationFrame(step);
+    }, delay);
+    return () => {
+      clearTimeout(timer);
+      cancelAnimationFrame(raf);
+    };
+  }, [start, value, delay]);
+
+  return <>{text}</>;
+}
+
+/** 3D tilt following the mouse + orange glare (fine pointers, motion allowed). */
+const canTilt = () =>
+  window.matchMedia("(pointer: fine)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function tiltMove(e: React.MouseEvent<HTMLElement>) {
+  if (!canTilt()) return;
+  const el = e.currentTarget;
+  const r = el.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width;
+  const y = (e.clientY - r.top) / r.height;
+  el.style.transition = "transform .15s ease-out";
+  el.style.transform = `perspective(900px) rotateX(${(0.5 - y) * 8}deg) rotateY(${(x - 0.5) * 10}deg) translateY(-6px)`;
+  const g = el.querySelector<HTMLElement>("[data-glare]");
+  if (g) {
+    g.style.opacity = "1";
+    g.style.background = `radial-gradient(420px circle at ${x * 100}% ${y * 100}%, rgba(255,59,0,0.16), transparent 60%)`;
+  }
+}
+
+function tiltLeave(e: React.MouseEvent<HTMLElement>) {
+  const el = e.currentTarget;
+  if (!el.style.transform) return;
+  el.style.transition = "transform .6s cubic-bezier(.22,1,.36,1)";
+  el.style.transform = "";
+  const g = el.querySelector<HTMLElement>("[data-glare]");
+  if (g) g.style.opacity = "0";
+}
+
+export function ServicesSection() {
   const { openModal } = useContactModal();
+  const plansRef = useRef<HTMLDivElement>(null);
+  const [plansIn, setPlansIn] = useState(false);
+  const [open, setOpen] = useState(0);
+
+  const choose = (key: ServiceKey) => openModal({ type: SERVICES[key].label, budget: SERVICES[key].budgets[0] });
+
+  useEffect(() => {
+    const el = plansRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setPlansIn(true);
+        io.disconnect();
+      },
+      { rootMargin: "0px 0px -15% 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
     <section
       id="services"
-      className="relative z-10 -mt-8 sm:-mt-12 md:-mt-16 bg-[#FFFFFF] text-[#111111] rounded-t-[36px] sm:rounded-t-[48px] md:rounded-t-[64px] px-5 sm:px-8 md:px-12 py-20 sm:py-24 md:py-32 shadow-[0_-30px_70px_rgba(0,0,0,0.35)]"
+      data-stack
+      className="relative z-[11] -mt-16 overflow-hidden rounded-t-[64px] bg-white text-abcs-black shadow-[0_-30px_70px_rgba(0,0,0,0.35)]"
+      style={{ padding: "clamp(64px,9vw,120px) clamp(20px,5vw,72px) clamp(96px,10vw,140px)" }}
     >
-      <div className="max-w-6xl mx-auto">
-        {/* En-tête */}
-        <FadeIn delay={0} y={40}>
-          <div className="flex flex-col items-center text-center mb-16 sm:mb-20 md:mb-24">
-            <span className="font-bold text-xs sm:text-sm uppercase tracking-[0.25em] text-[#FF3B00] mb-3">
-              Tarifs transparents & Prestations adaptées
-            </span>
-            <AnimatedText
-              as="h2"
-              text="Mes Services"
-              activeColor="#111111"
-              className="text-[#111111] font-black uppercase text-center leading-none tracking-tight select-none"
-              style={{ fontSize: 'clamp(2.8rem, 10vw, 130px)' }}
-            />
+      {/* Dot grid, visible at the top and bottom */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage: "radial-gradient(rgba(17,17,17,0.13) 1.2px, transparent 1.5px)",
+          backgroundSize: "24px 24px",
+          maskImage: "linear-gradient(180deg, black 0%, transparent 38%, transparent 72%, black 100%)",
+          WebkitMaskImage: "linear-gradient(180deg, black 0%, transparent 38%, transparent 72%, black 100%)",
+        }}
+      />
+      <Watermark text="Services · Tarifs · Services · Tarifs · Services ·" stroke="rgba(17,17,17,0.09)" />
+      <Watermark variant="2" text="Sur-mesure · Rapide · Transparent · Sur-mesure · Rapide ·" stroke="rgba(255,59,0,0.18)" />
 
-            <p className="font-medium text-sm sm:text-base text-[#111111]/60 max-w-xl mt-4">
-              Des offres claires du produit d&apos;appel au projet sur-mesure, conçues pour booster la visibilité et la rentabilité de votre activité.
-            </p>
-          </div>
-        </FadeIn>
+      <div className="relative z-[1] mx-auto flex max-w-[1200px] flex-col" style={{ gap: "clamp(40px,5vw,64px)" }}>
+        <SectionHeader
+          tone="light"
+          label="02 · Tarifs transparents"
+          title="Mes services"
+          titleSize="clamp(2.8rem,9vw,120px)"
+          intro="Un prix de départ, un délai et ce qui est inclus. Pas de surprise sur la facture."
+        />
 
-        {/* Liste des Services */}
-        <div className="flex flex-col">
-          {SERVICES.map((service, index) => (
-            <FadeIn
-              key={service.number}
-              delay={index * 0.08}
-              y={25}
-              className={`py-8 sm:py-10 md:py-12 border-t border-[#111111]/15 ${
-                index === SERVICES.length - 1 ? 'border-b' : ''
-              } group transition-all duration-300 hover:bg-[#111111]/[0.02] cursor-pointer`}
-            >
-              <div
-                onClick={() => openModal({ type: service.serviceLabel, budget: service.defaultBudget })}
-                className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-10"
+        {/* Plans */}
+        <div
+          ref={plansRef}
+          className={`plans grid items-stretch gap-5 ${plansIn ? "is-in" : ""}`}
+          style={{ gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,240px),1fr))" }}
+        >
+          {PLANS.map((p, i) => {
+            const f = !!p.featured;
+            const price = startPrice(p.key);
+            return (
+              <article
+                key={p.key}
+                data-plan
+                onMouseMove={tiltMove}
+                onMouseLeave={tiltLeave}
+                className={`relative flex flex-col gap-[22px] rounded-[28px] border px-7 py-8 will-change-transform [transform-style:preserve-3d] ${
+                  f
+                    ? "border-white/14 bg-abcs-black text-white shadow-[0_40px_80px_-30px_rgba(255,59,0,0.45)]"
+                    : "border-abcs-black/10 bg-abcs-bg text-abcs-black shadow-[0_20px_50px_-30px_rgba(0,0,0,0.25)]"
+                }`}
+                style={{ "--i": i, "--r": `${(i - 1) * 5}deg` } as CSSProperties}
               >
-
-                {/* Numéro géant + Prix */}
-                <div className="flex items-center justify-between md:flex-col md:items-start gap-3 md:w-[220px] shrink-0">
+                <span data-glare aria-hidden className="pointer-events-none absolute inset-0 rounded-[28px] opacity-0 transition-opacity duration-300" />
+                {f && (
+                  <span className="absolute -top-[13px] left-7 rounded-full bg-abcs-red px-3 py-1.5 text-[12px] font-bold uppercase tracking-[0.16em] text-white">
+                    Le plus choisi
+                  </span>
+                )}
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="font-mono text-[13px] tracking-[0.14em] opacity-60">{p.num}</span>
+                  <span className="text-[13px] font-bold uppercase tracking-[0.12em] opacity-70">{p.for}</span>
+                </div>
+                <h3 className="m-0 font-heading font-normal uppercase leading-[0.95]" style={{ fontSize: "clamp(1.5rem,2.2vw,1.9rem)" }}>
+                  {p.name}
+                </h3>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-[15px] opacity-70">dès</span>
                   <span
-                    className="font-black text-[#111111] leading-none select-none transition-all duration-300 group-hover:text-[#FF3B00] group-hover:translate-x-2"
-                    style={{ fontSize: 'clamp(2.8rem, 8vw, 110px)' }}
+                    className={`font-heading leading-none tracking-[-0.02em] tabular-nums ${f ? "text-abcs-red" : "text-abcs-red-text"}`}
+                    style={{ fontSize: "clamp(2.6rem,4vw,3.4rem)" }}
                   >
-                    {service.number}
-                  </span>
-                  <span className="inline-block px-3 py-1 bg-[#FF3B00]/10 text-[#FF3B00] font-bold text-xs sm:text-sm uppercase tracking-wider rounded-full md:mt-2">
-                    {service.price}
+                    <CountPrice value={price} start={plansIn} delay={i * 140} />
                   </span>
                 </div>
-
-                {/* Nom + Description + Tags */}
-                <div className="flex-1 flex flex-col gap-3 sm:gap-4 md:pl-2">
-                  <div className="flex items-center justify-between">
-                    <h3
-                      className="font-bold uppercase text-[#111111] tracking-tight group-hover:text-[#FF3B00] transition-colors"
-                      style={{ fontSize: 'clamp(1.15rem, 2.2vw, 1.9rem)' }}
-                    >
-                      {service.name}
-                    </h3>
-                    <span className="w-9 h-9 rounded-full bg-[#111111]/5 group-hover:bg-[#FF3B00] group-hover:text-white flex items-center justify-center font-bold text-base transition-all duration-300 shrink-0 ml-4">
-                      ↗
-                    </span>
-                  </div>
-
-                  <p
-                    className="font-medium text-[#111111]/70 leading-relaxed max-w-2xl"
-                    style={{ fontSize: 'clamp(0.9rem, 1.4vw, 1.15rem)' }}
-                  >
-                    {service.description}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    {service.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-[11px] font-bold uppercase tracking-wider text-[#111111]/55 bg-[#111111]/5 px-2.5 py-1 rounded"
-                      >
-                        {tag}
+                <div className={`grid grid-cols-2 gap-px overflow-hidden rounded-[14px] ${f ? "bg-white/14" : "bg-abcs-black/10"}`}>
+                  {[
+                    ["Délai", p.delay],
+                    ["Révisions", p.revisions],
+                  ].map(([k, v]) => (
+                    <div key={k} className={`flex flex-col gap-0.5 px-3.5 py-3 ${f ? "bg-abcs-black" : "bg-abcs-bg"}`}>
+                      <span className="text-[12px] uppercase tracking-[0.12em] opacity-60">{k}</span>
+                      <span className="text-[16px] font-bold">{v}</span>
+                    </div>
+                  ))}
+                </div>
+                <ul className="m-0 flex flex-1 list-none flex-col gap-2.5 p-0">
+                  {p.included.map((it) => (
+                    <li key={it} className="grid grid-cols-[18px_1fr] gap-2.5 text-[15px] leading-[1.45]">
+                      <span aria-hidden className={`font-extrabold ${f ? "text-abcs-red" : "text-abcs-red-text"}`}>✓</span>
+                      <span>{it}</span>
+                    </li>
+                  ))}
+                  {p.excluded.map((it) => (
+                    <li key={it} className="grid grid-cols-[18px_1fr] gap-2.5 text-[15px] leading-[1.45] opacity-60">
+                      <span aria-hidden>–</span>
+                      <span>
+                        <span className="sr-only">Non inclus : </span>
+                        {it}
                       </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </FadeIn>
-          ))}
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={() => choose(p.key)}
+                  className={`flex items-center justify-center gap-2.5 rounded-full px-5 py-4 text-[13px] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-[250ms] ${
+                    f ? "bg-abcs-red hover:bg-white hover:text-abcs-black" : "bg-abcs-black hover:bg-abcs-red"
+                  }`}
+                >
+                  Choisir cette offre <span aria-hidden>↗</span>
+                </button>
+              </article>
+            );
+          })}
         </div>
 
-        {/* CTA bas de section */}
-        <FadeIn delay={0.2} y={30} className="flex justify-center mt-16 sm:mt-20">
-          <button
-            onClick={() => openModal()}
-            className="inline-flex items-center gap-3 bg-[#111111] text-white px-8 py-4 sm:px-10 sm:py-4.5 rounded-full font-bold text-xs sm:text-sm uppercase tracking-widest hover:bg-[#FF3B00] transition-all duration-300 shadow-lg hover:shadow-[0_10px_25px_rgba(255,59,0,0.4)] group"
+        {/* Also available */}
+        <div className="flex flex-col gap-4">
+          <span className="text-[13px] font-bold uppercase tracking-[0.22em] text-abcs-black/60">Aussi disponible</span>
+          <div
+            className="grid gap-x-6 border-t border-abcs-black/15"
+            style={{ gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,240px),1fr))" }}
           >
-            <span>Demander un devis personnalisé</span>
-            <span className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform text-base">↗</span>
-          </button>
-        </FadeIn>
+            {EXTRAS.map((e) => (
+              <button
+                key={e.key}
+                onClick={() => choose(e.key)}
+                style={{ transition: "background-size .55s cubic-bezier(.22,1,.36,1), color .3s" }}
+                className="flex items-center justify-between gap-4 border-b border-abcs-black/15 bg-no-repeat px-4 py-5 text-left bg-[linear-gradient(#111,#111)] bg-[length:0%_100%] hover:bg-[length:100%_100%] hover:text-white focus-visible:bg-[length:100%_100%] focus-visible:text-white"
+              >
+                <span className="flex min-w-0 flex-col gap-1">
+                  <span className="text-[17px] font-extrabold uppercase">{e.name}</span>
+                  <span className="text-[14px] opacity-72">{e.desc}</span>
+                </span>
+                <span className="shrink-0 rounded-full bg-[rgba(255,59,0,0.1)] px-3 py-1.5 text-[13px] font-bold uppercase text-abcs-red-text">
+                  {SERVICES[e.key].price.toLowerCase()}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* FAQ */}
+        <div
+          className="grid items-start"
+          style={{
+            gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,400px),1fr))",
+            gap: "clamp(24px,4vw,56px)",
+            paddingTop: "clamp(16px,3vw,32px)",
+          }}
+        >
+          <div className="flex flex-col gap-3">
+            <h3 className="m-0 font-heading font-normal uppercase leading-[0.95] tracking-[-0.02em]" style={{ fontSize: "clamp(2rem,4vw,3.2rem)" }}>
+              Questions fréquentes
+            </h3>
+            <p className="m-0 text-[16px] leading-[1.6] text-abcs-black/70">Une autre question ? Réponse sous 24 h.</p>
+          </div>
+          <div className="flex flex-col border-t border-abcs-black/15">
+            {FAQ.map((f, i) => {
+              const isOpen = open === i;
+              return (
+                <div key={f.q} className="border-b border-abcs-black/15">
+                  <button
+                    onClick={() => setOpen(isOpen ? -1 : i)}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-${i}`}
+                    className="flex w-full items-center justify-between gap-4 py-5 text-left text-[17px] font-bold text-abcs-black"
+                  >
+                    <span>{f.q}</span>
+                    <span
+                      aria-hidden
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[18px] transition-colors ${
+                        isOpen ? "bg-abcs-red text-white" : "bg-abcs-black/6 text-abcs-black"
+                      }`}
+                    >
+                      {isOpen ? "−" : "+"}
+                    </span>
+                  </button>
+                  <div
+                    id={`faq-${i}`}
+                    aria-hidden={!isOpen}
+                    className={`grid transition-[grid-template-rows] duration-300 ease-out-expo ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+                  >
+                    <p className="m-0 max-w-[560px] overflow-hidden text-[16px] leading-[1.6] text-abcs-black/72">
+                      <span className="block pb-5">{f.a}</span>
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </section>
   );
-};
-
-export default ServicesSection;
+}

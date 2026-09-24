@@ -1,190 +1,184 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, type CSSProperties } from "react";
 import Image from "next/image";
-import { useLang } from "@/components/LanguageContext";
+import {
+  siReact, siNextdotjs, siTypescript, siTailwindcss, siWordpress, siFigma,
+  siNodedotjs, siJavascript, siHtml5, siSupabase, siVercel, siPostgresql,
+  type SimpleIcon,
+} from "simple-icons";
 import { useContactModal } from "@/components/ContactModalProvider";
+import { LOADER_INTRO_DELAY } from "@/components/Preloader";
+import { useScrollToSection } from "@/lib/useScrollToSection";
+import heroPhoto from "@/img/hero.webp";
 
-import heroPhoto from "@/img/Gemini_Generated_Image_zdg0rbzdg0rbzdg0.png";
+// [icon, left, top, size (px), rotation (deg)]
+const ICONS: [SimpleIcon, string, string, number, number][] = [
+  [siReact, "6%", "16%", 68, -8], [siNextdotjs, "18%", "34%", 56, 6], [siTypescript, "4%", "58%", 60, 10], [siTailwindcss, "15%", "74%", 64, -6],
+  [siWordpress, "88%", "14%", 66, 8], [siFigma, "78%", "30%", 54, -10], [siNodedotjs, "91%", "50%", 62, -4], [siJavascript, "80%", "70%", 58, 12],
+  [siHtml5, "30%", "12%", 50, -12], [siSupabase, "66%", "10%", 52, 10], [siVercel, "34%", "60%", 46, 4], [siPostgresql, "62%", "56%", 48, -8],
+];
 
-// ─── Text Scramble Hook ──────────────────────────────────────────────────────
-const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&";
+const PROOF = [
+  { v: "10+", l: "projets livrés" },
+  { v: "5 ans", l: "d’expérience" },
+  { v: "24 h", l: "délai de réponse" },
+];
 
-function useTextScramble(target: string, trigger: boolean, duration = 1200) {
-  const [display, setDisplay] = useState(target);
-  useEffect(() => {
-    if (!trigger) return;
-    let frame = 0;
-    const totalFrames = Math.ceil(duration / 16);
-    const interval = setInterval(() => {
-      frame++;
-      const progress = frame / totalFrames;
-      setDisplay(
-        target
-          .split("")
-          .map((char, i) => {
-            if (char === " " || char === "'" || char === ".") return char;
-            if (i / target.length < progress) return char;
-            return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
-          })
-          .join("")
-      );
-      if (frame >= totalFrames) {
-        clearInterval(interval);
-        setDisplay(target);
-      }
-    }, 16);
-    return () => clearInterval(interval);
-  }, [trigger, target, duration]);
-  return display;
-}
+const NAME = ["Othmane", "Bouakline"];
+
+const idx = (i: number) => ({ "--i": i }) as CSSProperties;
 
 export default function HeroSection() {
-  const [heroReady, setHeroReady] = useState(false);
-  const { t } = useLang();
+  const ref = useRef<HTMLElement>(null);
   const { openModal } = useContactModal();
+  const scrollToSection = useScrollToSection();
 
+  // Intro plays once the loader curtain is rising (immediately under reduced motion)
   useEffect(() => {
-    const timer = setTimeout(() => setHeroReady(true), 400);
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const timer = setTimeout(() => ref.current?.classList.add("is-in"), reduce ? 0 : LOADER_INTRO_DELAY);
     return () => clearTimeout(timer);
   }, []);
 
-  const scrambledFirst = useTextScramble("OTHMANE", heroReady, 1400);
-  const scrambledLast = useTextScramble("BOUAKLINE", heroReady, 1700);
+  let letter = 0;
 
   return (
-    <section id="top" className="w-full min-h-screen relative overflow-hidden">
+    <section
+      ref={ref}
+      id="top"
+      data-stack
+      className="hero relative flex min-h-screen flex-col justify-between overflow-hidden bg-abcs-bg text-abcs-black"
+      style={{ padding: "clamp(28px,4vw,48px) clamp(20px,4vw,48px) 160px" }}
+    >
+      {/* Grid, faded out by a radial mask */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(17,17,17,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(17,17,17,0.07) 1px, transparent 1px)",
+          backgroundSize: "72px 72px",
+          maskImage: "radial-gradient(ellipse 70% 65% at 50% 55%, black 20%, transparent 80%)",
+          WebkitMaskImage: "radial-gradient(ellipse 70% 65% at 50% 55%, black 20%, transparent 80%)",
+        }}
+      />
 
+      {/* Orange circles behind the photo */}
+      <div
+        aria-hidden
+        data-hero="ring"
+        className="pointer-events-none absolute left-1/2 z-[1] aspect-square -translate-x-1/2 rounded-full border-[1.5px] border-[rgba(255,59,0,0.35)]"
+        style={{ ...idx(0), bottom: "-38%", width: "min(1000px,110vw)" }}
+      />
+      <div
+        aria-hidden
+        data-hero="ring"
+        className="pointer-events-none absolute left-1/2 z-[1] aspect-square -translate-x-1/2 rounded-full border-[1.5px] border-dashed border-[rgba(255,59,0,0.25)]"
+        style={{ ...idx(1), bottom: "-22%", width: "min(720px,80vw)" }}
+      />
 
-
-        {/* Desktop — left: first name */}
-        <div className="hidden md:flex absolute inset-y-0 left-0 w-[55%] flex-col justify-end px-8 xl:px-12 pb-[30%] z-[1]">
-          <div className="overflow-visible">
-            <motion.h1
-              className="font-heading text-abcs-black leading-[0.82] tracking-tighter uppercase whitespace-nowrap"
-              style={{ fontSize: "clamp(4rem, 7.5vw, 9rem)" }}
-              initial={{ y: "110%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-            >
-              {scrambledFirst}
-            </motion.h1>
-          </div>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7, duration: 0.6 }}
-            className="font-bold text-[10px] tracking-[0.2em] uppercase mt-3 text-abcs-black/40"
+      {/* Floating stack logos */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-[1]">
+        {ICONS.map(([icon, x, y, size, rot], i) => (
+          <span
+            key={icon.slug}
+            data-hero="icon"
+            className="absolute flex items-center justify-center rounded-[18px] border border-[rgba(255,59,0,0.22)] bg-white/35"
+            style={{
+              ...idx(i),
+              left: x,
+              top: y,
+              width: size,
+              height: size,
+              rotate: `${rot}deg`,
+              animation: `hero-float ${6 + (i % 4)}s ease-in-out ${(i * 0.37).toFixed(2)}s infinite`,
+            }}
           >
-            Développeur Web · Full Stack
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.1, duration: 0.6 }}
-            className="mt-8"
-          >
+            <svg viewBox="0 0 24 24" className="h-[52%] w-[52%] opacity-55" fill="#FF3B00">
+              <path d={icon.path} />
+            </svg>
+          </span>
+        ))}
+      </div>
+
+      {/* Top bar */}
+      <div data-hero="fade" className="relative z-[6] flex items-center justify-between gap-4">
+        <span className="font-heading text-[20px] tracking-[-0.01em]">O&apos;LDEV</span>
+        <span className="inline-flex items-center gap-2 rounded-full bg-[rgba(34,160,90,0.12)] px-3.5 py-2 text-[13px] font-bold uppercase tracking-[0.14em] text-abcs-green-text">
+          <span className="h-2 w-2 rounded-full bg-abcs-green" />
+          Disponible · octobre
+        </span>
+      </div>
+
+      {/* Photo */}
+      <div
+        className="pointer-events-none absolute bottom-0 left-1/2 z-[3] -translate-x-1/2"
+        style={{ width: "min(1400px,130%)", aspectRatio: "3 / 2" }}
+      >
+        <Image
+          data-hero="photo"
+          src={heroPhoto}
+          alt="Othmane Bouakline"
+          fill
+          preload
+          sizes="(max-width: 768px) 130vw, 1400px"
+          className="object-contain object-bottom"
+        />
+      </div>
+
+      {/* Name — above the photo */}
+      <h1
+        aria-label="Othmane Bouakline"
+        className="relative z-[4] flex flex-wrap justify-between gap-x-6 font-heading font-normal uppercase leading-[0.82] tracking-[-0.04em]"
+        style={{ margin: "clamp(40px,8vh,96px) 0 0", fontSize: "clamp(3.2rem,10.5vw,11rem)" }}
+      >
+        {NAME.map((word) => (
+          <span key={word} aria-hidden className="split-mask">
+            {word.split("").map((ch, i) => (
+              <span key={i} className="split-unit" style={idx(letter++)}>
+                {ch}
+              </span>
+            ))}
+          </span>
+        ))}
+      </h1>
+
+      {/* Bottom blocks */}
+      <div data-hero="fade-late" className="relative z-[6] mt-auto flex flex-wrap items-end justify-between gap-7">
+        <div className="flex max-w-[360px] flex-col gap-[18px] rounded-[20px] bg-[rgba(240,240,238,0.86)] p-5 backdrop-blur-[8px]">
+          <p className="text-[13px] font-bold uppercase tracking-[0.2em] text-abcs-red-text">Développeur web freelance</p>
+          <p className="text-[19px] font-semibold leading-[1.4] text-pretty">
+            Je crée des sites rapides pour les indépendants et PME qui veulent plus de clients, pas juste un joli site.
+          </p>
+          <div className="flex flex-wrap gap-2.5">
             <button
-              onClick={openModal}
-              className="inline-flex items-center gap-2 border border-abcs-black/20 px-5 py-2.5 font-bold text-[10px] uppercase tracking-widest hover:border-abcs-red hover:text-abcs-red transition-colors group w-fit"
+              onClick={() => openModal()}
+              className="inline-flex items-center gap-2 rounded-full bg-abcs-black px-[22px] py-[15px] text-[13px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-abcs-red"
             >
-              <span>{t("hero_cta")}</span>
-              <span className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
+              Réserver un appel <span aria-hidden>↗</span>
             </button>
-          </motion.div>
-        </div>
-
-        {/* Desktop — right: last name */}
-        <div className="hidden md:flex absolute inset-y-0 right-0 w-[55%] flex-col justify-end items-end px-8 xl:px-12 pb-[32%] z-[1]">
-          <div className="overflow-visible">
-            <motion.h2
-              className="font-heading text-abcs-black leading-[0.82] tracking-tighter uppercase whitespace-nowrap"
-              style={{ fontSize: "clamp(4rem, 7.5vw, 9rem)" }}
-              initial={{ y: "110%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+            <a
+              href="#portfolio"
+              onClick={(e) => {
+                if (scrollToSection("portfolio")) e.preventDefault();
+              }}
+              className="inline-flex items-center gap-2 rounded-full border border-abcs-black/25 px-[22px] py-[15px] text-[13px] font-bold uppercase tracking-[0.14em] text-abcs-black transition-colors hover:border-abcs-red hover:text-abcs-red-text"
             >
-              {scrambledLast}
-            </motion.h2>
+              Voir mes projets
+            </a>
           </div>
         </div>
 
-        {/* Desktop — right: description */}
-        <div className="hidden md:flex absolute bottom-[28%] right-0 w-[32%] flex-col items-start px-8 xl:px-12 z-[1]">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.85, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="text-sm font-bold text-abcs-black/50 max-w-[240px] leading-relaxed"
-          >
-            {t("hero_desc").split("\n").join(" ")}
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.15, duration: 0.6 }}
-            className="mt-5 flex items-center gap-2"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-            <span className="font-bold text-[10px] uppercase tracking-widest text-abcs-black/40">Disponible</span>
-          </motion.div>
-        </div>
-
-        {/* Desktop — avatar */}
-        <div className="hidden md:block absolute inset-y-0 left-1/2 -translate-x-1/2 w-[94%] max-w-[1500px] z-[5]">
-          <Image src={heroPhoto} alt="Othmane" fill className="object-contain object-bottom" priority unoptimized />
-        </div>
-
-        {/* Mobile */}
-        <div className="md:hidden relative min-h-screen overflow-hidden">
-          <Image src={heroPhoto} alt="Othmane" fill className="object-cover object-top" priority unoptimized />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#f0f0ee] via-[#f0f0ee]/75 to-transparent" />
-          <div className="absolute top-0 left-0 right-0 z-10 px-6 pt-10 flex flex-col gap-3">
-            <div>
-              <div className="overflow-hidden">
-                <motion.h1
-                  className="font-heading text-abcs-black leading-[0.82] tracking-tighter uppercase"
-                  style={{ fontSize: "clamp(2.8rem, 11vw, 5rem)" }}
-                  initial={{ y: "110%" }} animate={{ y: 0 }}
-                  transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  {scrambledFirst}
-                </motion.h1>
-              </div>
-              <div className="overflow-hidden">
-                <motion.h2
-                  className="font-heading text-abcs-black leading-[0.82] tracking-tighter uppercase"
-                  style={{ fontSize: "clamp(2.8rem, 11vw, 5rem)" }}
-                  initial={{ y: "110%" }} animate={{ y: 0 }}
-                  transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-                >
-                  {scrambledLast}
-                </motion.h2>
-              </div>
+        <div className="flex flex-col gap-1.5 rounded-[20px] bg-[rgba(240,240,238,0.86)] px-5 py-[18px] backdrop-blur-[8px]">
+          {PROOF.map((p) => (
+            <div key={p.l} className="flex items-baseline gap-2.5">
+              <span className="font-heading text-[22px]">{p.v}</span>
+              <span className="text-[14px] text-abcs-black/70">{p.l}</span>
             </div>
-            <p className="font-bold text-[10px] tracking-[0.2em] uppercase text-abcs-black/40">
-              Développeur Web · Full Stack
-            </p>
-            <p className="text-sm font-bold text-abcs-black/60 leading-relaxed max-w-[280px]">
-              {t("hero_desc").split("\n").join(" ")}
-            </p>
-            <div className="flex flex-wrap items-center gap-3 pt-1">
-              <button
-                onClick={openModal}
-                className="inline-flex items-center gap-2 bg-abcs-black text-white px-5 py-3 font-bold text-xs uppercase tracking-widest hover:bg-abcs-red transition-colors duration-300 group"
-              >
-                <span>{t("hero_cta")}</span>
-                <span className="text-base leading-none group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
-              </button>
-              <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                <span className="font-bold text-[10px] uppercase tracking-widest text-abcs-black/40">Disponible</span>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
-      </section>
+      </div>
+    </section>
   );
 }
-

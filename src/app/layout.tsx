@@ -5,9 +5,7 @@ import LenisProvider from "@/components/LenisProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
-import Preloader from "@/components/Preloader";
 import { LangProvider } from "@/components/LanguageContext";
-import FooterStrip from "@/components/FooterStrip";
 import ContactModalProvider from "@/components/ContactModalProvider";
 import CookieBanner from "@/components/CookieBanner";
 
@@ -65,14 +63,12 @@ export default function RootLayout({
         <LangProvider>
           <ContactModalProvider>
             <CustomCursor />
-            <Preloader />
             <CookieBanner />
             <LenisProvider>
 
               <Navbar />
               <div className="flex-1 flex flex-col">{children}</div>
 
-              <FooterStrip />
 
               <Footer />
             </LenisProvider>

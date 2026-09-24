@@ -50,7 +50,7 @@ export default function CookieBanner() {
           <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/10">
             <Link
               href="/legal"
-              className="text-[11px] font-bold text-white/40 hover:text-white underline transition-colors"
+              className="text-[12px] font-bold text-white/40 hover:text-white underline transition-colors"
             >
               En savoir plus
             </Link>

@@ -101,7 +101,7 @@ export default function ContactModal({ isOpen, onClose, initialData }: Props) {
             {/* Header */}
             <div className="flex items-center justify-between px-8 py-6 border-b border-black/10 sticky top-0 bg-[#f0f0ee] z-10">
               <div>
-                <p className="font-bold text-[10px] uppercase tracking-[0.2em] opacity-40 mb-1">Démarrer un projet</p>
+                <p className="font-bold text-[12px] uppercase tracking-[0.2em] opacity-40 mb-1">Démarrer un projet</p>
                 <h2 className="font-heading text-3xl uppercase leading-none">Contact</h2>
               </div>
               <button
@@ -138,22 +138,22 @@ export default function ContactModal({ isOpen, onClose, initialData }: Props) {
                 <form onSubmit={handleSubmit} className="flex flex-col gap-7">
                   <div className="grid grid-cols-2 gap-6">
                     <div className="flex flex-col gap-1">
-                      <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Nom *</label>
+                      <label className="font-bold text-[12px] uppercase tracking-widest opacity-40">Nom *</label>
                       <input required name="name" value={form.name} onChange={handleChange} placeholder="Jean Dupont" className={inputClass} />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Email *</label>
+                      <label className="font-bold text-[12px] uppercase tracking-widest opacity-40">Email *</label>
                       <input required type="email" name="email" value={form.email} onChange={handleChange} placeholder="jean@exemple.com" className={inputClass} />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-6">
                     <div className="flex flex-col gap-1">
-                      <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Téléphone</label>
+                      <label className="font-bold text-[12px] uppercase tracking-widest opacity-40">Téléphone</label>
                       <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="06 XX XX XX XX" className={inputClass} />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Type de projet *</label>
+                      <label className="font-bold text-[12px] uppercase tracking-widest opacity-40">Type de projet *</label>
                       <select
                         required
                         name="type"
@@ -190,7 +190,7 @@ export default function ContactModal({ isOpen, onClose, initialData }: Props) {
                         transition={{ duration: 0.2 }}
                         className="flex flex-col gap-3"
                       >
-                        <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Budget *</label>
+                        <label className="font-bold text-[12px] uppercase tracking-widest opacity-40">Budget *</label>
                         <div className="flex flex-wrap gap-2">
                           {budgetOptions.map((b) => (
                             <button
@@ -213,7 +213,7 @@ export default function ContactModal({ isOpen, onClose, initialData }: Props) {
                   </AnimatePresence>
 
                   <div className="flex flex-col gap-1">
-                    <label className="font-bold text-[10px] uppercase tracking-widest opacity-40">Message *</label>
+                    <label className="font-bold text-[12px] uppercase tracking-widest opacity-40">Message *</label>
                     <textarea
                       required
                       name="message"
@@ -258,7 +258,7 @@ export default function ContactModal({ isOpen, onClose, initialData }: Props) {
                     </a>
                     <div className="flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                      <span className="font-bold text-[10px] uppercase tracking-widest opacity-40">Disponible · France & remote</span>
+                      <span className="font-bold text-[12px] uppercase tracking-widest opacity-40">Disponible · France & remote</span>
                     </div>
                   </div>
                 </form>

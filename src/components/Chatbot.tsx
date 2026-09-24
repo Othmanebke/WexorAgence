@@ -3,10 +3,9 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { useLang } from "@/components/LanguageContext";
 import { SERVICES } from "@/lib/services";
 import { useContactModal } from "@/components/ContactModalProvider";
-import avatarPhoto from "@/img/cravate-orange.png";
+import avatarPhoto from "@/img/avatar.webp";
 
 type Step = {
   id: string;
@@ -74,7 +73,6 @@ interface Props {
 }
 
 export default function ChatWindow({ isOpen, onClose }: Props) {
-  const { t } = useLang();
   const { openModal } = useContactModal();
   const [currentStepId, setCurrentStepId] = useState("start");
   const [history, setHistory] = useState<{ type: "bot" | "user"; text: string }[]>([
@@ -200,13 +198,13 @@ export default function ChatWindow({ isOpen, onClose }: Props) {
           <div className="flex items-center justify-between px-5 py-4 border-b border-white/8 flex-shrink-0">
             <div className="flex items-center gap-3">
               <div className="relative w-8 h-8 rounded-full overflow-hidden bg-[#222] flex-shrink-0">
-                <Image src={avatarPhoto} alt="Othmane" fill className="object-cover object-top scale-150 translate-y-1" />
+                <Image src={avatarPhoto} alt="Othmane" fill sizes="40px" className="object-cover" />
               </div>
               <div>
                 <p className="font-heading text-sm uppercase text-white/90 leading-none tracking-wide">Othmane</p>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="font-bold text-[9px] uppercase tracking-widest text-emerald-400/70">{t("chatbot_status")}</span>
+                  <span className="font-bold text-[12px] uppercase tracking-widest text-emerald-400/70">En ligne</span>
                 </div>
               </div>
             </div>
@@ -250,7 +248,7 @@ export default function ChatWindow({ isOpen, onClose }: Props) {
 
           {/* Input area */}
           <div className="px-4 pb-4 pt-3 flex-shrink-0 border-t border-white/8 flex flex-col gap-2.5" style={{ background: "rgba(0,0,0,0.3)" }}>
-            {error && <p className="text-[10px] font-bold text-abcs-red uppercase tracking-widest">{error}</p>}
+            {error && <p className="text-[12px] font-bold text-abcs-red uppercase tracking-widest">{error}</p>}
 
             {CHAT_LOGIC[currentStepId]?.type === "input" ? (
               <form onSubmit={handleInputSubmit} className="flex gap-2">
@@ -277,7 +275,7 @@ export default function ChatWindow({ isOpen, onClose }: Props) {
                     <button
                       key={i}
                       onClick={() => handleOptionClick(opt)}
-                      className="px-3.5 py-2 rounded-full font-bold text-[10px] uppercase tracking-wider border border-white/12 text-white/55 hover:bg-abcs-red hover:text-white hover:border-abcs-red transition-all duration-200"
+                      className="px-3.5 py-2 rounded-full font-bold text-[12px] uppercase tracking-wider border border-white/12 text-white/55 hover:bg-abcs-red hover:text-white hover:border-abcs-red transition-all duration-200"
                       style={{ background: "rgba(255,255,255,0.06)" }}
                     >
                       {opt.label}

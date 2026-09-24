@@ -46,9 +46,9 @@ export default function Footer() {
             </button>
             <a
               href={`mailto:${EMAIL}`}
-              className="inline-flex max-w-full items-center gap-2.5 break-all rounded-full border border-white/30 px-[30px] py-[18px] text-[14px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:border-abcs-red hover:text-abcs-red"
+              className="inline-flex max-w-full items-center gap-2.5 rounded-full border border-white/30 px-[30px] py-[18px] text-[14px] font-bold tracking-[0.04em] sm:uppercase sm:tracking-[0.14em] text-white transition-colors hover:border-abcs-red hover:text-abcs-red"
             >
-              {EMAIL}
+              {EMAIL.split("@")[0]}@<wbr />{EMAIL.split("@")[1]}
             </a>
           </div>
         </div>

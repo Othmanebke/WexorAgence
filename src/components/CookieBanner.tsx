@@ -33,7 +33,7 @@ export default function CookieBanner() {
           animate={{ y: 0, opacity: 1, scale: 1 }}
           exit={{ y: 80, opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed bottom-24 sm:bottom-8 right-4 sm:right-8 z-[99999] max-w-md w-[calc(100vw-2rem)] sm:w-auto bg-[#141414]/95 border border-white/15 backdrop-blur-md text-white p-5 sm:p-6 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col gap-4 select-none"
+          className="fixed bottom-24 right-4 sm:right-8 z-[99999] max-w-md w-[calc(100vw-2rem)] sm:w-auto bg-[#141414]/95 border border-white/15 backdrop-blur-md text-white p-5 sm:p-6 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col gap-4 select-none"
         >
           <div className="flex items-start gap-3">
             <span className="text-xl">🍪</span>

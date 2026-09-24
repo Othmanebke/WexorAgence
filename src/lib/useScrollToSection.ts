@@ -11,7 +11,7 @@ function naturalTop(el: HTMLElement) {
   const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-stack]"));
   const saved = cards.map((c) => [c.style.position, c.style.transform] as const);
   cards.forEach((c) => {
-    c.style.position = "relative";
+    c.style.position = "static";
     c.style.transform = "none";
   });
   const top = el.getBoundingClientRect().top + window.scrollY;

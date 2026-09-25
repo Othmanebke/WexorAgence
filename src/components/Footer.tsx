@@ -5,7 +5,7 @@ import Link from "next/link";
 import SplitTitle from "@/components/fx/SplitTitle";
 import Watermark from "@/components/fx/Watermark";
 import { useContactModal } from "@/components/ContactModalProvider";
-import { EMAIL, SOCIALS } from "@/lib/site";
+import { EMAIL, LOCATION, SOCIALS } from "@/lib/site";
 import avatarPointing from "@/img/avatar-pointing.webp";
 
 /** Contact card + footer, last card of the stack (not sticky itself). */
@@ -71,6 +71,7 @@ export default function Footer() {
           </div>
           <div className="flex flex-wrap gap-5 text-[13px] text-white/60">
             <span>© 2026 O&apos;ldev · Othmane Bouakline</span>
+            <span>Seine-et-Marne (77) · {LOCATION.region}</span>
             <Link href="/legal" className="transition-colors hover:text-abcs-red">
               Mentions légales
             </Link>

@@ -1,12 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import SplitTitle from "@/components/fx/SplitTitle";
 import Watermark from "@/components/fx/Watermark";
 import { useContactModal } from "@/components/ContactModalProvider";
 import { EMAIL, LOCATION, SOCIALS } from "@/lib/site";
-import avatarPointing from "@/img/avatar-pointing.webp";
 
 /** Contact card + footer, last card of the stack (not sticky itself). */
 export default function Footer() {
@@ -47,15 +45,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-5 border-t border-white/12 pt-7 relative">
-          {/* Avatar standing on the divider, pointing at the CTAs (wide screens only) */}
-          <Image
-            src={avatarPointing}
-            alt=""
-            aria-hidden
-            sizes="200px"
-            className="pointer-events-none absolute bottom-full right-[4%] hidden h-[clamp(200px,14vw,260px)] w-auto select-none xl:block"
-          />
+        <div className="flex flex-wrap items-center justify-between gap-5 border-t border-white/12 pt-7">
           <div className="flex flex-wrap gap-5">
             {SOCIALS.map((s) => (
               <a
@@ -70,7 +60,6 @@ export default function Footer() {
             ))}
           </div>
           <div className="flex flex-wrap gap-5 text-[13px] text-white/60">
-            <span>© 2026 O&apos;ldev · Othmane Bouakline</span>
             <span>Seine-et-Marne (77) · {LOCATION.region}</span>
             <Link href="/legal" className="transition-colors hover:text-abcs-red">
               Mentions légales

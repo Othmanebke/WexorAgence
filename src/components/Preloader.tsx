@@ -7,9 +7,8 @@ export const LOADER_INTRO_DELAY = 2700;
 const LOADER_UNMOUNT = 3700;
 
 /**
- * "BONJOUR" loader: the outline is drawn (0 → 1.4s), an orange dot fades in
- * (1.1s), the stroke is erased in the same direction (1.6 → 2.6s), then the
- * curtain rises (2.5s). Hidden by CSS and unmounted under reduced motion.
+ * "BONJOUR" loader: the outline is drawn (0 → 1.4s), the stroke is erased in
+ * the same direction (1.6 → 2.6s), then the curtain rises (2.5s). Hidden by CSS and unmounted under reduced motion.
  */
 export default function Preloader() {
   const [visible, setVisible] = useState(true);
@@ -48,16 +47,6 @@ export default function Preloader() {
           }}
         >
           BONJOUR
-          <tspan
-            style={{
-              fill: "#FF3B00",
-              stroke: "none",
-              opacity: 0,
-              animation: "loader-op-in .4s ease 1.1s forwards, loader-op-out .4s ease 2.1s forwards",
-            }}
-          >
-            .
-          </tspan>
         </text>
       </svg>
     </div>
